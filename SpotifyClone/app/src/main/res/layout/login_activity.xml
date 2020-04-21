@@ -6,14 +6,67 @@
     android:layout_height="match_parent"
     tools:context="com.spotifyclone.presentation.login.LoginActivity">
 
+
+    <ImageView
+        android:id="@+id/spotifyLogo"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_spotify_logo_white_black"
+        app:layout_constraintBottom_toTopOf="@+id/spotifyBrand"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/login_spotify_brand_img_description"/>
+
     <TextView
+        android:id="@+id/spotifyBrand"
+        style="@style/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        app:layout_constraintBottom_toTopOf="@id/signUpButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spotifyLogo"
+        tools:text="Millions of Songs.\nFree on Spotify" />
+
+    <Button
+        android:id="@+id/signUpButton"
+        android:layout_width="360dp"
+        android:layout_height="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/spotifyBrand"
+        tools:text="SIGN UP"
+        android:textColor="@color/white"
+        android:background="@drawable/ic_larger_button"
+        />
+
+    <Button
+        android:id="@+id/facebookButton"
+        android:layout_width="360dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toTopOf="@id/loginButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signUpButton"
+        tools:text="FACEBOOK"
+        android:textColor="@color/white"
+        android:background="@drawable/ic_button_unfilled"
+        />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="360dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/facebookButton"
+        tools:text="Login"
+        android:textColor="@color/white"
+        android:background="@color/transparent"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

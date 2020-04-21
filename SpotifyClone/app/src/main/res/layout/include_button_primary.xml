@@ -1,0 +1,10 @@
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <Button
+        android:id="@+id/buttonPrimary"
+        android:layout_width="360dp"
+        android:layout_height="48dp"
+        android:textColor="@color/white"
+        android:background="@drawable/ic_larger_button"
+        />
+</merge>

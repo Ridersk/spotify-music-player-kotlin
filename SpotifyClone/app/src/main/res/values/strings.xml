@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SpotifyClone</string>
+
+    <!-- Login -->
+    <string name="login_spotify_brand">
+        Millions of Songs.\n
+        Free on Spotify
+    </string>
+    <string name="login_button_sign_up">SIGN UP FREE</string>
+    <string name="login_button_facebook">CONTINUE WITH FACEBOOK</string>
+    <string name="login_button_login">LOG IN</string>
+    <string name="login_spotify_brand_img_description">Spotify Logo</string>
 </resources>
