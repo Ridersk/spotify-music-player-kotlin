@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SpotifyClone</string>
 
-    <!-- Login -->
+    <!-- Login Activity-->
     <string name="login_spotify_brand">
         Millions of Songs.\n
         Free on Spotify
@@ -10,4 +10,11 @@
     <string name="login_button_facebook">CONTINUE WITH FACEBOOK</string>
     <string name="login_button_login">LOG IN</string>
     <string name="login_spotify_brand_img_description">Spotify Logo</string>
+
+    <!-- Login Credentials Activity-->
+    <string name="credentials_label_email">Email or Username</string>
+    <string name="credentials_label_password">Password</string>
+    <string name="credentials_button_login">LOG IN</string>
+    <string name="credentials_button_forgot_password">FORGOT YOUR PASSWORD?</string>
+
 </resources>
