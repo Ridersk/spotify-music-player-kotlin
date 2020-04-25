@@ -17,4 +17,7 @@
     <string name="credentials_button_login">LOG IN</string>
     <string name="credentials_button_forgot_password">FORGOT YOUR PASSWORD?</string>
 
+    <!-- Home Activity -->
+    <string name="home_label_recommendedPlaylists">Good Morning</string>
+
 </resources>

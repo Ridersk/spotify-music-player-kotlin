@@ -1,11 +1,11 @@
 package com.spotifyclone.presentation.login
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.spotifyclone.R
+import com.spotifyclone.presentation.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_credentials.*
 
-class CredentialsActivity : AppCompatActivity() {
+class CredentialsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
