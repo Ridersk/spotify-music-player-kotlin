@@ -20,4 +20,10 @@
     <!-- Home Activity -->
     <string name="home_label_recommendedPlaylists">Good Morning</string>
 
+    <!-- Liked Songs Activity -->
+    <string name="liked_text_title">Liked Songs</string>
+    <string name="liked_button_random_play">SHUFFLE PLAY</string>
+    <string name="liked_text_downloaded_songs">Downloaded Songs</string>
+
+
 </resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textMusicName"
+        style="@style/mediumTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Music Name" />
+
+    <LinearLayout
+        android:id="@+id/layoutMusiclabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textMusicName">
+
+        <ImageView
+            android:id="@+id/imageDownload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="9dp"
+            android:adjustViewBounds="true"
+            android:maxWidth="15dp"
+            android:maxHeight="15dp"
+            android:src="@drawable/ic_download" />
+
+        <TextView
+            android:id="@+id/textMusicLabel"
+            style="@style/smallTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightGray"
+            tools:text="Author • Album Name" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="20dp"
+        android:layout_height="21dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_options"/>
+
+</RelativeLayout>

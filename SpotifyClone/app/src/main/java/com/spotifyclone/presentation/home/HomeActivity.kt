@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.example.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
+import com.spotifyclone.presentation.playlist.LikedSongsActivity
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity: BaseActivity() {
@@ -25,7 +26,8 @@ class HomeActivity: BaseActivity() {
             it?.let { playlists ->
                 with(recommendedPlaylistGrid) {
                     adapter = RecommendedPlaylistsAdapter(playlists) {playlist ->
-                        println("Playlist Invoke")
+                        val intent = LikedSongsActivity.getStartIntent(this@HomeActivity, playlist.title)
+                        this@HomeActivity.startActivity(intent)
                     }
                 }
             }

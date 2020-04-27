@@ -35,7 +35,7 @@ class RecommendedPlaylistsAdapter(
             val inflater: LayoutInflater = LayoutInflater.from(parent?.context)
             itemView = inflater.inflate(R.layout.item_recommended_playlist, parent, false)
 
-            viewHolder = ViewHolderItem(itemView)
+            viewHolder = ViewHolderItem(itemView, onItemClickListener)
 
             itemView.tag = viewHolder
         } else {
@@ -47,14 +47,18 @@ class RecommendedPlaylistsAdapter(
         return itemView
     }
 
-    companion object {
-        class ViewHolderItem(
-            itemView: View
-        ) {
-            private val title = itemView.textTitle
+    class ViewHolderItem(
+        private  val itemView: View,
+        private val onItemClickListener: (playlist: Playlist) -> Unit
+    ) {
+        private val title = itemView.textTitle
 
-            fun bindView(playlist: Playlist) {
-                title.text = playlist.title
+
+        fun bindView(playlist: Playlist) {
+            title.text = playlist.title
+
+            itemView.setOnClickListener {
+                onItemClickListener.invoke(playlist)
             }
         }
     }
