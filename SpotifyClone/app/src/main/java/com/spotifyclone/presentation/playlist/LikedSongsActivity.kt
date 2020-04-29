@@ -3,12 +3,16 @@ package com.spotifyclone.presentation.playlist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
+import com.spotifyclone.presentation.base.ToolbarParameters
 import kotlinx.android.synthetic.main.activity_liked_songs.*
+import kotlinx.android.synthetic.main.activity_liked_songs.view.*
+import kotlinx.android.synthetic.main.include_toolbar.*
 
 class LikedSongsActivity : BaseActivity(), PlaylistInterface {
 
@@ -16,20 +20,32 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liked_songs)
 
-        textTitle.text = getString(R.string.liked_text_title)
-        buttonRandomPlay.text = getString(R.string.liked_button_random_play)
-        textDownloadedSongs.text = getString(R.string.liked_text_downloaded_songs)
+        setupToolbar(
+            ToolbarParameters(
+                toolbar =  toolbarMain,
+                titleIdRes =  R.string.liked_toolbar_title,
+                option1Idres =  R.drawable.ic_back,
+                option3Idres =  R.drawable.ic_options
+            )
+        )
 
-        setMusicList()
+        val layout: ViewGroup = activityLikedSongs
+        with(layout) {
+            textTitle.text = getString(R.string.liked_text_title)
+            buttonRandomPlay.text = getString(R.string.liked_button_random_play)
+            textDownloadedSongs.text = getString(R.string.liked_text_downloaded_songs)
+        }
+
+        setMusicList(layout)
     }
 
-    fun setMusicList() {
+    fun setMusicList(layout: ViewGroup) {
         val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
             .ViewModelFactory().create(PlaylistMusicsViewModel::class.java)
 
         viewModel.musicsLiveData.observe(this, Observer {
             it?.let { musics ->
-                with(recyclerMusics) {
+                with(layout.recyclerMusics) {
                     layoutManager = LinearLayoutManager(this@LikedSongsActivity, RecyclerView.VERTICAL, false)
                     setHasFixedSize(true)
                     adapter = PlaylistMusicsAdapter(musics) {

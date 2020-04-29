@@ -1,11 +1,9 @@
 package com.spotifyclone.presentation.home
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.R
 import com.spotifyclone.data.model.Playlist
 import kotlinx.android.synthetic.main.item_recommended_playlist.view.*
@@ -51,7 +49,7 @@ class RecommendedPlaylistsAdapter(
         private  val itemView: View,
         private val onItemClickListener: (playlist: Playlist) -> Unit
     ) {
-        private val title = itemView.textTitle
+        private val title = itemView.toolbarTextTitle
 
 
         fun bindView(playlist: Playlist) {

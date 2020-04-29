@@ -12,15 +12,18 @@
     <string name="login_spotify_brand_img_description">Spotify Logo</string>
 
     <!-- Login Credentials Activity-->
+    <string name="credentials_toolbar_title" />
     <string name="credentials_label_email">Email or Username</string>
     <string name="credentials_label_password">Password</string>
     <string name="credentials_button_login">LOG IN</string>
     <string name="credentials_button_forgot_password">FORGOT YOUR PASSWORD?</string>
 
     <!-- Home Activity -->
+    <string name="home_toolbar_title" />
     <string name="home_label_recommendedPlaylists">Good Morning</string>
 
     <!-- Liked Songs Activity -->
+    <string name="liked_toolbar_title">Playlist</string>
     <string name="liked_text_title">Liked Songs</string>
     <string name="liked_button_random_play">SHUFFLE PLAY</string>
     <string name="liked_text_downloaded_songs">Downloaded Songs</string>

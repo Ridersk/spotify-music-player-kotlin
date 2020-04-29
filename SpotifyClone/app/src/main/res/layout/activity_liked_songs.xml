@@ -1,59 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLikedSongs"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingStart="15dp"
-    android:paddingTop="22dp"
-    android:paddingEnd="15dp"
     tools:context="com.spotifyclone.presentation.playlist.LikedSongsActivity">
 
-    <TextView
-        android:id="@+id/textTitle"
-        style="@style/smallSubtitleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        tools:text="Liked Songs" />
-
-    <Button
-        android:id="@+id/buttonRandomPlay"
-        style="@style/secondaryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="22dp"
-        tools:text="SHUFFLE PLAY" />
+    <include layout="@layout/include_toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbarMain"
+        android:orientation="vertical"
+        android:paddingStart="15dp"
+        android:paddingTop="22dp"
+        android:paddingEnd="15dp">
 
         <TextView
-            android:id="@+id/textDownloadedSongs"
+            android:id="@+id/textTitle"
+            style="@style/smallSubtitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            tools:text="Liked Songs" />
+
+        <Button
+            android:id="@+id/buttonRandomPlay"
+            style="@style/secondaryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            tools:text="Downloaded Songs" />
+            android:layout_below="@id/textTitle"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="22dp"
+            tools:text="SHUFFLE PLAY" />
 
-
-        <androidx.appcompat.widget.SwitchCompat
-            style="@style/switchButton"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/MusicControl"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/textDownloadedSongs"/>
+            android:layout_below="@id/buttonRandomPlay"
+            android:layout_marginTop="22dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textDownloadedSongs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                tools:text="Downloaded Songs" />
+
+
+            <androidx.appcompat.widget.SwitchCompat
+                style="@style/switchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/textDownloadedSongs" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerMusics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/MusicControl"
+            android:layout_marginTop="22dp"
+            tools:listitem="@layout/item_music" />
+
     </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerMusics"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        tools:listitem="@layout/item_music" />
-
-</LinearLayout>
+</RelativeLayout>
