@@ -24,8 +24,8 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
             ToolbarParameters(
                 toolbar =  toolbarMain,
                 titleIdRes =  R.string.liked_toolbar_title,
-                option1Idres =  R.drawable.ic_back,
-                option3Idres =  R.drawable.ic_options
+                option1 =  Pair(R.drawable.ic_back, {super.onBackPressed()}),
+                option3 =  Pair(R.drawable.ic_options, {})
             )
         )
 

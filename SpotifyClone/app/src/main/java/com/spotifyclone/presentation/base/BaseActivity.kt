@@ -19,14 +19,24 @@ abstract class BaseActivity : AppCompatActivity() {
             with(toolbar) {
                 toolbarTextTitle.text = getString(toolbarArgs.titleIdRes)
 
-                if (toolbarArgs.option1Idres > 0) {
-                    iconOption1.setImageDrawable(getDrawable(toolbarArgs.option1Idres))
+                if (toolbarArgs.option1 != null && toolbarArgs.option1.first > 0) {
+                    iconOption1.setImageDrawable(getDrawable(toolbarArgs.option1.first))
+                    iconOption1.setOnClickListener{
+//                        super.onBackPressed()
+                        toolbarArgs.option1.second.invoke()
+                    }
                 }
-                if (toolbarArgs.option2IdRes > 0) {
-                    iconOption2.setImageDrawable(getDrawable(toolbarArgs.option2IdRes))
+                if (toolbarArgs.option2 != null && toolbarArgs.option2.first > 0) {
+                    iconOption2.setImageDrawable(getDrawable(toolbarArgs.option2.first))
+                    iconOption2.setOnClickListener{
+                        toolbarArgs.option2.second.invoke()
+                    }
                 }
-                if (toolbarArgs.option3Idres > 0) {
-                    iconOption3.setImageDrawable(getDrawable(toolbarArgs.option3Idres))
+                if (toolbarArgs.option3 != null && toolbarArgs.option3.first > 0) {
+                    iconOption3.setImageDrawable(getDrawable(toolbarArgs.option3.first))
+                    iconOption3.setOnClickListener{
+                        toolbarArgs.option3.second.invoke()
+                    }
                 }
             }
             setSupportActionBar(toolbarMain)

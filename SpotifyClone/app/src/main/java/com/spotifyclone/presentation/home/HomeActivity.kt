@@ -1,5 +1,6 @@
 package com.spotifyclone.presentation.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
@@ -22,12 +23,19 @@ class HomeActivity : BaseActivity() {
             ToolbarParameters(
                 toolbar =  toolbarMain,
                 titleIdRes =  R.string.home_toolbar_title,
-                option3Idres =  R.drawable.ic_settings
+                option3 =  Pair(R.drawable.ic_settings, {})
             )
         )
 
         val layout: ViewGroup = activityHome
         setRecommendedPlaylistsGrid(layout)
+    }
+
+    override fun onBackPressed() {
+        val mainIntent = Intent(Intent.ACTION_MAIN)
+        mainIntent.addCategory(Intent.CATEGORY_HOME)
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(mainIntent)
     }
 
     fun setRecommendedPlaylistsGrid(layout: ViewGroup) {
