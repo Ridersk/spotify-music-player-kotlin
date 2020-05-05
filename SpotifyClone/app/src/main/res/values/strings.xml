@@ -23,10 +23,14 @@
     <string name="home_label_recommendedPlaylists">Good Morning</string>
 
     <!-- Liked Songs Activity -->
-    <string name="liked_toolbar_title">Playlist</string>
+    <string name="liked_playlist_title">Liked Songs</string>
     <string name="liked_text_title">Liked Songs</string>
     <string name="liked_button_random_play">SHUFFLE PLAY</string>
     <string name="liked_text_downloaded_songs">Downloaded Songs</string>
+    <string name="title_activity_music_player">MusicPlayerActivity</string>
 
+    <!-- Music Player Activity -->
+    <string name="music_album_image">Music Album Image</string>
+    <string name="music_toolbar_subTitle">PLAYING FROM YOUR LIBRARY</string>
 
 </resources>

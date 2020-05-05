@@ -17,7 +17,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
         toolbar.let {
             with(toolbar) {
-                toolbarTextTitle.text = getString(toolbarArgs.titleIdRes)
+                textToolbarTitle.text = toolbarArgs.title
+                textToolbarSubtitle.text = toolbarArgs.subTitle
 
                 if (toolbarArgs.option1 != null && toolbarArgs.option1.first > 0) {
                     iconOption1.setImageDrawable(getDrawable(toolbarArgs.option1.first))

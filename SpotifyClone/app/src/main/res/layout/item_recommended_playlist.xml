@@ -12,7 +12,7 @@
         />
 
     <TextView
-        android:id="@+id/toolbarTextTitle"
+        android:id="@+id/textToolbarTitle"
         tools:text="Strange Encounters Radio Station B landscape"
         android:layout_width="wrap_content"
         android:layout_height="56dp"

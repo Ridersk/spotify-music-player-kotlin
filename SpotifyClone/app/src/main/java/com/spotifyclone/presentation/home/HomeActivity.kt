@@ -22,7 +22,7 @@ class HomeActivity : BaseActivity() {
         setupToolbar(
             ToolbarParameters(
                 toolbar =  toolbarMain,
-                titleIdRes =  R.string.home_toolbar_title,
+                title =  getString(R.string.home_toolbar_title),
                 option3 =  Pair(R.drawable.ic_settings, {})
             )
         )

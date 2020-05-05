@@ -10,11 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
+import com.spotifyclone.presentation.music.MusicPlayerActivity
 import kotlinx.android.synthetic.main.activity_liked_songs.*
 import kotlinx.android.synthetic.main.activity_liked_songs.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 
 class LikedSongsActivity : BaseActivity(), PlaylistInterface {
+
+
+    override fun getPlaylistName() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +29,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
         setupToolbar(
             ToolbarParameters(
                 toolbar =  toolbarMain,
-                titleIdRes =  R.string.liked_toolbar_title,
+                title =  intent.getStringExtra(EXTRA_TITLE),
                 option1 =  Pair(R.drawable.ic_back, {super.onBackPressed()}),
                 option3 =  Pair(R.drawable.ic_options, {})
             )
@@ -31,7 +37,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
 
         val layout: ViewGroup = activityLikedSongs
         with(layout) {
-            textTitle.text = getString(R.string.liked_text_title)
+            textTitle.text = intent.getStringExtra(EXTRA_TITLE)
             buttonRandomPlay.text = getString(R.string.liked_button_random_play)
             textDownloadedSongs.text = getString(R.string.liked_text_downloaded_songs)
         }
@@ -48,7 +54,11 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
                 with(layout.recyclerMusics) {
                     layoutManager = LinearLayoutManager(this@LikedSongsActivity, RecyclerView.VERTICAL, false)
                     setHasFixedSize(true)
-                    adapter = PlaylistMusicsAdapter(musics) {
+                    adapter = PlaylistMusicsAdapter(musics) {music ->
+                        val intent = MusicPlayerActivity.getStartIntent(
+                            this@LikedSongsActivity, music.name, music.author, getString(PLAYLIST_NAME))
+
+                        this@LikedSongsActivity.startActivity(intent)
                     }
                 }
             }
@@ -58,6 +68,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
     }
 
     companion object {
+        private val PLAYLIST_NAME: Int = R.string.liked_playlist_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
         fun getStartIntent(context: Context, title: String) : Intent {

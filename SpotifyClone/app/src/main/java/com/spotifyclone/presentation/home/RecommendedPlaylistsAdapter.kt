@@ -49,7 +49,7 @@ class RecommendedPlaylistsAdapter(
         private  val itemView: View,
         private val onItemClickListener: (playlist: Playlist) -> Unit
     ) {
-        private val title = itemView.toolbarTextTitle
+        private val title = itemView.textToolbarTitle
 
 
         fun bindView(playlist: Playlist) {
