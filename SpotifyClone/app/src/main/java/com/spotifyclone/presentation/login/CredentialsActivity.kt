@@ -3,12 +3,11 @@ package com.spotifyclone.presentation.login
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
-import com.example.spotifyclone.R
+import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_credentials.*
-import kotlinx.android.synthetic.main.activity_credentials.loginButton
 import kotlinx.android.synthetic.main.activity_login.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 

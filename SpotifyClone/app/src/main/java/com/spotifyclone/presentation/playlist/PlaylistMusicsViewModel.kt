@@ -11,17 +11,22 @@ class PlaylistMusicsViewModel: ViewModel() {
     val musicsLiveData: MutableLiveData<List<Music>> = MutableLiveData()
 
     fun getMusics() {
-        var musicList = mutableListOf(
-            Music("Session", "Linkin Park", "Meteora"),
-            Music("Paradise City", "Guns N'Roses", "Use Your Illusion II"),
-            Music("Critical Acclaim", "Avenged Sevenfold", "")
-        )
+        var musicList = getRepositoryMusics()
 
         for (i in 0..26) {
             musicList.add(musicList[i % 3])
         }
 
         musicsLiveData.value = musicList
+    }
+
+    private fun getRepositoryMusics(): MutableList<Music> {
+
+        return mutableListOf(
+            Music("Session", "Linkin Park", "Meteora"),
+            Music("Paradise City", "Guns N'Roses", "Use Your Illusion II"),
+            Music("Critical Acclaim", "Avenged Sevenfold", "")
+        )
     }
 
     class ViewModelFactory : ViewModelProvider.Factory {

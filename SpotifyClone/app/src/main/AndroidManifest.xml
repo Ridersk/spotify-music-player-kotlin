@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.spotifyclone">
+    package="com.spotifyclone">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
 
     <application
         android:allowBackup="true"
@@ -11,10 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name="com.spotifyclone.presentation.music.MusicPlayerActivity"
-            android:label="@string/title_activity_music_player"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name="com.spotifyclone.presentation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +27,7 @@
         <activity android:name="com.spotifyclone.presentation.login.LoginActivity" />
         <activity android:name="com.spotifyclone.presentation.login.CredentialsActivity" />
         <activity android:name="com.spotifyclone.presentation.playlist.LikedSongsActivity" />
+        <activity android:name="com.spotifyclone.presentation.music.MusicPlayerActivity" />
     </application>
 
 </manifest>

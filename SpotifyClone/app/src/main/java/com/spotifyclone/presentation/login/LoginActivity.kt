@@ -3,7 +3,7 @@ package com.spotifyclone.presentation.login
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
-import com.example.spotifyclone.R
+import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.view.*

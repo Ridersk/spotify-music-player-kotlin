@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.spotifyclone.R
+import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import kotlinx.android.synthetic.main.item_music.view.*
 

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.spotifyclone.R
+import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.music.MusicPlayerActivity
@@ -28,10 +28,10 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
 
         setupToolbar(
             ToolbarParameters(
-                toolbar =  toolbarMain,
-                title =  intent.getStringExtra(EXTRA_TITLE),
-                option1 =  Pair(R.drawable.ic_back, {super.onBackPressed()}),
-                option3 =  Pair(R.drawable.ic_options, {})
+                toolbar = toolbarMain,
+                title = intent.getStringExtra(EXTRA_TITLE),
+                option1 = Pair(R.drawable.ic_back, { super.onBackPressed() }),
+                option3 = Pair(R.drawable.ic_options, {})
             )
         )
 
@@ -52,17 +52,23 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
         viewModel.musicsLiveData.observe(this, Observer {
             it?.let { musics ->
                 with(layout.recyclerMusics) {
-                    layoutManager = LinearLayoutManager(this@LikedSongsActivity, RecyclerView.VERTICAL, false)
+                    layoutManager =
+                        LinearLayoutManager(this@LikedSongsActivity, RecyclerView.VERTICAL, false)
                     setHasFixedSize(true)
-                    adapter = PlaylistMusicsAdapter(musics) {music ->
+                    adapter = PlaylistMusicsAdapter(musics) { music ->
                         val intent = MusicPlayerActivity.getStartIntent(
-                            this@LikedSongsActivity, music.name, music.author, getString(PLAYLIST_NAME))
+                            this@LikedSongsActivity,
+                            music.name,
+                            music.author,
+                            getString(PLAYLIST_NAME)
+                        )
 
                         this@LikedSongsActivity.startActivity(intent)
                     }
                 }
             }
         })
+
 
         viewModel.getMusics()
     }
@@ -71,7 +77,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
         private val PLAYLIST_NAME: Int = R.string.liked_playlist_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
-        fun getStartIntent(context: Context, title: String) : Intent {
+        fun getStartIntent(context: Context, title: String): Intent {
             return Intent(context, LikedSongsActivity::class.java).apply {
                 putExtra(EXTRA_TITLE, title)
             }

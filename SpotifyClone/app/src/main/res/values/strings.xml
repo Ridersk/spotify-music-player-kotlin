@@ -27,7 +27,6 @@
     <string name="liked_text_title">Liked Songs</string>
     <string name="liked_button_random_play">SHUFFLE PLAY</string>
     <string name="liked_text_downloaded_songs">Downloaded Songs</string>
-    <string name="title_activity_music_player">MusicPlayerActivity</string>
 
     <!-- Music Player Activity -->
     <string name="music_album_image">Music Album Image</string>

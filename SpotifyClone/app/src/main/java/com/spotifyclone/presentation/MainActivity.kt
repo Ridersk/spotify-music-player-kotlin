@@ -2,13 +2,15 @@ package com.spotifyclone.presentation
 
 import android.content.Intent
 import android.os.Bundle
-import com.example.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.home.HomeActivity
 import com.spotifyclone.presentation.login.LoginActivity
+import com.spotifyclone.presentation.playlist.LikedSongsActivity
 
 
 class MainActivity : BaseActivity() {
+
+    val context = this@MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,12 +18,23 @@ class MainActivity : BaseActivity() {
 
         val intent: Intent
         val userLogged = false
+        val development = true
 
-        intent = if(userLogged) {
-            Intent(this@MainActivity, HomeActivity::class.java)
-        } else {
-            Intent(this@MainActivity, LoginActivity::class.java)
+        if (development) {
+            intent = getActivityBeingTested()
         }
-        this@MainActivity.startActivity(intent)
+        else {
+            intent = if (userLogged) {
+                Intent(context, HomeActivity::class.java)
+            } else {
+                Intent(context, LoginActivity::class.java)
+            }
+        }
+
+        context.startActivity(intent)
+    }
+
+    fun getActivityBeingTested() : Intent {
+        return Intent(context, LikedSongsActivity::class.java)
     }
 }

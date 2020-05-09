@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.example.spotifyclone.R
+import com.spotifyclone.R
 import com.spotifyclone.data.model.Playlist
 import kotlinx.android.synthetic.main.item_recommended_playlist.view.*
 
