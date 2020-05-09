@@ -38,7 +38,7 @@ class MusicPlayerActivity : BaseActivity() {
         private const val EXTRA_AUTHOR = "EXTRA_AUTHOR"
         private const val EXTRA_PLAYLIST = "EXTRA_PLAYLIST"
 
-        fun getStartIntent(context: Context, name: String, author: String, playlist: String) : Intent {
+        fun getStartIntent(context: Context, name: String?, author: String?, playlist: String?) : Intent {
             return Intent(context, MusicPlayerActivity::class.java).apply {
                 putExtra(EXTRA_NAME, name)
                 putExtra(EXTRA_AUTHOR, author)

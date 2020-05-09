@@ -43,7 +43,11 @@ class PlaylistMusicsAdapter (
             }
         }
 
-        private fun getMusicLabel(author: String, album: String) = "$author • $album"
+        private fun getMusicLabel(author: String? = "", album: String? = "") =
+            "$author${showDiv(author, album)}$album"
+
+        private fun showDiv(author: String? = "", album: String? = "") =
+            if(author.isNullOrBlank() || album.isNullOrBlank()) "" else " • "
     }
 
 }

@@ -47,7 +47,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
 
     fun setMusicList(layout: ViewGroup) {
         val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
-            .ViewModelFactory().create(PlaylistMusicsViewModel::class.java)
+            .ViewModelFactory(this@LikedSongsActivity).create(PlaylistMusicsViewModel::class.java)
 
         viewModel.musicsLiveData.observe(this, Observer {
             it?.let { musics ->
