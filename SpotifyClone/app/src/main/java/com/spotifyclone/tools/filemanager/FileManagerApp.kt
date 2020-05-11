@@ -1,11 +1,13 @@
 package com.spotifyclone.tools.filemanager
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Environment
 import android.os.storage.StorageManager
 import android.os.storage.StorageManager.ACTION_MANAGE_STORAGE
+import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
@@ -13,6 +15,14 @@ import com.spotifyclone.data.model.Music
 import java.io.*
 import java.util.*
 import kotlin.system.exitProcess
+import android.Manifest.permission
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.annotation.SuppressLint
+import androidx.core.app.ActivityCompat
+import android.content.pm.PackageManager
+import android.util.Log
+import androidx.constraintlayout.widget.Constraints.TAG
+
 
 class FileManagerApp {
 
@@ -68,9 +78,48 @@ class FileManagerApp {
 
         }
 
+        @SuppressLint("Recycle")
+        fun getMusicMediaStorage(context: Context) {
+            val projection = arrayOf(
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.TRACK,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ARTIST_ID,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.COMPOSER,
+                MediaStore.Audio.Media.YEAR,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DATE_ADDED
+
+            )
+            val cursor = context.contentResolver.query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                null, null, null
+            )
+
+            if (cursor != null) {
+                val uris = mutableListOf<String>()
+                while (cursor.moveToNext()) {
+                    val r = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+                    if (r != - 1) {
+                        uris.add(cursor.getString(r))
+                    }
+
+                }
+
+                print(uris)
+            }
+        }
+
         fun getMusicList(context: Context): MutableList<Music> {
+            getMusicMediaStorage(context)
+
+
             val directoryDefault = File(
-                getDirectorNameDefault(
+                getDirectoryNameDefault(
                     context
                 )
             )
@@ -104,7 +153,7 @@ class FileManagerApp {
             return musics
         }
 
-        fun getDirectorNameDefault(context: Context) =
+        private fun getDirectoryNameDefault(context: Context) =
             "${getStorageLocationPath(
                 context
             )}/$PATH_MUSIC_LIST_DIRECTORY"

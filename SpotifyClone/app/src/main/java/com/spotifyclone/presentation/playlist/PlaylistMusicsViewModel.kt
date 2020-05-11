@@ -1,6 +1,14 @@
 package com.spotifyclone.presentation.playlist
 
+import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import android.util.Log
+import androidx.constraintlayout.widget.Constraints
+import androidx.core.app.ActivityCompat
+import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -16,10 +24,6 @@ class PlaylistMusicsViewModel(
 
     fun getMusics() {
         var musicList = getRepositoryMusics()
-
-        for (i in 0..26) {
-            musicList.add(musicList[i % musicList.size])
-        }
 
         val a = "teste"
         a.length
