@@ -1,5 +1,6 @@
 package com.spotifyclone.tools.filemanager
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -14,9 +15,6 @@ import com.spotifyclone.data.model.Music
 import java.io.*
 import java.util.*
 import kotlin.system.exitProcess
-import android.annotation.SuppressLint
-import androidx.loader.content.CursorLoader
-import kotlin.collections.HashMap
 
 
 class FileManagerApp {
@@ -43,8 +41,8 @@ class FileManagerApp {
 
     companion object {
         private const val PATH_MUSIC_LIST_DIRECTORY = "musics"
-        const val SEARCH_ALL_DIRECTORIES = "all_dir"
         const val SEARCH_SCOPED_DIRECTORY = "scope_dir"
+        const val SEARCH_MEDIA_AUDIO = "media_audio_dir"
 
         fun createFile(context: Context, filename: String, contents: String, parentPath: String = "") {
 
@@ -75,53 +73,51 @@ class FileManagerApp {
 
         }
 
-        fun getMusicList(context: Context, searchRange: String = SEARCH_ALL_DIRECTORIES): MutableList<Music> {
+        fun getMusicList(context: Context, searchRange: String = SEARCH_MEDIA_AUDIO): MutableList<Music> {
             return when (searchRange) {
-                SEARCH_ALL_DIRECTORIES -> getMusicMediaStorage(context)
+                SEARCH_MEDIA_AUDIO -> getMusicsFromMediaAudioDirectories(context)
                 SEARCH_SCOPED_DIRECTORY -> getMusicsScoped(context)
                 else -> getMusicsScoped(context)
             }
         }
 
         @SuppressLint("Recycle")
-        private fun getMusicMediaStorage(context: Context): MutableList<Music> {
+        private fun getMusicsFromMediaAudioDirectories(context: Context): MutableList<Music> {
             val projection = arrayOf(
-                "COUNT(" + MediaStore.Files.FileColumns.DATA + ") AS totalFiles",
-                MediaStore.Files.FileColumns.MEDIA_TYPE,
-                MediaStore.Files.FileColumns.PARENT,
-                MediaStore.Files.FileColumns.DATA,
-                MediaStore.Files.FileColumns.DISPLAY_NAME
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.DATA
             )
 
-            val selection =
-                MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO +
-                        ") GROUP BY (" + MediaStore.Files.FileColumns.PARENT
+            val order = MediaStore.Files.FileColumns.DISPLAY_NAME + " ASC"
 
-            val sortOrder = MediaStore.Files.FileColumns.DISPLAY_NAME + " ASC"
-
-            val cursorLoader = CursorLoader(
-                context,
-                MediaStore.Files.getContentUri("external"),
+            val cursor = context.contentResolver.query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection,
-                selection,
                 null,
-                sortOrder
+                null,
+                order
             )
+
 
             val musics = mutableListOf<Music>()
-            val cursor = cursorLoader.loadInBackground()
             if (cursor != null) {
-                val uris = mutableListOf<String>()
                 while (cursor.moveToNext()) {
-                    val name = cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)
-                    if (name != - 1) {
-                        uris.add(cursor.getString(name))
+                    val name = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
+                    val album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
+                    val author = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+                    if (name != - 1 && album != -1) {
 
-                        musics.add(Music(cursor.getString(name)))
+                        musics.add(Music(
+                            title = if (cursor.getString(name).contains("<unknown>")) "" else cursor.getString(name),
+                            artist = if (cursor.getString(author).contains("<unknown>")) "" else cursor.getString(author),
+                            album =  if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(album)
+                        ))
                     }
+
                 }
             }
-
             return musics
         }
 

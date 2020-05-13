@@ -30,7 +30,7 @@ class MusicPlayerActivity : BaseActivity() {
         val layout: ViewGroup = activityMusicPlayer
 
         layout.textMusicName.text = intent.getStringExtra(EXTRA_NAME)
-        layout.textMusicAuthor.text = intent.getStringExtra(EXTRA_AUTHOR)
+        layout.textMusicArtist.text = intent.getStringExtra(EXTRA_AUTHOR)
     }
 
     companion object {

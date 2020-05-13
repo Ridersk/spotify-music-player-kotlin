@@ -59,7 +59,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
                         val intent = MusicPlayerActivity.getStartIntent(
                             this@LikedSongsActivity,
                             music.name,
-                            music.author,
+                            music.artist,
                             getString(PLAYLIST_NAME)
                         )
 

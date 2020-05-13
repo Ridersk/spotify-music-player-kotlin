@@ -36,15 +36,15 @@ class PlaylistMusicsAdapter (
 
         fun bindView(music: Music) {
             name.text = music.name
-            musiclabel.text = getMusicLabel(music.author, music.album)
+            musiclabel.text = getMusicLabel(music.artist, music.album)
 
             itemView.setOnClickListener{
                 onItemClickListener.invoke(music)
             }
         }
 
-        private fun getMusicLabel(author: String? = "", album: String? = "") =
-            "$author${showDiv(author, album)}$album"
+        private fun getMusicLabel(artist: String? = "", album: String? = "") =
+            "$artist${showDiv(artist, album)}$album"
 
         private fun showDiv(author: String? = "", album: String? = "") =
             if(author.isNullOrBlank() || album.isNullOrBlank()) "" else " • "

@@ -47,7 +47,7 @@
                     tools:text="Music Name" />
 
                 <TextView
-                    android:id="@+id/textMusicAuthor"
+                    android:id="@+id/textMusicArtist"
                     style="@style/smallTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/buttonFavoriteMusic"
                     android:textColor="@color/lightGray"
-                    tools:text="Music's Author" />
+                    tools:text="Music's Artist" />
 
                 <Button
                     android:id="@+id/buttonFavoriteMusic"
