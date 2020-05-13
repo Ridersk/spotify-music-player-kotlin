@@ -1,6 +1,5 @@
 package com.spotifyclone.tools.filemanager
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -15,26 +14,22 @@ import com.spotifyclone.data.model.Music
 import java.io.*
 import java.util.*
 import kotlin.system.exitProcess
-import android.Manifest.permission
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
-import androidx.core.app.ActivityCompat
-import android.content.pm.PackageManager
-import android.util.Log
-import androidx.constraintlayout.widget.Constraints.TAG
+import androidx.loader.content.CursorLoader
+import kotlin.collections.HashMap
 
 
 class FileManagerApp {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun verifyAvailableStorage(context: Context, filesDir: File) {
+    fun verifyAvailableStorage(context: Context, filesDir: File, requiredStorageBytes: Long) {
         val storageManager = context.getSystemService<StorageManager>()!!
         val appSpecificInternalDirUuid: UUID = storageManager.getUuidForPath(filesDir)
         val availableBytes: Long = storageManager.getAllocatableBytes(appSpecificInternalDirUuid)
 
-        if (availableBytes >= NUM_BYTES_NEEDED_FOR_APP) {
+        if (availableBytes >= requiredStorageBytes) {
             storageManager.allocateBytes(appSpecificInternalDirUuid,
-                NUM_BYTES_NEEDED_FOR_APP
+                requiredStorageBytes
             )
         } else {
             val storageIntent = Intent().apply {
@@ -47,10 +42,12 @@ class FileManagerApp {
     }
 
     companion object {
-        private const val NUM_BYTES_NEEDED_FOR_APP = 1024 * 1024 * 10L
         private const val PATH_MUSIC_LIST_DIRECTORY = "musics"
+        const val SEARCH_ALL_DIRECTORIES = "all_dir"
+        const val SEARCH_SCOPED_DIRECTORY = "scope_dir"
 
         fun createFile(context: Context, filename: String, contents: String, parentPath: String = "") {
+
             val storageLocalPath =
                 getStorageLocationPath(
                     context
@@ -78,51 +75,58 @@ class FileManagerApp {
 
         }
 
-        @SuppressLint("Recycle")
-        fun getMusicMediaStorage(context: Context) {
-            val projection = arrayOf(
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.TRACK,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.ARTIST_ID,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.COMPOSER,
-                MediaStore.Audio.Media.YEAR,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DATE_ADDED
-
-            )
-            val cursor = context.contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                null, null, null
-            )
-
-            if (cursor != null) {
-                val uris = mutableListOf<String>()
-                while (cursor.moveToNext()) {
-                    val r = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
-                    if (r != - 1) {
-                        uris.add(cursor.getString(r))
-                    }
-
-                }
-
-                print(uris)
+        fun getMusicList(context: Context, searchRange: String = SEARCH_ALL_DIRECTORIES): MutableList<Music> {
+            return when (searchRange) {
+                SEARCH_ALL_DIRECTORIES -> getMusicMediaStorage(context)
+                SEARCH_SCOPED_DIRECTORY -> getMusicsScoped(context)
+                else -> getMusicsScoped(context)
             }
         }
 
-        fun getMusicList(context: Context): MutableList<Music> {
-            getMusicMediaStorage(context)
-
-
-            val directoryDefault = File(
-                getDirectoryNameDefault(
-                    context
-                )
+        @SuppressLint("Recycle")
+        private fun getMusicMediaStorage(context: Context): MutableList<Music> {
+            val projection = arrayOf(
+                "COUNT(" + MediaStore.Files.FileColumns.DATA + ") AS totalFiles",
+                MediaStore.Files.FileColumns.MEDIA_TYPE,
+                MediaStore.Files.FileColumns.PARENT,
+                MediaStore.Files.FileColumns.DATA,
+                MediaStore.Files.FileColumns.DISPLAY_NAME
             )
+
+            val selection =
+                MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO +
+                        ") GROUP BY (" + MediaStore.Files.FileColumns.PARENT
+
+            val sortOrder = MediaStore.Files.FileColumns.DISPLAY_NAME + " ASC"
+
+            val cursorLoader = CursorLoader(
+                context,
+                MediaStore.Files.getContentUri("external"),
+                projection,
+                selection,
+                null,
+                sortOrder
+            )
+
+            val musics = mutableListOf<Music>()
+            val cursor = cursorLoader.loadInBackground()
+            if (cursor != null) {
+                val uris = mutableListOf<String>()
+                while (cursor.moveToNext()) {
+                    val name = cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)
+                    if (name != - 1) {
+                        uris.add(cursor.getString(name))
+
+                        musics.add(Music(cursor.getString(name)))
+                    }
+                }
+            }
+
+            return musics
+        }
+
+        private fun getMusicsScoped(context: Context): MutableList<Music> {
+            val directoryDefault = File(getDirectoryNameDefault(context))
 
             if (!directoryDefault.exists()) {
                 directoryDefault.mkdirs()

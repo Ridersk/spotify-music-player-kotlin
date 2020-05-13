@@ -8,9 +8,15 @@
     <TextView
         android:id="@+id/textMusicName"
         style="@style/mediumTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Music Name" />
+        android:layout_alignParentStart="true"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:paddingEnd="10dp"
+        android:layout_toStartOf="@id/buttonOptions"
+        tools:text="Music Name Music Name Music Name Music Name "
+        tools:ignore="RtlSymmetry" />
 
     <LinearLayout
         android:id="@+id/layoutMusiclabel"
@@ -39,6 +45,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/buttonOptions"
         android:layout_width="20dp"
         android:layout_height="21dp"
         android:layout_alignParentEnd="true"
