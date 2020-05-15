@@ -60,6 +60,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
                             this@LikedSongsActivity,
                             music.name,
                             music.artist,
+                            music.physicStoredPath,
                             getString(PLAYLIST_NAME)
                         )
 

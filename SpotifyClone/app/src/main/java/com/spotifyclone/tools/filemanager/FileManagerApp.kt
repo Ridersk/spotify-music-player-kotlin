@@ -8,6 +8,7 @@ import android.os.Environment
 import android.os.storage.StorageManager
 import android.os.storage.StorageManager.ACTION_MANAGE_STORAGE
 import android.provider.MediaStore
+import android.widget.CursorAdapter
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
@@ -100,19 +101,20 @@ class FileManagerApp {
                 order
             )
 
-
             val musics = mutableListOf<Music>()
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     val name = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
                     val album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
                     val author = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
-                    if (name != - 1 && album != -1) {
+                    val path = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
 
+                    if (name != - 1 && album != -1 && author != - 1 && path != -1) {
                         musics.add(Music(
                             title = if (cursor.getString(name).contains("<unknown>")) "" else cursor.getString(name),
                             artist = if (cursor.getString(author).contains("<unknown>")) "" else cursor.getString(author),
-                            album =  if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(album)
+                            album =  if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(album),
+                            physicStoredPath = cursor.getString(path)
                         ))
                     }
 

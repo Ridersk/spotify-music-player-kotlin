@@ -13,6 +13,7 @@ import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.home.HomeActivity
 import com.spotifyclone.presentation.login.LoginActivity
 import com.spotifyclone.presentation.playlist.LikedSongsActivity
+import com.spotifyclone.tools.musicplayer.SpotifyMediaPlayer
 
 
 class MainActivity : BaseActivity() {
@@ -22,15 +23,18 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-        val intent: Intent
-        val userLogged = false
-        val development = true
-
         isStoragePermissionGranted()
         if (!isStoragePermissionGranted()) {
             // intent = activityRequestPermissions
         }
+        startResources()
+        startAcitivityApp()
+    }
+
+    private fun startAcitivityApp() {
+        val intent: Intent
+        val userLogged = false
+        val development = true
 
         if (development) {
             intent = getActivityBeingTested()
@@ -43,6 +47,10 @@ class MainActivity : BaseActivity() {
         }
 
         context.startActivity(intent)
+    }
+
+    private fun startResources() {
+        // TODO
     }
 
     private fun isStoragePermissionGranted(): Boolean {
