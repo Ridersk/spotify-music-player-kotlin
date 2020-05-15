@@ -2,13 +2,13 @@ package com.spotifyclone.presentation.music
 
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.ViewGroup
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.tools.musicplayer.SpotifyMediaPlayer
+import com.spotifyclone.tools.statemanager.ButtonManager
 import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -31,16 +31,30 @@ class MusicPlayerActivity : BaseActivity() {
             )
         )
 
+        initComponents()
+        startMusic()
+    }
+
+    private fun initComponents() {
         val layout: ViewGroup = activityMusicPlayer
 
+        // Texts
         layout.textMusicName.text = intent.getStringExtra(EXTRA_NAME)
         layout.textMusicArtist.text = intent.getStringExtra(EXTRA_AUTHOR)
 
-        playMusic()
+        // Buttons
+        val buttonPlay = ButtonManager(
+            this@MusicPlayerActivity,
+            layout.buttonPlayMusic,
+            listOf(R.drawable.ic_play_music, R.drawable.ic_pause_music)
+        ) {
+            musicPlayer.playMusic()
+        }
     }
 
-    private fun playMusic () {
-        musicPlayer.playMusic(intent.getStringExtra(EXTRA_PHYSIC_PATH)!!)
+    private fun startMusic () {
+        musicPlayer.prepareMusic(intent.getStringExtra(EXTRA_PHYSIC_PATH)!!)
+        musicPlayer.playMusic()
     }
 
     companion object {
