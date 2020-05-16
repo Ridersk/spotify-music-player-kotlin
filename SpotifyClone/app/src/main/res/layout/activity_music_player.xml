@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activityMusicPlayer"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityMusicPlayer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_dark_brown"
@@ -69,17 +69,27 @@
             </RelativeLayout>
 
 
-            <androidx.slidingpanelayout.widget.SlidingPaneLayout
+            <RelativeLayout
+                android:id="@+id/layoutMusicProgress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layoutMusicName" >
+                <ProgressBar
+                    android:id="@+id/progressBarMusic"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:progressTint="@color/white"
+                    android:progress="0"
+                    android:max="100"/>
+            </RelativeLayout>
 
-            </androidx.slidingpanelayout.widget.SlidingPaneLayout>
 
             <RelativeLayout
                 android:id="@+id/layoutMusicControl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/layoutMusicName">
+                android:layout_below="@id/layoutMusicProgress">
 
                 <Button
                     android:id="@+id/buttonRandomMusic"

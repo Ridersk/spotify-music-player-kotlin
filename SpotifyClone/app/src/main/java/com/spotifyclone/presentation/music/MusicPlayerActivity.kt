@@ -20,6 +20,7 @@ class MusicPlayerActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.activity_music_player)
+        super.onCreate(savedInstanceState)
 
         setupToolbar(
             ToolbarParameters(
@@ -32,7 +33,6 @@ class MusicPlayerActivity : BaseActivity() {
         )
 
         startMusic()
-        super.onCreate(savedInstanceState)
     }
 
     override fun initComponents() {
@@ -51,7 +51,15 @@ class MusicPlayerActivity : BaseActivity() {
             musicPlayer.playMusic()
         }
 
-        musicPlayer.setObserversOnCompletion(listOf { buttonPlay.toggleOption() })
+        // Progress Bar
+        val progressBar = layout.progressBarMusic
+
+        musicPlayer.setObserversOnCompletion {
+            buttonPlay.toggleOption()
+        }
+        musicPlayer.setObserversProgressBar { progress ->
+            progressBar.progress = progress
+        }
     }
 
     private fun startMusic() {

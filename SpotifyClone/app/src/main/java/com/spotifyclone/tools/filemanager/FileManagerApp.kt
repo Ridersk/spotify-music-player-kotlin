@@ -4,12 +4,13 @@ import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
+import android.media.MediaMetadata
+import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.os.Environment
 import android.os.storage.StorageManager
 import android.os.storage.StorageManager.ACTION_MANAGE_STORAGE
 import android.provider.MediaStore
-import android.widget.CursorAdapter
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
@@ -38,13 +39,12 @@ class FileManagerApp {
 
             context.startActivity(storageIntent)
         }
-
     }
 
     companion object {
         private const val PATH_MUSIC_LIST_DIRECTORY = "musics"
-        const val SEARCH_SCOPED_DIRECTORY = "scope_dir"
-        const val SEARCH_MEDIA_AUDIO = "media_audio_dir"
+        private const val SEARCH_SCOPED_DIRECTORY = "scope_dir"
+        private const val SEARCH_MEDIA_AUDIO = "media_audio_dir"
 
         fun createFile(context: Context, filename: String, contents: String, parentPath: String = "") {
 
@@ -86,10 +86,10 @@ class FileManagerApp {
         @SuppressLint("Recycle")
         private fun getMusicsFromMediaAudioDirectories(context: Context): MutableList<Music> {
             val projection = arrayOf(
+                MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media._ID
+                MediaStore.Audio.Media.ALBUM
             )
 
             val order = MediaStore.Files.FileColumns.DISPLAY_NAME + " ASC"
@@ -104,18 +104,21 @@ class FileManagerApp {
 
             val musics = mutableListOf<Music>()
             if (cursor != null) {
+                val id = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
                 val name = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
                 val album = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
                 val author = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
-                val path = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+
+                val mediaRetriever = MediaMetadataRetriever()
+
 
                 while (cursor.moveToNext()) {
 
                     musics.add(Music(
+                        contentUriId = cursor.getLong(id),
                         title = if (cursor.getString(name).contains("<unknown>")) "" else cursor.getString(name),
                         artist = if (cursor.getString(author).contains("<unknown>")) "" else cursor.getString(author),
-                        album =  if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(album),
-                        contentUriId = cursor.getLong(path)
+                        album =  if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(album)
                     ))
 
                 }

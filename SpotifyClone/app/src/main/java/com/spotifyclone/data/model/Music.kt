@@ -1,7 +1,5 @@
 package com.spotifyclone.data.model
 
-import android.content.ContentUris
-
 class Music {
     var name: String = "Unknown Title"
     var artist: String = "Unknown Artist"
