@@ -35,7 +35,7 @@ class ButtonManager (
         }
     }
 
-    private fun toggleOption() {
+    fun toggleOption() {
         selectedOption = (selectedOption + 1) % drawOptions.size
         this.renderIcon()
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.VideoView
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
@@ -22,11 +23,11 @@ class MusicPlayerActivity : BaseActivity() {
 
         setupToolbar(
             ToolbarParameters(
-                toolbar =  toolbarMain,
-                title =  intent.getStringExtra(EXTRA_PLAYLIST),
+                toolbar = toolbarMain,
+                title = intent.getStringExtra(EXTRA_PLAYLIST),
                 subTitle = getString(R.string.music_toolbar_subTitle),
-                option1 =  Pair(R.drawable.ic_close, {super.onBackPressed()}),
-                option3 =  Pair(R.drawable.ic_options, {})
+                option1 = Pair(R.drawable.ic_close, { super.onBackPressed() }),
+                option3 = Pair(R.drawable.ic_options, {})
             )
         )
 
@@ -49,28 +50,31 @@ class MusicPlayerActivity : BaseActivity() {
         ) {
             musicPlayer.playMusic()
         }
+
+        musicPlayer.setObserversOnCompletion(listOf { buttonPlay.toggleOption() })
     }
 
-    private fun startMusic () {
-        musicPlayer.prepareMusic(intent.getStringExtra(EXTRA_PHYSIC_PATH)!!)
+    private fun startMusic() {
+        musicPlayer.prepareMusic(intent.getLongExtra(CONTENT_URI_ID, -1L))
         musicPlayer.playMusic()
+
     }
 
     companion object {
         private const val EXTRA_NAME = "EXTRA_NAME"
         private const val EXTRA_AUTHOR = "EXTRA_AUTHOR"
         private const val EXTRA_PLAYLIST = "EXTRA_PLAYLIST"
-        private const val EXTRA_PHYSIC_PATH = "EXTRA_PHYSIC_PATH"
+        private const val CONTENT_URI_ID = "CONTENT_URI_ID"
 
         fun getStartIntent(
-            context: Context, name: String, author: String, path: String, playlist: String
-        ) : Intent {
+            context: Context, name: String, author: String, contentUriId: Long, playlist: String
+        ): Intent {
 
             return Intent(context, MusicPlayerActivity::class.java).apply {
                 putExtra(EXTRA_NAME, name)
                 putExtra(EXTRA_AUTHOR, author)
-                putExtra(EXTRA_PLAYLIST,  playlist)
-                putExtra(EXTRA_PHYSIC_PATH, path)
+                putExtra(EXTRA_PLAYLIST, playlist)
+                putExtra(CONTENT_URI_ID, contentUriId)
             }
         }
 

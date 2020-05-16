@@ -32,7 +32,7 @@ class MainActivity : BaseActivity() {
     override fun initComponents() {
         val intent: Intent
         val userLogged = false
-        val development = false
+        val development = true
 
         if (development) {
             intent = getActivityBeingTested()

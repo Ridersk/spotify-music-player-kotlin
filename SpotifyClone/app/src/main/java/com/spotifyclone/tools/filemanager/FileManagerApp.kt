@@ -1,6 +1,7 @@
 package com.spotifyclone.tools.filemanager
 
 import android.annotation.SuppressLint
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -88,7 +89,7 @@ class FileManagerApp {
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.DATA
+                MediaStore.Audio.Media._ID
             )
 
             val order = MediaStore.Files.FileColumns.DISPLAY_NAME + " ASC"
@@ -103,20 +104,19 @@ class FileManagerApp {
 
             val musics = mutableListOf<Music>()
             if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    val name = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-                    val album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
-                    val author = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
-                    val path = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+                val name = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+                val album = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
+                val author = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+                val path = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
 
-                    if (name != - 1 && album != -1 && author != - 1 && path != -1) {
-                        musics.add(Music(
-                            title = if (cursor.getString(name).contains("<unknown>")) "" else cursor.getString(name),
-                            artist = if (cursor.getString(author).contains("<unknown>")) "" else cursor.getString(author),
-                            album =  if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(album),
-                            physicStoredPath = cursor.getString(path)
-                        ))
-                    }
+                while (cursor.moveToNext()) {
+
+                    musics.add(Music(
+                        title = if (cursor.getString(name).contains("<unknown>")) "" else cursor.getString(name),
+                        artist = if (cursor.getString(author).contains("<unknown>")) "" else cursor.getString(author),
+                        album =  if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(album),
+                        contentUriId = cursor.getLong(path)
+                    ))
 
                 }
             }

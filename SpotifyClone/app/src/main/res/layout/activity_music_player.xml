@@ -68,6 +68,13 @@
 
             </RelativeLayout>
 
+
+            <androidx.slidingpanelayout.widget.SlidingPaneLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+
             <RelativeLayout
                 android:id="@+id/layoutMusicControl"
                 android:layout_width="match_parent"

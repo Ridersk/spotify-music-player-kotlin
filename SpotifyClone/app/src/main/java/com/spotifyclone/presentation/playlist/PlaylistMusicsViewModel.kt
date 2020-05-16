@@ -28,17 +28,11 @@ class PlaylistMusicsViewModel(
         val a = "teste"
         a.length
         musicsLiveData.value = musicList
-
     }
 
     private fun getRepositoryMusics(): MutableList<Music> {
 
         return FileManagerApp.getMusicList(parentContext)
-//        return mutableListOf(
-//            Music("Session", "Linkin Park", "Meteora"),
-//            Music("Paradise City", "Guns N'Roses", "Use Your Illusion II"),
-//            Music("Critical Acclaim", "Avenged Sevenfold", "")
-//        )
     }
 
     class ViewModelFactory(private val parentContext: Context) : ViewModelProvider.Factory {

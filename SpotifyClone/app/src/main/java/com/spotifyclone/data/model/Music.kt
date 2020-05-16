@@ -1,12 +1,14 @@
 package com.spotifyclone.data.model
 
+import android.content.ContentUris
+
 class Music {
     var name: String = "Unknown Title"
     var artist: String = "Unknown Artist"
     var album: String = "Unknown Album"
-    var physicStoredPath: String = ""
+    var contentUriId: Long = -1L
 
-    constructor(title: String? = "", artist: String? = "", album: String? = "", physicStoredPath: String? = "") {
+    constructor(title: String? = "", artist: String? = "", album: String? = "", contentUriId: Long? = -1L) {
 
         if (title != null && title.isNotEmpty()) {
             this.name = title
@@ -17,8 +19,8 @@ class Music {
         if (album != null && album.isNotEmpty()) {
             this.album = album
         }
-        if (physicStoredPath != null && physicStoredPath.isNotEmpty()) {
-            this.physicStoredPath = physicStoredPath
+        if (contentUriId != null && contentUriId != -1L) {
+            this.contentUriId = contentUriId
         }
     }
 }
