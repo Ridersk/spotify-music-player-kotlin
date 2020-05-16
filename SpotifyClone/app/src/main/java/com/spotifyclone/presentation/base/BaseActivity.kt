@@ -1,5 +1,6 @@
 package com.spotifyclone.presentation.base
 
+import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -9,6 +10,11 @@ import kotlinx.android.synthetic.main.include_toolbar.view.*
 abstract class BaseActivity : AppCompatActivity() {
 
     private var toolbarArgs: ToolbarParameters? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        initComponents()
+        super.onCreate(savedInstanceState)
+    }
 
     protected fun setupToolbar(toolbarArgs: ToolbarParameters) {
         this.toolbarArgs = toolbarArgs
@@ -43,4 +49,7 @@ abstract class BaseActivity : AppCompatActivity() {
             setSupportActionBar(toolbarMain)
         }
     }
+
+
+    protected abstract fun initComponents()
 }

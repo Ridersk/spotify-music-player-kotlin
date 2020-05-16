@@ -18,8 +18,7 @@ class MusicPlayerActivity : BaseActivity() {
     private val musicPlayer = SpotifyMediaPlayer.getInstance(this@MusicPlayerActivity)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_music_player)
+        super.setContentView(R.layout.activity_music_player)
 
         setupToolbar(
             ToolbarParameters(
@@ -31,11 +30,11 @@ class MusicPlayerActivity : BaseActivity() {
             )
         )
 
-        initComponents()
         startMusic()
+        super.onCreate(savedInstanceState)
     }
 
-    private fun initComponents() {
+    override fun initComponents() {
         val layout: ViewGroup = activityMusicPlayer
 
         // Texts
@@ -46,7 +45,7 @@ class MusicPlayerActivity : BaseActivity() {
         val buttonPlay = ButtonManager(
             this@MusicPlayerActivity,
             layout.buttonPlayMusic,
-            listOf(R.drawable.ic_play_music, R.drawable.ic_pause_music)
+            listOf(R.drawable.ic_pause_music, R.drawable.ic_play_music)
         ) {
             musicPlayer.playMusic()
         }

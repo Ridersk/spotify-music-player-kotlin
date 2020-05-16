@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.include_toolbar.*
 class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
 
@@ -27,6 +26,10 @@ class HomeActivity : BaseActivity() {
             )
         )
 
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun initComponents() {
         val layout: ViewGroup = activityHome
         setRecommendedPlaylistsGrid(layout)
     }

@@ -18,12 +18,7 @@ import kotlinx.android.synthetic.main.include_toolbar.*
 class LikedSongsActivity : BaseActivity(), PlaylistInterface {
 
 
-    override fun getPlaylistName() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liked_songs)
 
         setupToolbar(
@@ -35,6 +30,10 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
             )
         )
 
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun initComponents() {
         val layout: ViewGroup = activityLikedSongs
         with(layout) {
             textTitle.text = intent.getStringExtra(EXTRA_TITLE)
@@ -43,6 +42,10 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
         }
 
         setMusicList(layout)
+    }
+
+    override fun getPlaylistName() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     fun setMusicList(layout: ViewGroup) {

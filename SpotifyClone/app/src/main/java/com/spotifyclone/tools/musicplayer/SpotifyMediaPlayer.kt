@@ -13,6 +13,7 @@ class SpotifyMediaPlayer private constructor(context: Context) : MediaPlayer() {
     }
 
     fun prepareMusic(path: String) {
+        super.reset()
         super.setDataSource(path)
         super.prepare()
     }

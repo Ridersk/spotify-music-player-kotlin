@@ -21,20 +21,18 @@ class MainActivity : BaseActivity() {
     val context = this@MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         isStoragePermissionGranted()
         if (!isStoragePermissionGranted()) {
             // intent = activityRequestPermissions
         }
-        startResources()
-        startAcitivityApp()
+
+        super.onCreate(savedInstanceState)
     }
 
-    private fun startAcitivityApp() {
+    override fun initComponents() {
         val intent: Intent
         val userLogged = false
-        val development = true
+        val development = false
 
         if (development) {
             intent = getActivityBeingTested()
@@ -47,10 +45,6 @@ class MainActivity : BaseActivity() {
         }
 
         context.startActivity(intent)
-    }
-
-    private fun startResources() {
-        // TODO
     }
 
     private fun isStoragePermissionGranted(): Boolean {

@@ -12,9 +12,7 @@ import kotlinx.android.synthetic.main.activity_login.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 
 class CredentialsActivity : BaseActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credentials)
 
         setupToolbar(
@@ -25,16 +23,16 @@ class CredentialsActivity : BaseActivity() {
             )
         )
 
-        val layout: ViewGroup = activityCredentials
-        setForm(layout)
+        super.onCreate(savedInstanceState)
     }
 
-    fun setForm(layout: ViewGroup) {
+    override fun initComponents() {
+        val layout: ViewGroup = activityCredentials
         with(layout) {
-            labelEmailInput.text = getString(R.string.credentials_label_email)
-            labelPasswordInput.text = getString(R.string.credentials_label_password)
-            loginButton.text = getString(R.string.credentials_button_login)
-            forgotPassword.text = getString(R.string.credentials_button_forgot_password)
+            labelEmailInput.text = getString(com.spotifyclone.R.string.credentials_label_email)
+            labelPasswordInput.text = getString(com.spotifyclone.R.string.credentials_label_password)
+            loginButton.text = getString(com.spotifyclone.R.string.credentials_button_login)
+            forgotPassword.text = getString(com.spotifyclone.R.string.credentials_button_forgot_password)
         }
 
         layout.loginButton.setOnClickListener {
@@ -42,4 +40,5 @@ class CredentialsActivity : BaseActivity() {
             this@CredentialsActivity.startActivity(intent)
         }
     }
+
 }

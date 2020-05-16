@@ -11,10 +11,12 @@ import kotlinx.android.synthetic.main.activity_login.view.*
 class LoginActivity : BaseActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        super.onCreate(savedInstanceState)
+    }
 
+    override fun initComponents() {
         val layout: ViewGroup = activityLogin
         with(layout) {
             spotifyBrand.text = getString(R.string.login_spotify_brand)
