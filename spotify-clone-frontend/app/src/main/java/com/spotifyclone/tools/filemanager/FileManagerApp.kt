@@ -1,10 +1,8 @@
 package com.spotifyclone.tools.filemanager
 
 import android.annotation.SuppressLint
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
-import android.media.MediaMetadata
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.os.Environment
@@ -132,7 +130,7 @@ class FileManagerApp {
             if (!directoryDefault.exists()) {
                 directoryDefault.mkdirs()
             }
-            val list = directoryDefault.listFiles { _, name -> name.toLowerCase().endsWith(".txt") }
+            val list = directoryDefault.listFiles { _, name -> name.toLowerCase(Locale.ROOT).endsWith(".txt") }
 
             val musics = mutableListOf<Music>()
 

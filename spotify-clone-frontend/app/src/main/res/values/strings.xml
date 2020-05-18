@@ -9,7 +9,7 @@
     <string name="login_button_sign_up">SIGN UP FREE</string>
     <string name="login_button_facebook">CONTINUE WITH FACEBOOK</string>
     <string name="login_button_login">LOG IN</string>
-    <string name="login_spotify_brand_img_description">Spotify Logo</string>
+    <string name="login_spotify_img_description_brand">Spotify Logo</string>
 
     <!-- Login Credentials Activity-->
     <string name="credentials_toolbar_title" />
@@ -17,6 +17,8 @@
     <string name="credentials_label_password">Password</string>
     <string name="credentials_button_login">LOG IN</string>
     <string name="credentials_button_forgot_password">FORGOT YOUR PASSWORD?</string>
+    <string name="credentials_input_hint_email">Your E-mail</string>
+    <string name="credentials_input_hint_password">Your Password</string>
 
     <!-- Home Activity -->
     <string name="home_toolbar_title" />
@@ -24,12 +26,28 @@
 
     <!-- Liked Songs Activity -->
     <string name="liked_playlist_title">Liked Songs</string>
-    <string name="liked_text_title">Liked Songs</string>
     <string name="liked_button_random_play">SHUFFLE PLAY</string>
     <string name="liked_text_downloaded_songs">Downloaded Songs</string>
 
     <!-- Music Player Activity -->
     <string name="music_album_image">Music Album Image</string>
     <string name="music_toolbar_subTitle">PLAYING FROM YOUR LIBRARY</string>
+
+
+    <!-- Include Toolbar -->
+    <string name="include_toolbar_img_description_btn1">Screen Close Button</string>
+    <string name="include_toolbar_img_description_btn2">
+        Additional or Optional Button for some screens
+    </string>
+    <string name="include_toolbar_img_description_btn3">Screen Options Button</string>
+
+    <!-- Item Music -->
+    <string name="item_music_img_description_download">Download Button</string>
+
+    <!-- Item Recommended Playlist -->
+    <string name="item_recommended_playlist_img_description_playlist_card_background">
+        Download Button
+    </string>
+
 
 </resources>

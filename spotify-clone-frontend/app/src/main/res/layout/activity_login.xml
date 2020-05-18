@@ -12,7 +12,7 @@
         android:id="@+id/spotifyLogo"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:contentDescription="@string/login_spotify_brand_img_description"
+        android:contentDescription="@string/login_spotify_img_description_brand"
         android:src="@drawable/ic_spotify_logo_white_black"
         app:layout_constraintBottom_toTopOf="@+id/spotifyBrand"
         app:layout_constraintLeft_toLeftOf="parent"

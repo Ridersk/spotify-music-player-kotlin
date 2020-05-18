@@ -1,13 +1,17 @@
 package com.spotifyclone.data.model
 
-class Music {
+class Music(
+    title: String? = "",
+    artist: String? = "",
+    album: String? = "",
+    contentUriId: Long? = -1L
+) {
     var name: String = "Unknown Title"
     var artist: String = "Unknown Artist"
     var album: String = "Unknown Album"
     var contentUriId: Long = -1L
 
-    constructor(title: String? = "", artist: String? = "", album: String? = "", contentUriId: Long? = -1L) {
-
+    init {
         if (title != null && title.isNotEmpty()) {
             this.name = title
         }

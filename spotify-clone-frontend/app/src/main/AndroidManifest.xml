@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_spotify_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:fullBackupContent="true">
         <activity android:name="com.spotifyclone.presentation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

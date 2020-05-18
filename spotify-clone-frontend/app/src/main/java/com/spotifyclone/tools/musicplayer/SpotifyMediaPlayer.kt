@@ -4,11 +4,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
 import android.provider.MediaStore
-import androidx.core.os.postAtTime
 import com.spotifyclone.tools.basepatterns.SingletonHolder
 import java.io.FileDescriptor
 import java.util.*
@@ -50,7 +46,7 @@ class SpotifyMediaPlayer private constructor(val context: Context) : MediaPlayer
         super.start()
     }
 
-    fun pauseMusic() {
+    private fun pauseMusic() {
         super.pause()
     }
 

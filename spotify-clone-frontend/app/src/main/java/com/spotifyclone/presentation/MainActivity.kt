@@ -3,7 +3,6 @@ package com.spotifyclone.presentation
 import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +12,6 @@ import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.home.HomeActivity
 import com.spotifyclone.presentation.login.LoginActivity
 import com.spotifyclone.presentation.playlist.LikedSongsActivity
-import com.spotifyclone.tools.musicplayer.SpotifyMediaPlayer
 
 
 class MainActivity : BaseActivity() {
@@ -30,14 +28,10 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initComponents() {
-        val intent: Intent
-        val userLogged = false
-        val development = true
-
-        if (development) {
-            intent = getActivityBeingTested()
+        val intent: Intent = if (DEVELOPMENT) {
+            getActivityBeingTested()
         } else {
-            intent = if (userLogged) {
+            if (USER_LOGGED) {
                 Intent(context, HomeActivity::class.java)
             } else {
                 Intent(context, LoginActivity::class.java)
@@ -75,5 +69,10 @@ class MainActivity : BaseActivity() {
 
     private fun getActivityBeingTested(): Intent {
         return Intent(context, LikedSongsActivity::class.java)
+    }
+
+    companion object {
+        private const val USER_LOGGED = true
+        private const val DEVELOPMENT = true
     }
 }

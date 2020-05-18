@@ -48,7 +48,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun setMusicList(layout: ViewGroup) {
+    private fun setMusicList(layout: ViewGroup) {
         val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
             .ViewModelFactory(this@LikedSongsActivity).create(PlaylistMusicsViewModel::class.java)
 
@@ -78,7 +78,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
     }
 
     companion object {
-        private val PLAYLIST_NAME: Int = R.string.liked_playlist_title
+        private const val PLAYLIST_NAME: Int = R.string.liked_playlist_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
         fun getStartIntent(context: Context, title: String): Intent {

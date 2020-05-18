@@ -24,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/buttonOptions"
-        android:layout_below="@id/textMusicName">
+        android:layout_below="@id/textMusicName"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:id="@+id/imageDownload"
@@ -35,7 +36,8 @@
             android:adjustViewBounds="true"
             android:maxWidth="15dp"
             android:maxHeight="15dp"
-            android:src="@drawable/ic_download" />
+            android:src="@drawable/ic_download"
+            android:contentDescription="@string/item_music_img_description_download" />
 
         <TextView
             android:id="@+id/textMusicLabel"

@@ -8,7 +8,8 @@ import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_credentials.*
-import kotlinx.android.synthetic.main.activity_login.view.*
+import kotlinx.android.synthetic.main.activity_credentials.view.*
+import kotlinx.android.synthetic.main.activity_login.view.loginButton
 import kotlinx.android.synthetic.main.include_toolbar.*
 
 class CredentialsActivity : BaseActivity() {
@@ -28,12 +29,10 @@ class CredentialsActivity : BaseActivity() {
 
     override fun initComponents() {
         val layout: ViewGroup = activityCredentials
-        with(layout) {
-            labelEmailInput.text = getString(com.spotifyclone.R.string.credentials_label_email)
-            labelPasswordInput.text = getString(com.spotifyclone.R.string.credentials_label_password)
-            loginButton.text = getString(com.spotifyclone.R.string.credentials_button_login)
-            forgotPassword.text = getString(com.spotifyclone.R.string.credentials_button_forgot_password)
-        }
+        layout.labelEmailInput.text = getString(R.string.credentials_label_email)
+        layout.labelPasswordInput.text = getString(R.string.credentials_label_password)
+        layout.loginButton.text = getString(R.string.credentials_button_login)
+        layout.forgotPassword.text = getString(R.string.credentials_button_forgot_password)
 
         layout.loginButton.setOnClickListener {
             val intent = Intent(this@CredentialsActivity, HomeActivity::class.java)

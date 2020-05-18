@@ -5,7 +5,6 @@
     android:id="@+id/toolbarMain"
     android:layout_width="match_parent"
     android:layout_height="55dp"
-    android:background="@color/transparent"
     android:contentInsetLeft="0dp"
     android:contentInsetRight="0dp"
     app:contentInsetLeft="0dp"
@@ -24,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            tools:src="@drawable/ic_close" />
+            tools:src="@drawable/ic_close"
+            android:contentDescription="@string/include_toolbar_img_description_btn1" />
 
         <LinearLayout
             android:id="@+id/layoutToolbarTitle"
@@ -65,7 +65,8 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
             android:layout_toStartOf="@+id/iconOption3"
-            tools:src="@drawable/ic_heart_white" />
+            tools:src="@drawable/ic_heart_white"
+            android:contentDescription="@string/include_toolbar_img_description_btn2" />
 
         <ImageView
             android:id="@+id/iconOption3"
@@ -73,7 +74,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            tools:src="@drawable/ic_options" />
+            tools:src="@drawable/ic_options"
+            android:contentDescription="@string/include_toolbar_img_description_btn3" />
 
     </RelativeLayout>
 </androidx.appcompat.widget.Toolbar>

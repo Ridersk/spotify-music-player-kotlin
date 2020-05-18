@@ -37,11 +37,11 @@ class HomeActivity : BaseActivity() {
     override fun onBackPressed() {
         val mainIntent = Intent(Intent.ACTION_MAIN)
         mainIntent.addCategory(Intent.CATEGORY_HOME)
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(mainIntent)
     }
 
-    fun setRecommendedPlaylistsGrid(layout: ViewGroup) {
+    private fun setRecommendedPlaylistsGrid(layout: ViewGroup) {
         val viewModel: RecommendedPlaylistsViewModel = RecommendedPlaylistsViewModel
             .ViewModelFactory().create(RecommendedPlaylistsViewModel::class.java)
 
