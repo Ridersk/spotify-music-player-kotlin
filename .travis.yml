@@ -1,0 +1,8 @@
+language: java
+jdk:
+    -oraclejdk8
+before_install:
+    - chmod +x spotify-clone-frontend/gradlew
+    - chmod +x spotify-clone-fronted/gradle/wrapper/gradle-wrapper.jar
+script:
+    - ./gradlew test build
