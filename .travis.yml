@@ -3,6 +3,6 @@ jdk:
     - openjdk8
 before_install:
     - chmod +x spotify-clone-frontend/gradlew
-    - chmod +x spotify-clone-fronted/gradle/wrapper/gradle-wrapper.jar
+    - chmod +x spotify-clone-frontend/gradle/wrapper/gradle-wrapper.jar
 script:
-    - ./gradlew test build
+    - ./spotify-clone-frontend/gradlew build
