@@ -27,7 +27,8 @@ class FileManagerApp {
         val availableBytes: Long = storageManager.getAllocatableBytes(appSpecificInternalDirUuid)
 
         if (availableBytes >= requiredStorageBytes) {
-            storageManager.allocateBytes(appSpecificInternalDirUuid,
+            storageManager.allocateBytes(
+                appSpecificInternalDirUuid,
                 requiredStorageBytes
             )
         } else {
@@ -44,7 +45,12 @@ class FileManagerApp {
         private const val SEARCH_SCOPED_DIRECTORY = "scope_dir"
         private const val SEARCH_MEDIA_AUDIO = "media_audio_dir"
 
-        fun createFile(context: Context, filename: String, contents: String, parentPath: String = "") {
+        fun createFile(
+            context: Context,
+            filename: String,
+            contents: String,
+            parentPath: String = ""
+        ) {
 
             val storageLocalPath =
                 getStorageLocationPath(
@@ -60,7 +66,7 @@ class FileManagerApp {
             val appFile = File(newDirectory, filename)
 
 
-            try{
+            try {
                 val fw = FileWriter(appFile.absoluteFile)
                 val bw = BufferedWriter(fw)
 
@@ -73,7 +79,10 @@ class FileManagerApp {
 
         }
 
-        fun getMusicList(context: Context, searchRange: String = SEARCH_MEDIA_AUDIO): MutableList<Music> {
+        fun getMusicList(
+            context: Context,
+            searchRange: String = SEARCH_MEDIA_AUDIO
+        ): MutableList<Music> {
             return when (searchRange) {
                 SEARCH_MEDIA_AUDIO -> getMusicsFromMediaAudioDirectories(context)
                 SEARCH_SCOPED_DIRECTORY -> getMusicsScoped(context)
@@ -112,12 +121,20 @@ class FileManagerApp {
 
                 while (cursor.moveToNext()) {
 
-                    musics.add(Music(
-                        contentUriId = cursor.getLong(id),
-                        title = if (cursor.getString(name).contains("<unknown>")) "" else cursor.getString(name),
-                        artist = if (cursor.getString(author).contains("<unknown>")) "" else cursor.getString(author),
-                        album =  if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(album)
-                    ))
+                    musics.add(
+                        Music(
+                            contentUriId = cursor.getLong(id),
+                            title = if (cursor.getString(name).contains("<unknown>")) "" else cursor.getString(
+                                name
+                            ),
+                            artist = if (cursor.getString(author).contains("<unknown>")) "" else cursor.getString(
+                                author
+                            ),
+                            album = if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(
+                                album
+                            )
+                        )
+                    )
 
                 }
             }
@@ -130,7 +147,9 @@ class FileManagerApp {
             if (!directoryDefault.exists()) {
                 directoryDefault.mkdirs()
             }
-            val list = directoryDefault.listFiles { _, name -> name.toLowerCase(Locale.ROOT).endsWith(".txt") }
+            val list = directoryDefault.listFiles { _, name ->
+                name.toLowerCase(Locale.ROOT).endsWith(".txt")
+            }
 
             val musics = mutableListOf<Music>()
 
@@ -143,7 +162,7 @@ class FileManagerApp {
                     val musicAuthor = br.readLine()
                     val musicAlbum = br.readLine()
 
-                    musics.add(Music(musicName?:"", musicAuthor?:"", musicAlbum?:""))
+                    musics.add(Music(musicName ?: "", musicAuthor ?: "", musicAlbum ?: ""))
 
                     br.close()
 
