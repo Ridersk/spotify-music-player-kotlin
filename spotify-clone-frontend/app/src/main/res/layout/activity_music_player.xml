@@ -28,6 +28,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/imageAlbum"
+            android:layout_marginTop="80dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="50dp">
 
@@ -68,20 +70,32 @@
 
             </RelativeLayout>
 
-
             <RelativeLayout
                 android:id="@+id/layoutMusicProgress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/layoutMusicName" >
-                <ProgressBar
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/layoutMusicName">
+
+                <SeekBar
                     android:id="@+id/progressBarMusic"
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:progressTint="@color/white"
+                    android:max="100"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:progress="0"
-                    android:max="100"/>
+                    android:progressTint="@color/white"
+                    android:thumbTint="@color/white" />
+
+                <TextView
+                    android:id="@+id/textMusicTime"
+                    style="@style/smallTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/progressBarMusic"
+                    android:text="@string/music_progress_init_time"/>
             </RelativeLayout>
 
 
@@ -108,16 +122,16 @@
 
                     <Button
                         android:id="@+id/buttonPreviousMusic"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_centerInParent="true"
                         android:layout_toStartOf="@id/buttonPlayMusic"
                         android:background="@drawable/ic_previous_music" />
 
                     <Button
                         android:id="@+id/buttonPlayMusic"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:layout_centerInParent="true"
                         android:layout_marginStart="30dp"
                         android:layout_marginEnd="30dp"
@@ -125,8 +139,8 @@
 
                     <Button
                         android:id="@+id/buttonNextMusic"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_centerInParent="true"
                         android:layout_toEndOf="@id/buttonPlayMusic"
                         android:background="@drawable/ic_next_music" />

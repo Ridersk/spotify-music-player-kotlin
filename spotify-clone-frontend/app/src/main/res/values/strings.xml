@@ -32,6 +32,7 @@
     <!-- Music Player Activity -->
     <string name="music_album_image">Music Album Image</string>
     <string name="music_toolbar_subTitle">PLAYING FROM YOUR LIBRARY</string>
+    <string name="music_progress_init_time">0:00</string>
 
 
     <!-- Include Toolbar -->

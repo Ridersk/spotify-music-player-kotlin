@@ -5,6 +5,7 @@ import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.provider.MediaStore
+import android.widget.SeekBar
 import com.spotifyclone.tools.basepatterns.SingletonHolder
 import java.io.FileDescriptor
 import java.util.*
@@ -14,17 +15,23 @@ class SpotifyMediaPlayer private constructor(val context: Context) : MediaPlayer
     private var stoppedPlayer: Boolean = false
     private var currentMusic: FileDescriptor? = null
     private val mediaMetada = MediaMetadataRetriever()
-    private var musicDuration: Int = 1
+    private var musicDurationMilisec: Int = 0
+    private var blockUpdateProgress = false
+    private var observerTimer: ((String) -> Unit)? = null
+    private var observerProgress: ((Int) -> Unit)? = null
+    private var progress: Int = 0
 
     init {
         super.reset()
+        musicRefresh()
     }
 
     fun prepareMusic(contentUriId: Long) {
         super.reset()
         currentMusic = getAudioFile(contentUriId)
         mediaMetada.setDataSource(currentMusic)
-        musicDuration = mediaMetada.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+        musicDurationMilisec =
+            mediaMetada.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
         super.setDataSource(currentMusic)
         super.prepare()
     }
@@ -50,11 +57,7 @@ class SpotifyMediaPlayer private constructor(val context: Context) : MediaPlayer
         super.pause()
     }
 
-    fun stopMusic() {
-        super.stop()
-    }
-
-    fun setObserversOnCompletion(callback: () -> Unit) {
+    fun setObserverOnCompletion(callback: () -> Unit) {
         super.setOnCompletionListener {
             if (!super.isPlaying()) {
                 callback.invoke()
@@ -62,23 +65,95 @@ class SpotifyMediaPlayer private constructor(val context: Context) : MediaPlayer
         }
     }
 
-    fun setObserversProgressBar(callback: (progress: Int) -> Unit) {
-        updateProgressBar(callback)
+    fun setObserverMusicTime(callback: (time: String) -> Unit) {
+        observerTimer = callback
     }
 
-    private fun updateProgressBar(callback: (progress: Int) -> Unit) {
+    fun setObserverProgressBar(callback: (progress: Int) -> Unit) {
+        observerProgress = callback
+    }
+
+    private fun musicRefresh() {
+        Timer().scheduleAtFixedRate(
+            object : TimerTask() {
+                override fun run() {
+                    updateProgressbarObserver()
+                }
+            },
+            0,
+            50
+        )
 
         Timer().scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {
-                    val progress: Int = (currentPosition * 100)/musicDuration
-                    callback.invoke(progress)
+                    updateTimerObserver()
                 }
             },
             0,
-            200
+            1000
         )
     }
+
+    private fun updateTimerObserver() {
+        if (!blockUpdateProgress && observerTimer != null) {
+            val time: Pair<Int, Int> = convertToMinutes(currentPosition)
+            setTimeOnObserverTimer(time)
+        }
+    }
+
+    private fun updateProgressbarObserver() {
+        if (!blockUpdateProgress && observerProgress != null) {
+            setProgressOnObserverProgress(calculateProgress(currentPosition))
+        }
+    }
+
+    private fun setTimeOnObserverTimer(time: Pair<Int, Int>) {
+        observerTimer!!.invoke(
+            "${time.first}:${if (time.second < 10) "0" else ""}${time.second}"
+        )
+    }
+
+    private fun setProgressOnObserverProgress(progress: Int) {
+        this.progress = progress
+        observerProgress!!.invoke(progress)
+    }
+
+    private fun updateProgressOnMusicPlayer() {
+        super.seekTo(calculateMiliseconds(progress))
+    }
+
+    val progressControl = object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            if (fromUser) {
+                setProgressOnObserverProgress(progress)
+                setTimeOnObserverTimer(convertToMinutes(calculateMiliseconds(progress)))
+            }
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            blockUpdateProgress = true
+
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            blockUpdateProgress = false
+            updateProgressOnMusicPlayer()
+        }
+
+    }
+
+    private fun convertToMinutes(milisec: Int): Pair<Int, Int> {
+        val minutes: Int = milisec / 1000 / 60
+        val seconds: Int = (milisec / 1000) % 60
+        return Pair(minutes, seconds)
+    }
+
+    private fun calculateProgress(positionMilisec: Int): Int =
+        (positionMilisec * 100) / musicDurationMilisec
+
+    private fun calculateMiliseconds(progress: Int): Int =
+        (progress * musicDurationMilisec) / 100
 
     companion object : SingletonHolder<SpotifyMediaPlayer, Context>(::SpotifyMediaPlayer)
 }

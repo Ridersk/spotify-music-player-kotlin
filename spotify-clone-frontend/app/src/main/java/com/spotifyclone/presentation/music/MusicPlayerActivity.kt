@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 
+
+
 class MusicPlayerActivity : BaseActivity() {
 
     private val musicPlayer = SpotifyMediaPlayer.getInstance(this@MusicPlayerActivity)
@@ -50,14 +52,24 @@ class MusicPlayerActivity : BaseActivity() {
             musicPlayer.playMusic()
         }
 
+        // Timer
+        val timer = layout.textMusicTime
+
+        musicPlayer.setObserverMusicTime { time: String ->
+            runOnUiThread { timer.text = time }
+        }
+
         // Progress Bar
         val progressBar = layout.progressBarMusic
 
-        musicPlayer.setObserversOnCompletion {
-            buttonPlay.toggleOption()
-        }
-        musicPlayer.setObserversProgressBar { progress ->
+        progressBar.setOnSeekBarChangeListener(musicPlayer.progressControl)
+
+        musicPlayer.setObserverProgressBar { progress: Int ->
             progressBar.progress = progress
+        }
+
+        musicPlayer.setObserverOnCompletion {
+            buttonPlay.toggleOption()
         }
     }
 
