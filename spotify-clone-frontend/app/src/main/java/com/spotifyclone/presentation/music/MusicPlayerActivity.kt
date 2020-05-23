@@ -10,6 +10,7 @@ import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.tools.filemanager.MusicFileManagerApp
+import com.spotifyclone.tools.musicplayer.PlaylistController
 import com.spotifyclone.tools.musicplayer.SpotifyMediaController
 import com.spotifyclone.tools.statemanager.ComponentStateManager
 import kotlinx.android.synthetic.main.activity_music_player.*
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.include_toolbar.*
 class MusicPlayerActivity : BaseActivity() {
 
     private val musicPlayer = SpotifyMediaController.getInstance(this@MusicPlayerActivity)
+    private val playlistController = PlaylistController.getInstance(this@MusicPlayerActivity)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.activity_music_player)
@@ -83,9 +85,11 @@ class MusicPlayerActivity : BaseActivity() {
         }
 
         buttonPrevious.setOnClickListener{
+            playlistController.previousMusic()
         }
 
         buttonNext.setOnClickListener{
+            playlistController.nextMusic()
         }
 
         buttonRandom.setOnClickListener{

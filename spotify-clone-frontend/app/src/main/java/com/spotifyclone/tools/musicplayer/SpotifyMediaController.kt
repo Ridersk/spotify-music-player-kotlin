@@ -8,7 +8,7 @@ import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 import java.io.FileDescriptor
 import java.util.*
 
-class SpotifyMediaController private constructor(val context: Context) : MediaPlayer() {
+class SpotifyMediaController private constructor(var context: Context) : MediaPlayer() {
 
     private var stoppedPlayer: Boolean = false
     private var currentMusic: FileDescriptor? = null
