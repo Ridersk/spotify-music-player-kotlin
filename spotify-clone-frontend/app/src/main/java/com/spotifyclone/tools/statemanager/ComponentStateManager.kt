@@ -3,7 +3,7 @@ package com.spotifyclone.tools.statemanager
 import android.content.Context
 import android.view.View
 
-class ButtonManager (
+class ComponentStateManager (
     private val context: Context,
     private val component: View,
     private val drawableId: Int,
