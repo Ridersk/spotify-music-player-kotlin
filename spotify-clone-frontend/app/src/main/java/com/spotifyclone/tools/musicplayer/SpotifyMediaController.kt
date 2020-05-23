@@ -1,13 +1,10 @@
 package com.spotifyclone.tools.musicplayer
 
-import android.content.ContentUris
 import android.content.Context
-import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
-import android.net.Uri
-import android.provider.MediaStore
 import android.widget.SeekBar
 import com.spotifyclone.tools.basepatterns.SingletonHolder
+import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 import java.io.FileDescriptor
 import java.util.*
 
@@ -15,7 +12,6 @@ class SpotifyMediaController private constructor(val context: Context) : MediaPl
 
     private var stoppedPlayer: Boolean = false
     private var currentMusic: FileDescriptor? = null
-    private val mediaMetada = MediaMetadataRetriever()
     private var musicDurationMilisec: Int = 1
     private var blockUpdateProgress = false
     private var observerTimer: ((String) -> Unit)? = null
@@ -29,19 +25,15 @@ class SpotifyMediaController private constructor(val context: Context) : MediaPl
 
     fun prepareMusic(contentUriId: Long) {
         super.reset()
-        currentMusic = getAudioFile(getUri(contentUriId))
-        mediaMetada.setDataSource(currentMusic)
-        musicDurationMilisec =
-            mediaMetada.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+        setMusicAttrs(contentUriId)
         super.setDataSource(currentMusic)
         super.prepare()
     }
 
-    private fun getAudioFile(uri: Uri) = context.contentResolver
-        .openFileDescriptor(uri, "r")?.fileDescriptor
-
-    private fun getUri (contentUriId: Long): Uri =
-        ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentUriId)
+    private fun setMusicAttrs(contentUriId: Long) {
+        currentMusic = MusicFileManagerApp.getAudioFile(contentUriId, context)
+        musicDurationMilisec = MusicFileManagerApp.getMusicDuration(currentMusic)
+    }
 
     fun playMusic() {
         if (super.isPlaying()) {

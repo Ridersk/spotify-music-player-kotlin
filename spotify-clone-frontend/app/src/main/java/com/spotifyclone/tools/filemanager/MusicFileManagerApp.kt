@@ -1,9 +1,11 @@
 package com.spotifyclone.tools.filemanager
 
 import android.annotation.SuppressLint
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.os.storage.StorageManager
@@ -18,7 +20,7 @@ import java.util.*
 import kotlin.system.exitProcess
 
 
-class FileManagerApp {
+class MusicFileManagerApp {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun verifyAvailableStorage(context: Context, filesDir: File, requiredStorageBytes: Long) {
@@ -90,6 +92,16 @@ class FileManagerApp {
             }
         }
 
+        fun getMusicDuration(file: FileDescriptor?): Int {
+            val mediaMetada = MediaMetadataRetriever()
+            mediaMetada.setDataSource(file)
+
+            return mediaMetada.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+        }
+
+        fun getAudioFile(contentUriId: Long, context: Context) = context.contentResolver
+            .openFileDescriptor(getUri(contentUriId), "r")?.fileDescriptor
+
         @SuppressLint("Recycle")
         private fun getMusicsFromMediaAudioDirectories(context: Context): MutableList<Music> {
             val projection = arrayOf(
@@ -115,9 +127,6 @@ class FileManagerApp {
                 val name = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
                 val album = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
                 val author = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
-
-                val mediaRetriever = MediaMetadataRetriever()
-
 
                 while (cursor.moveToNext()) {
 
@@ -195,10 +204,11 @@ class FileManagerApp {
             return null
         }
 
-        // Checks if a volume containing external storage is available
-        // for read and write. 
         private fun isExternalStorageWritable(): Boolean {
             return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
         }
+
+        private fun getUri (contentUriId: Long): Uri =
+            ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentUriId)
     }
 }

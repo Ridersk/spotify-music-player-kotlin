@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.spotifyclone.data.model.Music
-import com.spotifyclone.tools.filemanager.FileManagerApp
+import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 import java.lang.IllegalArgumentException
 
 class PlaylistMusicsViewModel(
@@ -24,7 +24,7 @@ class PlaylistMusicsViewModel(
 
     private fun getRepositoryMusics(): MutableList<Music> {
 
-        return FileManagerApp.getMusicList(parentContext)
+        return MusicFileManagerApp.getMusicList(parentContext)
     }
 
     class ViewModelFactory(private val parentContext: Context) : ViewModelProvider.Factory {
