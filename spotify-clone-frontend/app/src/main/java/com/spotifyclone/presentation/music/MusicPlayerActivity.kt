@@ -8,7 +8,7 @@ import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.tools.musicplayer.SpotifyMediaPlayer
-import com.spotifyclone.tools.statemanager.ButtonManager
+import com.spotifyclone.tools.statemanager.ComponentStateManager
 import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -38,38 +38,58 @@ class MusicPlayerActivity : BaseActivity() {
 
     override fun initComponents() {
         val layout: ViewGroup = activityMusicPlayer
+        val buttonFavorite = layout.buttonFavoriteMusic
+        val buttonPlay = layout.buttonPlayMusic
+        val buttonPrevious = layout.buttonPreviousMusic
+        val buttonNext = layout.buttonNextMusic
+        val buttonRandom = layout.buttonRandomMusic
+        val buttonRepeat = layout.buttonRepeatMusic
+        val buttonQueue = layout.buttonMusicQueue
+        val progressBar = layout.progressBarMusic
+        val timer = layout.textMusicTime
 
-        // Texts
         layout.textMusicName.text = intent.getStringExtra(EXTRA_NAME)
         layout.textMusicArtist.text = intent.getStringExtra(EXTRA_AUTHOR)
 
-        // Buttons
-        val buttonPlay = ButtonManager(
-            this@MusicPlayerActivity,
-            layout.buttonPlayMusic,
-            listOf(R.drawable.ic_pause_music, R.drawable.ic_play_music)
-        ) {
-            musicPlayer.playMusic()
-        }
 
-        // Timer
-        val timer = layout.textMusicTime
+        progressBar.setOnSeekBarChangeListener(musicPlayer.progressControl)
 
         musicPlayer.setObserverMusicTime { time: String ->
             runOnUiThread { timer.text = time }
         }
 
-        // Progress Bar
-        val progressBar = layout.progressBarMusic
-
-        progressBar.setOnSeekBarChangeListener(musicPlayer.progressControl)
-
         musicPlayer.setObserverProgressBar { progress: Int ->
             progressBar.progress = progress
         }
 
+        buttonFavorite.setOnClickListener{
+        }
+
+        val buttonPlayState = ComponentStateManager(
+            this@MusicPlayerActivity,
+            buttonPlay,
+            listOf(R.drawable.ic_pause_music, R.drawable.ic_play_music)
+        ) {
+            musicPlayer.playMusic()
+        }
+
         musicPlayer.setObserverOnCompletion {
-            buttonPlay.toggleOption()
+            buttonPlayState.toggleOption()
+        }
+
+        buttonPrevious.setOnClickListener{
+        }
+
+        buttonNext.setOnClickListener{
+        }
+
+        buttonRandom.setOnClickListener{
+        }
+
+        buttonRepeat.setOnClickListener{
+        }
+
+        buttonQueue.setOnClickListener{
         }
     }
 
