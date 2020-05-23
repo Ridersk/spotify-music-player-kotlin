@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
@@ -16,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import com.spotifyclone.data.model.Music
 import java.io.*
+import java.lang.Exception
 import java.util.*
 import kotlin.system.exitProcess
 
@@ -46,6 +49,7 @@ class MusicFileManagerApp {
         private const val PATH_MUSIC_LIST_DIRECTORY = "musics"
         private const val SEARCH_SCOPED_DIRECTORY = "scope_dir"
         private const val SEARCH_MEDIA_AUDIO = "media_audio_dir"
+        private const val ALBUM_ART_PATH = "content://media/external/audio/albumart"
 
         fun createFile(
             context: Context,
@@ -95,12 +99,27 @@ class MusicFileManagerApp {
         fun getMusicDuration(file: FileDescriptor?): Int {
             val mediaMetada = MediaMetadataRetriever()
             mediaMetada.setDataSource(file)
-
             return mediaMetada.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
         }
 
         fun getAudioFile(contentUriId: Long, context: Context) = context.contentResolver
-            .openFileDescriptor(getUri(contentUriId), "r")?.fileDescriptor
+            .openFileDescriptor(getContentUri(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                contentUriId
+            ), "r")?.fileDescriptor
+
+        fun getAlbumArt(albumUriId: Long, context: Context): Bitmap? {
+            return try {
+                val albumPathUri = Uri.parse(ALBUM_ART_PATH)
+                val arq: InputStream? = context.contentResolver
+                    .openInputStream(getContentUri(albumPathUri, albumUriId))
+                BitmapFactory.decodeStream(arq)
+            } catch (e: Exception) {
+                print("Music Without Album Art. ")
+                print(e.message)
+                null
+            }
+        }
 
         @SuppressLint("Recycle")
         private fun getMusicsFromMediaAudioDirectories(context: Context): MutableList<Music> {
@@ -108,7 +127,8 @@ class MusicFileManagerApp {
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ALBUM
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.ALBUM_ID
             )
 
             val order = MediaStore.Files.FileColumns.DISPLAY_NAME + " ASC"
@@ -124,24 +144,26 @@ class MusicFileManagerApp {
             val musics = mutableListOf<Music>()
             if (cursor != null) {
                 val id = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-                val name = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+                val artist = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+                val title = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
                 val album = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
-                val author = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+                val albumId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
 
                 while (cursor.moveToNext()) {
 
                     musics.add(
                         Music(
-                            contentUriId = cursor.getLong(id),
-                            title = if (cursor.getString(name).contains("<unknown>")) "" else cursor.getString(
-                                name
+                            title = if (cursor.getString(title).contains("<unknown>")) "" else cursor.getString(
+                                title
                             ),
-                            artist = if (cursor.getString(author).contains("<unknown>")) "" else cursor.getString(
-                                author
+                            artist = if (cursor.getString(artist).contains("<unknown>")) "" else cursor.getString(
+                                artist
                             ),
                             album = if (cursor.getString(album).contains("<unknown>")) "" else cursor.getString(
                                 album
-                            )
+                            ),
+                            contentUriId = cursor.getLong(id),
+                            albumUriId = cursor.getLong(albumId)
                         )
                     )
 
@@ -208,7 +230,7 @@ class MusicFileManagerApp {
             return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
         }
 
-        private fun getUri (contentUriId: Long): Uri =
-            ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentUriId)
+        private fun getContentUri (pathUri: Uri, contentUriId: Long): Uri =
+            ContentUris.withAppendedId(pathUri, contentUriId)
     }
 }

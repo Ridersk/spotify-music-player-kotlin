@@ -64,6 +64,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
                             music.name,
                             music.artist,
                             music.contentUriId,
+                            music.albumUriId,
                             getString(PLAYLIST_NAME)
                         )
 

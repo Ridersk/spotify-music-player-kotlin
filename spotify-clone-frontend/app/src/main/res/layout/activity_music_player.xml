@@ -23,7 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="65dp"
             android:contentDescription="@string/music_album_image"
-            tools:src="@drawable/pic_music_album_test" />
+            tools:src="@drawable/img_album_art_test" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,12 +35,12 @@
 
 
             <RelativeLayout
-                android:id="@+id/layoutMusicName"
+                android:id="@+id/layoutMusicTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/textMusicName"
+                    android:id="@+id/textMusicTitle"
                     style="@style/smallMediumTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                     style="@style/smallTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/textMusicName"
+                    android:layout_below="@id/textMusicTitle"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/buttonFavoriteMusic"
                     android:textColor="@color/lightGray"
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_below="@id/layoutMusicName">
+                android:layout_below="@id/layoutMusicTitle">
 
                 <SeekBar
                     android:id="@+id/progressBarMusic"

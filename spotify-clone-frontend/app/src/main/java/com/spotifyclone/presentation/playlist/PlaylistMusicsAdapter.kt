@@ -31,7 +31,7 @@ class PlaylistMusicsAdapter (
         itemView: View,
         private val onItemClickListener: (music: Music) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
-        private val name = itemView.textMusicName
+        private val name = itemView.textMusicTitle
         private val musiclabel = itemView.textMusicLabel
 
         fun bindView(music: Music) {
