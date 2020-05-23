@@ -155,7 +155,6 @@
                     android:background="@drawable/ic_repeat_music" />
             </RelativeLayout>
 
-
             <RelativeLayout
                 android:id="@+id/layoutAddOptions"
                 android:layout_width="match_parent"
