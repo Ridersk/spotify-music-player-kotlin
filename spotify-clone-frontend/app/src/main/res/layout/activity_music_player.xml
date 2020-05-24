@@ -21,15 +21,15 @@
             android:layout_width="@dimen/image_album_width"
             android:layout_height="@dimen/image_album_height"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="65dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="80dp"
             android:contentDescription="@string/music_album_image"
             tools:src="@drawable/img_album_art_test" />
 
         <RelativeLayout
+            android:id="@+id/layoutMusicControl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/imageAlbum"
-            android:layout_marginTop="80dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="50dp">
 
@@ -74,8 +74,8 @@
                 android:id="@+id/layoutMusicProgress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_below="@id/layoutMusicTitle">
+                android:layout_below="@id/layoutMusicTitle"
+                android:layout_marginTop="20dp">
 
                 <SeekBar
                     android:id="@+id/progressBarMusic"
@@ -95,12 +95,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/progressBarMusic"
-                    android:text="@string/music_progress_init_time"/>
+                    android:text="@string/music_progress_init_time" />
             </RelativeLayout>
 
 
             <RelativeLayout
-                android:id="@+id/layoutMusicControl"
+                android:id="@+id/layoutMusicPlay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/layoutMusicProgress">
@@ -159,7 +159,7 @@
                 android:id="@+id/layoutAddOptions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/layoutMusicControl">
+                android:layout_below="@+id/layoutMusicPlay">
 
                 <Button
                     android:id="@+id/buttonMusicQueue"
