@@ -5,7 +5,7 @@ import com.spotifyclone.data.model.Music
 
 class PlaylistObserverProvider : Observer<List<Music>> {
 
-    private val receivers = mutableListOf<PlaylistObserverReceiver<Music>>()
+    private val receivers = mutableListOf<PlaylistObserver<Music>>()
 
     override fun onChanged(musics: List<Music>?) {
         musics?.let {
@@ -13,8 +13,8 @@ class PlaylistObserverProvider : Observer<List<Music>> {
         }
     }
 
-    fun addReceiver(receiver: PlaylistObserverReceiver<Music>) {
-        this.receivers.add(receiver)
+    fun addReceiver(observer: PlaylistObserver<Music>) {
+        this.receivers.add(observer)
     }
 
     private fun addListToReceivers(musics: List<Music>) {

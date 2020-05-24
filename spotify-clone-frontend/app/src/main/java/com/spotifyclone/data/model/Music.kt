@@ -8,7 +8,7 @@ class Music(
     albumUriId: Long? = -1L
 ) {
     val index: Int
-    var name: String = "Unknown Title"
+    var title: String = "Unknown Title"
     var artist: String = "Unknown Artist"
     var album: String = "Unknown Album"
     var contentUriId: Long = -1L
@@ -16,7 +16,7 @@ class Music(
 
     init {
         if (title != null && title.isNotEmpty()) {
-            this.name = title
+            this.title = title
         }
         if (artist != null && artist.isNotEmpty()) {
             this.artist = artist

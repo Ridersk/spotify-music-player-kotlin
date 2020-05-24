@@ -4,10 +4,12 @@ import android.content.Context
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
 
-class PlaylistController private constructor(var context: Context): PlaylistObserverReceiver<Music> {
+class PlaylistController private constructor(var context: Context) : PlaylistObserver<Music>,
+    MusicProvider {
 
     private var musicList = mutableListOf<Music>()
     private var musicPositionPlaying = 0
+    private var observers = mutableListOf<MusicObserver>()
 
     override fun receiverList(list: List<Music>) {
         this.musicList = list.toMutableList()
@@ -15,6 +17,18 @@ class PlaylistController private constructor(var context: Context): PlaylistObse
 
     override fun chooseItem(position: Int) {
         this.musicPositionPlaying = position
+        alertChoosedMusic()
+    }
+
+    override fun addObserver(observer: MusicObserver) {
+        this.observers.add(observer)
+    }
+
+    override fun alertChoosedMusic() {
+        val music = getCurrentMusic()
+        for (observer in this.observers) {
+            observer.chooseMusic(music)
+        }
     }
 
     fun nextMusic() {
@@ -23,7 +37,12 @@ class PlaylistController private constructor(var context: Context): PlaylistObse
     }
 
     fun previousMusic() {
-        val position = (musicPositionPlaying - 1) % musicList.size
+        val position: Int =
+            if (musicPositionPlaying == 0) {
+                musicList.size - 1
+            } else {
+                (musicPositionPlaying - 1) % musicList.size
+            }
         chooseItem(position)
     }
 
@@ -44,5 +63,5 @@ class PlaylistController private constructor(var context: Context): PlaylistObse
     }
 
 
-    companion object: SingletonHolder<PlaylistController, Context>(::PlaylistController)
+    companion object : SingletonHolder<PlaylistController, Context>(::PlaylistController)
 }

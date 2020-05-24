@@ -102,11 +102,13 @@ class MusicFileManagerApp {
             return mediaMetada.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
         }
 
-        fun getAudioFile(contentUriId: Long, context: Context) = context.contentResolver
-            .openFileDescriptor(getContentUri(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                contentUriId
-            ), "r")?.fileDescriptor
+        fun getAudioFile(contentUriId: Long, context: Context): FileDescriptor? {
+            return context.contentResolver
+                .openFileDescriptor(getContentUri(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    contentUriId
+                ), "r")?.fileDescriptor
+        }
 
         fun getAlbumArt(albumUriId: Long, context: Context): Bitmap? {
             return try {

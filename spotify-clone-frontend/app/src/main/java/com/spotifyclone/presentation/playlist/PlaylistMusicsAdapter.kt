@@ -31,11 +31,11 @@ class PlaylistMusicsAdapter (
         itemView: View,
         private val onItemClickListener: (music: Music, position: Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
-        private val name = itemView.textMusicTitle
+        private val title = itemView.textMusicTitle
         private val musiclabel = itemView.textMusicLabel
 
         fun bindView(music: Music, position: Int) {
-            name.text = music.name
+            title.text = music.title
             musiclabel.text = getMusicLabel(music.artist, music.album)
 
             itemView.setOnClickListener{

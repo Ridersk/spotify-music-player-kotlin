@@ -11,12 +11,12 @@ import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.musicplayer.PlaylistController
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
-import com.spotifyclone.tools.musicplayer.PlaylistObserverReceiver
+import com.spotifyclone.tools.musicplayer.PlaylistObserver
 import kotlinx.android.synthetic.main.activity_liked_songs.*
 import kotlinx.android.synthetic.main.activity_liked_songs.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 
-class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserverReceiver<Music> {
+class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<Music> {
 
     private val playlistController = PlaylistController.getInstance(this@LikedSongsActivity)
 
@@ -45,7 +45,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserverRe
             textDownloadedSongs.text = getString(R.string.liked_text_downloaded_songs)
         }
 
-        setMusicList(layout)
+        setMusicList()
     }
 
     override fun getPlaylistName() {
@@ -65,7 +65,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserverRe
                     val intent =
                         MusicPlayerActivity.getStartIntent(
                             context,
-                            music.name,
+                            music.title,
                             music.artist,
                             music.albumUriId,
                             getString(EXTRA_PLAYLIST_NAME)
@@ -81,16 +81,16 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserverRe
         playlistController.chooseItem(position)
     }
 
-    private fun setMusicList(layout: ViewGroup) {
+    private fun setMusicList() {
         val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
             .ViewModelFactory(this@LikedSongsActivity)
             .create(PlaylistMusicsViewModel::class.java)
 
-        val playlistObserver = PlaylistObserverProvider()
+        val playlistObserverProvider = PlaylistObserverProvider()
 
-        playlistObserver.addReceiver(playlistController)
-        playlistObserver.addReceiver(this)
-        viewModel.musicsLiveData.observe(this, playlistObserver)
+        playlistObserverProvider.addReceiver(playlistController)
+        playlistObserverProvider.addReceiver(this)
+        viewModel.musicsLiveData.observe(this, playlistObserverProvider)
 
         viewModel.getMusics()
     }
