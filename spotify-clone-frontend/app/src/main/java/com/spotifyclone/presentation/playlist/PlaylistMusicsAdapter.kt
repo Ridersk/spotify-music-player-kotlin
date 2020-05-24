@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.item_music.view.*
 
 class PlaylistMusicsAdapter (
     private val musics: List<Music>,
-    private val onItemClickListener: ((music: Music) -> Unit)
+    private val onItemClickListener: ((music: Music, position: Int) -> Unit)
 ) : RecyclerView.Adapter<PlaylistMusicsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
@@ -23,23 +23,23 @@ class PlaylistMusicsAdapter (
     override fun getItemCount(): Int = musics.count()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindView(musics[position])
+        holder.bindView(musics[position], position)
     }
 
 
     class ViewHolder(
         itemView: View,
-        private val onItemClickListener: (music: Music) -> Unit
+        private val onItemClickListener: (music: Music, position: Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         private val name = itemView.textMusicTitle
         private val musiclabel = itemView.textMusicLabel
 
-        fun bindView(music: Music) {
+        fun bindView(music: Music, position: Int) {
             name.text = music.name
             musiclabel.text = getMusicLabel(music.artist, music.album)
 
             itemView.setOnClickListener{
-                onItemClickListener.invoke(music)
+                onItemClickListener.invoke(music, position)
             }
         }
 

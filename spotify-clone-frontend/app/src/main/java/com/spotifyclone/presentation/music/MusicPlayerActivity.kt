@@ -104,10 +104,9 @@ class MusicPlayerActivity : BaseActivity() {
 
     private fun startMusic() {
         musicPlayer.prepareMusic(
-            intent.getLongExtra(EXTRA_CONTENT_URI_ID, -1L)
+            playlistController.getCurrentMusic().contentUriId
         )
         musicPlayer.playMusic()
-
     }
 
     private fun insertAlbumArt (imageAlbum: ImageView) {
@@ -126,19 +125,16 @@ class MusicPlayerActivity : BaseActivity() {
         private const val EXTRA_NAME = "EXTRA_NAME"
         private const val EXTRA_AUTHOR = "EXTRA_AUTHOR"
         private const val EXTRA_PLAYLIST = "EXTRA_PLAYLIST"
-        private const val EXTRA_CONTENT_URI_ID = "EXTRA_CONTENT_URI_ID"
         private const val EXTRA_ALBUM_URI_ID = "EXTRA_ALBUM_URI_ID"
 
         fun getStartIntent(
             context: Context, name: String, author: String,
-            contentUriId: Long, albumUriId: Long,
-            playlist: String
+            albumUriId: Long, playlist: String
         ): Intent {
 
             return Intent(context, MusicPlayerActivity::class.java).apply {
                 putExtra(EXTRA_NAME, name)
                 putExtra(EXTRA_AUTHOR, author)
-                putExtra(EXTRA_CONTENT_URI_ID, contentUriId)
                 putExtra(EXTRA_ALBUM_URI_ID, albumUriId)
                 putExtra(EXTRA_PLAYLIST, playlist)
             }

@@ -30,11 +30,6 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
         super.prepare()
     }
 
-    private fun setMusicAttrs(contentUriId: Long) {
-        currentMusic = MusicFileManagerApp.getAudioFile(contentUriId, context)
-        musicDurationMilisec = MusicFileManagerApp.getMusicDuration(currentMusic)
-    }
-
     fun playMusic() {
         if (super.isPlaying()) {
             pauseMusic()
@@ -65,6 +60,11 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
 
     fun setObserverProgressBar(callback: (progress: Int) -> Unit) {
         observerProgress = callback
+    }
+
+    private fun setMusicAttrs(contentUriId: Long) {
+        currentMusic = MusicFileManagerApp.getAudioFile(contentUriId, context)
+        musicDurationMilisec = MusicFileManagerApp.getMusicDuration(currentMusic)
     }
 
     private fun musicRefresh() {
@@ -117,6 +117,18 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
         super.seekTo(calculateMiliseconds(progress))
     }
 
+    private fun convertToMinutes(milisec: Int): Pair<Int, Int> {
+        val minutes: Int = milisec / 1000 / 60
+        val seconds: Int = (milisec / 1000) % 60
+        return Pair(minutes, seconds)
+    }
+
+    private fun calculateProgress(positionMilisec: Int): Int =
+        (positionMilisec * 100) / musicDurationMilisec
+
+    private fun calculateMiliseconds(progress: Int): Int =
+        (progress * musicDurationMilisec) / 100
+
     val progressControl = object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             if (fromUser) {
@@ -134,20 +146,7 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
             blockUpdateProgress = false
             updateProgressOnMusicPlayer()
         }
-
     }
-
-    private fun convertToMinutes(milisec: Int): Pair<Int, Int> {
-        val minutes: Int = milisec / 1000 / 60
-        val seconds: Int = (milisec / 1000) % 60
-        return Pair(minutes, seconds)
-    }
-
-    private fun calculateProgress(positionMilisec: Int): Int =
-        (positionMilisec * 100) / musicDurationMilisec
-
-    private fun calculateMiliseconds(progress: Int): Int =
-        (progress * musicDurationMilisec) / 100
 
     companion object : SingletonHolder<SpotifyMediaController, Context>(::SpotifyMediaController)
 }

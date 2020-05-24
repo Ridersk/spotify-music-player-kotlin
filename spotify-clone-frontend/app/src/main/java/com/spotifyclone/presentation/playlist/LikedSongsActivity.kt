@@ -5,17 +5,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
 import com.spotifyclone.R
+import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
+import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.musicplayer.PlaylistController
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
+import com.spotifyclone.tools.musicplayer.PlaylistObserverReceiver
 import kotlinx.android.synthetic.main.activity_liked_songs.*
 import kotlinx.android.synthetic.main.activity_liked_songs.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 
-class LikedSongsActivity : BaseActivity(), PlaylistInterface {
+class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserverReceiver<Music> {
 
     private val playlistController = PlaylistController.getInstance(this@LikedSongsActivity)
+
+    lateinit var layout: ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_liked_songs)
@@ -33,7 +38,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
     }
 
     override fun initComponents() {
-        val layout: ViewGroup = activityLikedSongs
+        layout = activityLikedSongs
         with(layout) {
             textTitle.text = intent.getStringExtra(EXTRA_TITLE)
             buttonRandomPlay.text = getString(R.string.liked_button_random_play)
@@ -47,16 +52,44 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun receiverList(list: List<Music>) {
+        with(layout.recyclerMusics) {
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+                context,
+                androidx.recyclerview.widget.RecyclerView.VERTICAL,
+                false
+            )
+            setHasFixedSize(true)
+            adapter =
+                PlaylistMusicsAdapter(list) { music, position ->
+                    val intent =
+                        MusicPlayerActivity.getStartIntent(
+                            context,
+                            music.name,
+                            music.artist,
+                            music.albumUriId,
+                            getString(EXTRA_PLAYLIST_NAME)
+                        )
+
+                    chooseItem(position)
+                    this@LikedSongsActivity.startActivity(intent)
+                }
+        }
+    }
+
+    override fun chooseItem(position: Int) {
+        playlistController.chooseItem(position)
+    }
+
     private fun setMusicList(layout: ViewGroup) {
         val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
-            .ViewModelFactory(this@LikedSongsActivity).create(PlaylistMusicsViewModel::class.java)
+            .ViewModelFactory(this@LikedSongsActivity)
+            .create(PlaylistMusicsViewModel::class.java)
 
-        val playlistObserver = PlaylistObserverProvider(
-            layout.recyclerMusics,
-            getString(EXTRA_PLAYLIST_NAME)
-        )
+        val playlistObserver = PlaylistObserverProvider()
 
         playlistObserver.addReceiver(playlistController)
+        playlistObserver.addReceiver(this)
         viewModel.musicsLiveData.observe(this, playlistObserver)
 
         viewModel.getMusics()
