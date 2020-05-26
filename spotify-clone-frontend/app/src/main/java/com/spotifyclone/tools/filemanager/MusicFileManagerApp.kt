@@ -126,11 +126,11 @@ class MusicFileManagerApp {
         @SuppressLint("Recycle")
         private fun getMusicsFromMediaAudioDirectories(context: Context): MutableList<Music> {
             val projection = arrayOf(
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.ALBUM_ID
+                MediaStore.Audio.AudioColumns._ID,
+                MediaStore.Audio.AudioColumns.ARTIST,
+                MediaStore.Audio.AudioColumns.TITLE,
+                MediaStore.Audio.AudioColumns.ALBUM,
+                MediaStore.Audio.AudioColumns.ALBUM_ID
             )
 
             val order = MediaStore.Files.FileColumns.DISPLAY_NAME + " ASC"
@@ -141,15 +141,16 @@ class MusicFileManagerApp {
                 null,
                 null,
                 order
+
             )
 
             val musics = mutableListOf<Music>()
             if (cursor != null) {
-                val id = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-                val artist = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
-                val title = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-                val album = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
-                val albumId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+                val id = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID)
+                val artist = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST)
+                val title = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE)
+                val album = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM)
+                val albumId = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID)
 
                 while (cursor.moveToNext()) {
 

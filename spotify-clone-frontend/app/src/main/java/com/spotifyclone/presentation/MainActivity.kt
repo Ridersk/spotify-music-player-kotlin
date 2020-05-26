@@ -19,9 +19,10 @@ class MainActivity : BaseActivity() {
     val context = this@MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isStoragePermissionGranted()
-        if (!isStoragePermissionGranted()) {
-            // intent = activityRequestPermissions
+        val permission = isStoragePermissionGranted()
+        if (!permission) {
+//             intent = activityRequestPermissions
+            print("without permissions")
         }
 
         super.onCreate(savedInstanceState)
