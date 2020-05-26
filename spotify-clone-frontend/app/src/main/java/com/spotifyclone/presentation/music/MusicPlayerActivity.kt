@@ -90,11 +90,13 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
 
         buttonFavorite.setOnClickListener{
+            buttonFavorite.isActivated = !buttonFavorite.isActivated
         }
 
+        buttonPlay.isActivated = true
         buttonPlay.setOnClickListener{
-            buttonPlay.isActivated = !buttonPlay.isActivated
             musicPlayer.playMusic()
+            buttonPlay.isActivated = musicPlayer.isPlaying
         }
 
         musicPlayer.setObserverOnCompletion {
