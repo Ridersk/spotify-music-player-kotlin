@@ -55,7 +55,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
     override fun receiverList(list: List<Music>) {
         with(layout.recyclerMusics) {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-                context,
+                this@LikedSongsActivity,
                 androidx.recyclerview.widget.RecyclerView.VERTICAL,
                 false
             )
@@ -64,7 +64,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
                 PlaylistMusicsAdapter(list) { music, position ->
                     val intent =
                         MusicPlayerActivity.getStartIntent(
-                            context,
+                            this@LikedSongsActivity,
                             music.title,
                             music.artist,
                             music.albumUriId,

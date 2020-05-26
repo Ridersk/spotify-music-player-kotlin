@@ -14,7 +14,6 @@ import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistController
 import com.spotifyclone.tools.musicplayer.SpotifyMediaController
-import com.spotifyclone.tools.statemanager.ComponentStateManager
 import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -93,16 +92,13 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         buttonFavorite.setOnClickListener{
         }
 
-        val buttonPlayState = ComponentStateManager(
-            this@MusicPlayerActivity,
-            buttonPlay,
-            listOf(R.drawable.ic_pause_music, R.drawable.ic_play_music)
-        ) {
+        buttonPlay.setOnClickListener{
+            buttonPlay.isActivated = !buttonPlay.isActivated
             musicPlayer.playMusic()
         }
 
         musicPlayer.setObserverOnCompletion {
-            buttonPlayState.toggleOption()
+            buttonPlay.isActivated = false
         }
 
         buttonPrevious.setOnClickListener{
@@ -113,10 +109,16 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             playlistController.nextMusic()
         }
 
+        buttonRandom.isActivated = playlistController.random
         buttonRandom.setOnClickListener{
+            playlistController.toogleRandom()
+            buttonRandom.isActivated = playlistController.random
         }
 
+        buttonRepeat.isActivated = playlistController.cycle
         buttonRepeat.setOnClickListener{
+            playlistController.toogleModeCycle()
+            buttonRepeat.isActivated = playlistController.cycle
         }
 
         buttonQueue.setOnClickListener{

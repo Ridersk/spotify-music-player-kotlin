@@ -3,6 +3,7 @@ package com.spotifyclone.tools.musicplayer
 import android.content.Context
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
+import java.util.*
 
 class PlaylistController private constructor(var context: Context) : PlaylistObserver<Music>,
     MusicProvider {
@@ -10,6 +11,10 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     private var musicList = mutableListOf<Music>()
     private var musicPositionPlaying = 0
     private var observers = mutableListOf<MusicObserver>()
+    var cycle = false
+        private set
+    var random = false
+        private set
 
     override fun receiverList(list: List<Music>) {
         this.musicList = list.toMutableList()
@@ -32,17 +37,18 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     }
 
     fun nextMusic() {
-        val position = (musicPositionPlaying + 1) % musicList.size
+        val position: Int = if (musicPositionPlaying < musicList.size -1 || cycle)
+            (musicPositionPlaying + 1) % musicList.size
+        else musicPositionPlaying
         chooseItem(position)
     }
 
     fun previousMusic() {
-        val position: Int =
-            if (musicPositionPlaying == 0) {
-                musicList.size - 1
-            } else {
-                (musicPositionPlaying - 1) % musicList.size
-            }
+        var position: Int = (musicPositionPlaying - 1) % musicList.size
+
+        if (position < 0) {
+            position = if (cycle) musicList.size - 1 else 0
+        }
         chooseItem(position)
     }
 
@@ -51,6 +57,22 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
             musicList[musicPositionPlaying]
         } else {
             Music()
+        }
+    }
+
+    fun toogleModeCycle() {
+        this.cycle = !this.cycle
+    }
+
+    fun toogleRandom() {
+        this.random = !this.random
+
+        if (this.random) shuffleList()
+    }
+
+    private fun shuffleList() {
+        if (random) {
+            this.musicList.shuffle()
         }
     }
 
