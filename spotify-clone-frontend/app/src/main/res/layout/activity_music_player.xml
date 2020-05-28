@@ -59,7 +59,7 @@
                     android:textColor="@color/lightGray"
                     tools:text="Music's Artist" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/buttonFavoriteMusic"
                     android:layout_width="@dimen/icon_music_player_width"
                     android:layout_height="@dimen/icon_music_player_height"
@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/layoutMusicProgress">
 
-                <Button
+                <ImageButton
                     android:id="@+id/buttonRandomMusic"
                     android:layout_width="@dimen/icon_music_player_width"
                     android:layout_height="@dimen/icon_music_player_height"
@@ -118,10 +118,10 @@
                     android:id="@+id/layoutMusicPlayControl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@id/buttonRepeatMusic"
+                    android:layout_toStartOf="@id/layoutButtonRepeat"
                     android:layout_toEndOf="@id/buttonRandomMusic">
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/buttonPreviousMusic"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -129,7 +129,7 @@
                         android:layout_toStartOf="@id/buttonPlayMusic"
                         android:background="@drawable/ic_previous_music" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/buttonPlayMusic"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
@@ -138,7 +138,7 @@
                         android:layout_marginEnd="30dp"
                         android:background="@drawable/selector_button_play" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/buttonNextMusic"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -147,23 +147,37 @@
                         android:background="@drawable/ic_next_music" />
                 </RelativeLayout>
 
-                <Button
-                    android:id="@+id/buttonRepeatMusic"
-                    android:layout_width="@dimen/icon_music_player_width"
-                    android:layout_height="@dimen/icon_music_player_height"
+                <LinearLayout
+                    android:id="@+id/layoutButtonRepeat"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/ic_repeat_music"
-                    android:backgroundTint="@color/selector_button_color"/>
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true">
+                    <ImageButton
+                        android:id="@+id/buttonRepeatMusic"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:background="@color/transparent"
+                        android:src="@drawable/ic_repeat_music"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_circle"/>
+                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/layoutAddOptions"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layoutMusicPlay">
 
-                <Button
+                <ImageButton
                     android:id="@+id/buttonMusicQueue"
                     android:layout_width="@dimen/icon_music_player_width"
                     android:layout_height="@dimen/icon_music_player_height"

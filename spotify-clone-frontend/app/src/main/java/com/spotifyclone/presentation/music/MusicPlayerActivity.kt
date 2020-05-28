@@ -2,7 +2,7 @@ package com.spotifyclone.presentation.music
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -17,6 +17,10 @@ import com.spotifyclone.tools.musicplayer.SpotifyMediaController
 import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
+import android.graphics.Bitmap
+import android.widget.ImageButton
+import com.spotifyclone.tools.images.ImageTreatment
+
 
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
@@ -89,12 +93,12 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             progressBar.progress = progress
         }
 
-        buttonFavorite.setOnClickListener{
+        buttonFavorite.setOnClickListener {
             buttonFavorite.isActivated = !buttonFavorite.isActivated
         }
 
         buttonPlay.isActivated = true
-        buttonPlay.setOnClickListener{
+        buttonPlay.setOnClickListener {
             musicPlayer.playMusic()
             buttonPlay.isActivated = musicPlayer.isPlaying
         }
@@ -103,38 +107,55 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             buttonPlay.isActivated = false
         }
 
-        buttonPrevious.setOnClickListener{
+        buttonPrevious.setOnClickListener {
             playlistController.previousMusic()
         }
 
-        buttonNext.setOnClickListener{
+        buttonNext.setOnClickListener {
             playlistController.nextMusic()
         }
 
         buttonRandom.isActivated = playlistController.random
-        buttonRandom.setOnClickListener{
+        buttonRandom.setOnClickListener {
             playlistController.toogleRandom()
             buttonRandom.isActivated = playlistController.random
         }
 
-        buttonRepeat.isActivated = playlistController.cycle
-        buttonRepeat.setOnClickListener{
+
+        buttonRepeat.isActivated = playlistController.cycleAll
+        buttonRepeat.setOnClickListener {
             playlistController.toogleModeCycle()
-            buttonRepeat.isActivated = playlistController.cycle
+            buttonRepeat.isActivated = playlistController.cycleAll || playlistController.cycleOne
         }
 
-        buttonQueue.setOnClickListener{
+        buttonQueue.setOnClickListener {
         }
     }
+
+    private fun changeButton(button: ImageButton) {
+        if (button.isActivated) {
+            val repeateicon: Drawable? = getDrawable(R.drawable.ic_repeat_music)
+            val circleIcon = getDrawable(R.drawable.ic_circle)
+
+            val repeatIconScale: Drawable = ImageTreatment.resizeDrawable(applicationContext, repeateicon, 15, 15)
+
+            button.setImageDrawable(ImageTreatment.mergeIcons(repeatIconScale, circleIcon))
+        }
+    }
+
+
+
+
 
     private fun startMusic() {
         chooseMusic(playlistController.getCurrentMusic())
     }
 
-    private fun insertAlbumArt (imageAlbum: ImageView) {
+    private fun insertAlbumArt(imageAlbum: ImageView) {
         val musicThumbnail: Bitmap? = MusicFileManagerApp.getAlbumArt(
             intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1),
-            this@MusicPlayerActivity)
+            this@MusicPlayerActivity
+        )
 
         if (musicThumbnail != null) {
             imageAlbum.setImageBitmap(musicThumbnail)

@@ -3,7 +3,6 @@ package com.spotifyclone.tools.musicplayer
 import android.content.Context
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
-import java.util.*
 
 class PlaylistController private constructor(var context: Context) : PlaylistObserver<Music>,
     MusicProvider {
@@ -11,8 +10,11 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     private var musicList = mutableListOf<Music>()
     private var musicPositionPlaying = 0
     private var observers = mutableListOf<MusicObserver>()
-    var cycle = false
+    var cycleAll = false
         private set
+    var cycleOne = false
+        private set
+    var cycleMode = listOf<Int>()
     var random = false
         private set
 
@@ -37,7 +39,7 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     }
 
     fun nextMusic() {
-        val position: Int = if (musicPositionPlaying < musicList.size -1 || cycle)
+        val position: Int = if (musicPositionPlaying < musicList.size -1 || cycleAll)
             (musicPositionPlaying + 1) % musicList.size
         else musicPositionPlaying
         chooseItem(position)
@@ -47,7 +49,7 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
         var position: Int = (musicPositionPlaying - 1) % musicList.size
 
         if (position < 0) {
-            position = if (cycle) musicList.size - 1 else 0
+            position = if (cycleAll) musicList.size - 1 else 0
         }
         chooseItem(position)
     }
@@ -61,7 +63,7 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     }
 
     fun toogleModeCycle() {
-        this.cycle = !this.cycle
+        this.cycleAll = !this.cycleAll
     }
 
     fun toogleRandom() {
