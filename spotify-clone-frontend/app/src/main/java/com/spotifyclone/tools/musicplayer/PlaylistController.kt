@@ -10,11 +10,8 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     private var musicList = mutableListOf<Music>()
     private var musicPositionPlaying = 0
     private var observers = mutableListOf<MusicObserver>()
-    var cycleAll = false
-        private set
-    var cycleOne = false
-        private set
-    var cycleMode = listOf<Int>()
+    private val cycleModeList = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ONE, CYCLE_MODE_ALL)
+    private var currentCycleMode = 0
     var random = false
         private set
 
@@ -39,9 +36,10 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     }
 
     fun nextMusic() {
-        val position: Int = if (musicPositionPlaying < musicList.size -1 || cycleAll)
-            (musicPositionPlaying + 1) % musicList.size
-        else musicPositionPlaying
+        val position: Int =
+            if (musicPositionPlaying < musicList.size - 1 || cycleModeList[currentCycleMode] == CYCLE_MODE_ALL)
+                (musicPositionPlaying + 1) % musicList.size
+            else musicPositionPlaying
         chooseItem(position)
     }
 
@@ -49,7 +47,8 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
         var position: Int = (musicPositionPlaying - 1) % musicList.size
 
         if (position < 0) {
-            position = if (cycleAll) musicList.size - 1 else 0
+            position =
+                if (cycleModeList[currentCycleMode] == CYCLE_MODE_ALL) musicList.size - 1 else 0
         }
         chooseItem(position)
     }
@@ -63,7 +62,11 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     }
 
     fun toogleModeCycle() {
-        this.cycleAll = !this.cycleAll
+        this.currentCycleMode = (this.currentCycleMode + 1) % cycleModeList.size
+    }
+
+    fun isCycle(): Boolean {
+        return currentCycleMode != 0
     }
 
     fun toogleRandom() {
@@ -87,5 +90,9 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     }
 
 
-    companion object : SingletonHolder<PlaylistController, Context>(::PlaylistController)
+    companion object : SingletonHolder<PlaylistController, Context>(::PlaylistController) {
+        const val CYCLE_MODE_ALL = "CYCLE_MODE_ALL"
+        const val CYCLE_MODE_ONE = "CYCLE_MODE_ONE"
+        const val CYCLE_MODE_OFF = "CYCLE_MODE_OFF"
+    }
 }

@@ -18,7 +18,9 @@ import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import android.graphics.Bitmap
+import android.view.View
 import android.widget.ImageButton
+import com.spotifyclone.components.buttons.ButtonStage
 import com.spotifyclone.tools.images.ImageTreatment
 
 
@@ -73,7 +75,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         val buttonPrevious = layout.buttonPreviousMusic
         val buttonNext = layout.buttonNextMusic
         val buttonRandom = layout.buttonRandomMusic
-        val buttonRepeat = layout.buttonRepeatMusic
+        val buttonRepeat: ButtonStage = layout.layoutButtonRepeat
         val buttonQueue = layout.buttonMusicQueue
         val progressBar = layout.progressBarMusic
         val timer = layout.textMusicTime
@@ -121,11 +123,14 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             buttonRandom.isActivated = playlistController.random
         }
 
+//        val icoButtonRepeatActivated = layout.layoutButtonRepeat.buttonActivated
 
-        buttonRepeat.isActivated = playlistController.cycleAll
+//        buttonRepeat.setStatusProvider {playlistController.isCycle()}
+
         buttonRepeat.setOnClickListener {
             playlistController.toogleModeCycle()
-            buttonRepeat.isActivated = playlistController.cycleAll || playlistController.cycleOne
+//            buttonRepeat.isActivated = playlistController.isCycle()
+//            icoButtonRepeatActivated.visibility = if (playlistController.isCycle()) View.VISIBLE else View.INVISIBLE
         }
 
         buttonQueue.setOnClickListener {

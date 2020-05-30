@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityMusicPlayer"
     android:layout_width="match_parent"
@@ -102,7 +103,7 @@
             <RelativeLayout
                 android:id="@+id/layoutMusicPlay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_below="@id/layoutMusicProgress">
 
                 <ImageButton
@@ -111,7 +112,7 @@
                     android:layout_height="@dimen/icon_music_player_height"
                     android:layout_centerVertical="true"
                     android:background="@drawable/ic_random_music"
-                    android:backgroundTint="@color/selector_button_color"/>
+                    android:backgroundTint="@color/selector_button_color" />
 
 
                 <RelativeLayout
@@ -147,35 +148,22 @@
                         android:background="@drawable/ic_next_music" />
                 </RelativeLayout>
 
-                <LinearLayout
+                <com.spotifyclone.components.buttons.ButtonStage
                     android:id="@+id/layoutButtonRepeat"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
-                    android:orientation="vertical"
-                    android:layout_centerVertical="true">
-                    <ImageButton
-                        android:id="@+id/buttonRepeatMusic"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center"
-                        android:background="@color/transparent"
-                        android:src="@drawable/ic_repeat_music"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_circle"/>
-                </LinearLayout>
+                    custom:mainImage="@drawable/selector_button_repeat"
+                    custom:statusImage="@drawable/ic_circle"/>
+
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/layoutAddOptions"
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/layoutMusicPlay">
+                android:layout_below="@+id/layoutMusicPlay"
+                android:layout_marginTop="20dp">
 
                 <ImageButton
                     android:id="@+id/buttonMusicQueue"

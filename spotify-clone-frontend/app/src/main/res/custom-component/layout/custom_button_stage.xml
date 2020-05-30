@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_button_stage"
+    android:layout_width="25dp"
+    android:layout_height="60dp"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/mainImage"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerVertical="true"
+        android:background="@color/transparent" />
+
+    <ImageView
+        android:layout_below="@id/mainImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="5dp"
+        android:visibility="visible" />
+</merge>

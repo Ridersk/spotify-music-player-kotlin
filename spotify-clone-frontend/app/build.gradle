@@ -29,6 +29,14 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res',
+                    'src/main/res/custom-component'
+            ]
+        }
+    }
 }
 
 dependencies {
