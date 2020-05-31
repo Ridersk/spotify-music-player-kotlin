@@ -2,6 +2,7 @@ package com.spotifyclone.tools.musicplayer
 
 import android.content.Context
 import android.media.AudioManager
+import android.os.Handler
 import androidx.media.AudioAttributesCompat
 import androidx.media.AudioFocusRequestCompat
 import androidx.media.AudioManagerCompat
@@ -16,15 +17,29 @@ class SpotifyAudioManager private constructor(var context: Context) {
     private var playbackDelayed: Boolean = false
     private var playbackNowAuthorized: Boolean = false
     private var resumeOnFocusGain: Boolean = false
+    private val musicAttributes: AudioAttributesCompat
 
-    fun startMusic(callPlayback: () -> Unit = {}, callPauseback: () -> Unit = {}) {
-        audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private lateinit var mediaController:SpotifyMediaController
+
+    private var delayedStopRunnable = Runnable {
+        mediaController.stopControls()
+    }
+
+    init {
+        musicAttributes = getMusicAttributes()
+    }
+
+    fun startMusic(mediaController: SpotifyMediaController, callPlayback: () -> Unit = {}, callPauseback: () -> Unit = {}) {
+
+        audioManager = getAudioService()
         val afChangeListener: AudioManager.OnAudioFocusChangeListener = getAfterChangeListener(callPlayback, callPauseback)
-        val musicAttributes: AudioAttributesCompat = getMusicAttributes()
+        val handler = Handler()
+
+        handler.removeCallbacks(delayedStopRunnable)
 
         focusRequest = AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN).run {
             setAudioAttributes(musicAttributes)
-            setOnAudioFocusChangeListener(afChangeListener)
+            setOnAudioFocusChangeListener(afChangeListener, handler)
             build()
         }
 
@@ -43,14 +58,6 @@ class SpotifyAudioManager private constructor(var context: Context) {
                 }
                 else -> false
             }
-        }
-    }
-
-    private fun getMusicAttributes(): AudioAttributesCompat {
-        return AudioAttributesCompat.Builder().run {
-            setUsage(AudioAttributesCompat.USAGE_MEDIA)
-            setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
-            build()
         }
     }
 
@@ -73,7 +80,7 @@ class SpotifyAudioManager private constructor(var context: Context) {
                         resumeOnFocusGain = false
                         playbackDelayed = false
                     }
-                    callPauseback.invoke()
+                    callPauseback.invoke() // problem loss focus
                 }
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                     synchronized(focusLock) {
@@ -84,8 +91,21 @@ class SpotifyAudioManager private constructor(var context: Context) {
                 }
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                     // ... pausing or ducking
+                    callPlayback.invoke()
                 }
             }
+        }
+    }
+
+    private fun getAudioService(): AudioManager {
+        return context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    }
+
+    private fun getMusicAttributes(): AudioAttributesCompat {
+        return AudioAttributesCompat.Builder().run {
+            setUsage(AudioAttributesCompat.USAGE_MEDIA)
+            setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
+            build()
         }
     }
 
