@@ -7,6 +7,7 @@ import android.graphics.drawable.DrawableContainer.DrawableContainerState
 import android.graphics.drawable.StateListDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -19,7 +20,8 @@ class ButtonStage(parentContext: Context, attrs: AttributeSet?) :
     private lateinit var mMainImageButton: ImageButton
     private lateinit var mStatusImageView: ImageView
     private lateinit var mainDrawableOptions: Array<Drawable>
-    private lateinit var statusDrawableOptions: Array<Drawable>
+    private var statusFun: () -> Boolean = { false }
+    private var mainButtonStatesFun: () -> Int = { 0 }
 
     init {
         val inflater: LayoutInflater =
@@ -39,14 +41,9 @@ class ButtonStage(parentContext: Context, attrs: AttributeSet?) :
         val mainImage: StateListDrawable =
             typedArray.getDrawable(R.styleable.ButtonStage_mainImage) as StateListDrawable
 
-//        if (mainImage is StateListDrawable) {
-//            val t = 0
-//        }
-
         mainDrawableOptions = getDrawableChildren(mainImage)
-        val firstItem: Drawable = mainDrawableOptions[0]
 
-        mMainImageButton.background = firstItem
+        mMainImageButton.background = mainDrawableOptions[0]
 
     }
 
@@ -64,4 +61,28 @@ class ButtonStage(parentContext: Context, attrs: AttributeSet?) :
 
         return drawableContainerState.children
     }
+
+    fun setMainButtonStatesProvider(statusFun: () -> Int) {
+        this.mainButtonStatesFun = statusFun
+
+        mMainImageButton.background = updateState()
+    }
+
+    fun setStatusProvider(statusFun: () -> Boolean) {
+        this.statusFun = statusFun
+
+        mStatusImageView.visibility = updateVisibility()
+    }
+
+    override fun setOnClickListener(listener: OnClickListener?) {
+        mMainImageButton.setOnClickListener { v ->
+            listener?.onClick(v)
+            mStatusImageView.visibility = updateVisibility()
+            mMainImageButton.background = updateState()
+        }
+    }
+
+    private fun updateVisibility() = if (statusFun.invoke()) View.VISIBLE else View.INVISIBLE
+
+    private fun updateState() = mainDrawableOptions[this.mainButtonStatesFun.invoke()]
 }

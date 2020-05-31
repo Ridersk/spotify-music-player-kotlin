@@ -106,20 +106,21 @@
                 android:layout_height="60dp"
                 android:layout_below="@id/layoutMusicProgress">
 
-                <ImageButton
+                <com.spotifyclone.components.buttons.ButtonStage
                     android:id="@+id/buttonRandomMusic"
-                    android:layout_width="@dimen/icon_music_player_width"
-                    android:layout_height="@dimen/icon_music_player_height"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    custom:mainImage="@drawable/selector_button_random"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/ic_random_music"
-                    android:backgroundTint="@color/selector_button_color" />
+                    custom:statusImage="@drawable/ic_circle" />
 
 
                 <RelativeLayout
                     android:id="@+id/layoutMusicPlayControl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@id/layoutButtonRepeat"
+                    android:layout_toStartOf="@id/buttonRepeat"
                     android:layout_toEndOf="@id/buttonRandomMusic">
 
                     <ImageButton
@@ -149,12 +150,12 @@
                 </RelativeLayout>
 
                 <com.spotifyclone.components.buttons.ButtonStage
-                    android:id="@+id/layoutButtonRepeat"
+                    android:id="@+id/buttonRepeat"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     custom:mainImage="@drawable/selector_button_repeat"
-                    custom:statusImage="@drawable/ic_circle"/>
+                    custom:statusImage="@drawable/ic_circle" />
 
             </RelativeLayout>
 

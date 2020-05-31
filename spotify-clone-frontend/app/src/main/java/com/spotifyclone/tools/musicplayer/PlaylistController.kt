@@ -12,8 +12,7 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     private var observers = mutableListOf<MusicObserver>()
     private val cycleModeList = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ONE, CYCLE_MODE_ALL)
     private var currentCycleMode = 0
-    var random = false
-        private set
+    private var random = false
 
     override fun receiverList(list: List<Music>) {
         this.musicList = list.toMutableList()
@@ -68,6 +67,12 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     fun isCycle(): Boolean {
         return currentCycleMode != 0
     }
+
+    fun getCycleType(): Int = currentCycleMode
+
+    fun isRandom():Boolean = random
+
+    fun getRandomType(): Int = if (random) 1 else 0
 
     fun toogleRandom() {
         this.random = !this.random
