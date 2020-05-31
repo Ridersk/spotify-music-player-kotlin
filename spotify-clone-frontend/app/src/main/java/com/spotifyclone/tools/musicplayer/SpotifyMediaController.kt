@@ -10,6 +10,7 @@ import java.util.*
 
 class SpotifyMediaController private constructor(var context: Context) : MediaPlayer() {
 
+    private val spotifyAudioManager: SpotifyAudioManager
     private var stoppedPlayer: Boolean = false
     private var currentMusic: FileDescriptor? = null
     private var musicDurationMilisec: Int = 1
@@ -18,19 +19,27 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
     private var observerProgress: ((Int) -> Unit)? = null
     private var progress: Int = 0
 
+    private var observerStatusPlaying: () -> Unit = {}
+
     init {
         super.reset()
         musicRefresh()
+        spotifyAudioManager = SpotifyAudioManager.getInstance(context)
     }
 
-    fun prepareMusic(contentUriId: Long) {
+    fun playMusic(contentUriId: Long) {
         super.reset()
         setMusicAttrs(contentUriId)
         super.setDataSource(currentMusic)
         super.prepare()
+        this.startMusic()
     }
 
     fun playMusic() {
+        this.startMusic()
+    }
+
+    private fun startMusic() {
         if (super.isPlaying()) {
             pauseMusic()
             return
@@ -40,18 +49,23 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
             super.prepare()
         }
         super.start()
+
+        spotifyAudioManager.startMusic({ super.start() }, { this.pauseMusic() })
     }
 
     private fun pauseMusic() {
         super.pause()
+        this.observerStatusPlaying.invoke()
     }
 
-    fun setObserverOnCompletion(callback: () -> Unit) {
+    fun setObserverOnStatusPlaying(callback: () -> Unit) {
         super.setOnCompletionListener {
             if (!super.isPlaying()) {
                 callback.invoke()
             }
         }
+
+        this.observerStatusPlaying = callback
     }
 
     fun setObserverMusicTime(callback: (time: String) -> Unit) {

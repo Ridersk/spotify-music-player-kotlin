@@ -2,7 +2,6 @@ package com.spotifyclone.presentation.music
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -18,9 +17,7 @@ import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import android.graphics.Bitmap
-import android.widget.ImageButton
 import com.spotifyclone.components.buttons.ButtonStage
-import com.spotifyclone.tools.images.ImageTreatment
 
 
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
@@ -52,10 +49,9 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
     }
 
     override fun chooseMusic(music: Music) {
-        musicPlayer.prepareMusic(
+        musicPlayer.playMusic(
             playlistController.getCurrentMusic().contentUriId
         )
-        musicPlayer.playMusic()
         reloadActivity(
             music.title,
             music.artist,
@@ -104,7 +100,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             buttonPlay.isActivated = musicPlayer.isPlaying
         }
 
-        musicPlayer.setObserverOnCompletion {
+        musicPlayer.setObserverOnStatusPlaying {
             buttonPlay.isActivated = false
         }
 
@@ -131,20 +127,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         buttonQueue.setOnClickListener {
         }
     }
-
-    private fun changeButton(button: ImageButton) {
-        if (button.isActivated) {
-            val repeateicon: Drawable? = getDrawable(R.drawable.ic_repeat_music)
-            val circleIcon = getDrawable(R.drawable.ic_circle)
-
-            val repeatIconScale: Drawable = ImageTreatment.resizeDrawable(applicationContext, repeateicon, 15, 15)
-
-            button.setImageDrawable(ImageTreatment.mergeIcons(repeatIconScale, circleIcon))
-        }
-    }
-
-
-
 
 
     private fun startMusic() {
