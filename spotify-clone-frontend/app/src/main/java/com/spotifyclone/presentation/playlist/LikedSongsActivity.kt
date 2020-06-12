@@ -71,14 +71,14 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
                             getString(EXTRA_PLAYLIST_NAME)
                         )
 
-                    chooseItem(position)
+                    chooseItem(music.contentUriId)
                     this@LikedSongsActivity.startActivity(intent)
                 }
         }
     }
 
-    override fun chooseItem(position: Int) {
-        playlistController.chooseItem(position)
+    override fun chooseItem(id: Long) {
+        playlistController.chooseItem(id)
     }
 
     private fun setMusicList() {

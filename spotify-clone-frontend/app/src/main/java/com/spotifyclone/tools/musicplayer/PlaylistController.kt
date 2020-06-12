@@ -18,8 +18,14 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
         this.musicList = list.toMutableList()
     }
 
-    override fun chooseItem(position: Int) {
-        this.musicPositionPlaying = position
+    override fun chooseItem(id: Long) {
+        val position = getMusicById(id)
+        this.musicPositionPlaying = if (position != -1) position else this.musicPositionPlaying
+        alertChoosedMusic()
+    }
+
+    fun chooseItem(position: Int) {
+        this.musicPositionPlaying = if (position != -1) position else this.musicPositionPlaying
         alertChoosedMusic()
     }
 
@@ -78,6 +84,13 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
         this.random = !this.random
 
         if (this.random) shuffleList()
+    }
+
+    private fun getMusicById(id: Long):Int {
+        if (id != -1L) {
+            return musicList.map{music -> music.contentUriId }.indexOf(id)
+        }
+        return 0
     }
 
     private fun shuffleList() {

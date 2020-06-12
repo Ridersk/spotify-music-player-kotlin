@@ -17,8 +17,6 @@ class PlaylistMusicsViewModel(
     fun getMusics() {
         val musicList = getRepositoryMusics()
 
-        val a = "teste"
-        a.length
         musicsLiveData.value = musicList
     }
 
