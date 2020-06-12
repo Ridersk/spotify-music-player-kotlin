@@ -29,10 +29,6 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
         spotifyAudioManager = SpotifyAudioManager.getInstance(context)
     }
 
-    fun stopControls() {
-        this.stopedControls = true
-    }
-
     fun playMusic(contentUriId: Long) {
         super.reset()
         setMusicAttrs(contentUriId)
@@ -57,7 +53,7 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
             super.prepare()
         }
 
-        spotifyAudioManager.startMusic(this, { super.start() }, { this.pauseMusic() })
+        spotifyAudioManager.startMusic({ super.start() }, { this.pauseMusic() })
     }
 
     private fun pauseMusic() {

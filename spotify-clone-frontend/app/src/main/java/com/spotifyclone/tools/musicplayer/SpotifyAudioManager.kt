@@ -1,6 +1,7 @@
 package com.spotifyclone.tools.musicplayer
 
 import android.content.Context
+import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Handler
 import androidx.media.AudioAttributesCompat
@@ -10,43 +11,38 @@ import com.spotifyclone.tools.basepatterns.SingletonHolder
 
 class SpotifyAudioManager private constructor(var context: Context) {
 
-    private lateinit var audioManager: AudioManager
-    private lateinit var focusRequest: AudioFocusRequestCompat
-
     private val focusLock = Any()
     private var playbackDelayed: Boolean = false
     private var playbackNowAuthorized: Boolean = false
     private var resumeOnFocusGain: Boolean = false
     private val musicAttributes: AudioAttributesCompat
 
-    private lateinit var mediaController:SpotifyMediaController
-
-    private var delayedStopRunnable = Runnable {
-        mediaController.stopControls()
-    }
-
     init {
         musicAttributes = getMusicAttributes()
     }
 
-    fun startMusic(mediaController: SpotifyMediaController, callPlayback: () -> Unit = {}, callPauseback: () -> Unit = {}) {
-
-        audioManager = getAudioService()
-        val afChangeListener: AudioManager.OnAudioFocusChangeListener = getAfterChangeListener(callPlayback, callPauseback)
-        val handler = Handler()
-
-        handler.removeCallbacks(delayedStopRunnable)
-
-        focusRequest = AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN).run {
-            setAudioAttributes(musicAttributes)
-            setOnAudioFocusChangeListener(afChangeListener, handler)
-            build()
+    fun startMusic(callPlayback: () -> Unit = {}, callPauseback: () -> Unit = {}) {
+        if (playbackNowAuthorized) {
+            callPlayback.invoke()
+            return
         }
 
+        val audioManager: AudioManager = getAudioService()
+        val afChangeListener: AudioManager.OnAudioFocusChangeListener = getAfterChangeListener(callPlayback, callPauseback)
+        val focusRequest: AudioFocusRequestCompat = buildFocusRequest(afChangeListener)
 
+        playbackNowAuthorized = requestFocus(audioManager, focusRequest, callPlayback)
+    }
+
+    private fun requestFocus(
+        audioManager: AudioManager,
+        focusRequest: AudioFocusRequestCompat,
+        callPlayback: () -> Unit = {}):Boolean {
         val res = AudioManagerCompat.requestAudioFocus(audioManager, focusRequest)
+        val authorization: Boolean
+
         synchronized(focusLock) {
-            playbackNowAuthorized = when (res) {
+            authorization = when (res) {
                 AudioManager.AUDIOFOCUS_REQUEST_FAILED -> false
                 AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
                     callPlayback.invoke()
@@ -58,6 +54,19 @@ class SpotifyAudioManager private constructor(var context: Context) {
                 }
                 else -> false
             }
+        }
+
+        return authorization
+    }
+
+    private fun buildFocusRequest(
+        afChangeListener: AudioManager.OnAudioFocusChangeListener,
+        handler: Handler = Handler()
+    ): AudioFocusRequestCompat {
+        return AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN).run {
+            setAudioAttributes(musicAttributes)
+            setOnAudioFocusChangeListener(afChangeListener, handler)
+            build()
         }
     }
 
@@ -79,6 +88,7 @@ class SpotifyAudioManager private constructor(var context: Context) {
                     synchronized(focusLock) {
                         resumeOnFocusGain = false
                         playbackDelayed = false
+                        playbackNowAuthorized = false
                     }
                     callPauseback.invoke() // problem loss focus
                 }
