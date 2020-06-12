@@ -5,7 +5,7 @@ import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
 
 class PlaylistMusicPlayer private constructor(
-    private var contextActivity: Context) : MusicPlayer(contextActivity),
+    contextActivity: Context) : MusicPlayer(contextActivity),
     PlaylistObserver<Music>,
     MusicProvider {
 
@@ -15,6 +15,19 @@ class PlaylistMusicPlayer private constructor(
     private val cycleModeList = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ONE, CYCLE_MODE_ALL)
     private var currentCycleMode = 0
     private var random = false
+
+    val isCycle: () -> Boolean = { currentCycleMode != 0 }
+    val isLastMusic: () -> Boolean = {this.musicPositionPlaying == this.musicList.size - 1 && !isCycle()}
+    val getCycleType: () -> Int = {currentCycleMode}
+    val isRandom:() -> Boolean = {random}
+    val getRandomType:() -> Int = {if (random) 1 else 0}
+
+
+    fun toogleRandom() {
+        this.random = !this.random
+
+        if (this.random) shuffleList()
+    }
 
     override fun receiverList(list: List<Music>) {
         this.musicList = list.toMutableList()
@@ -69,24 +82,16 @@ class PlaylistMusicPlayer private constructor(
         }
     }
 
-    fun toogleModeCycle() {
-        this.currentCycleMode = (this.currentCycleMode + 1) % cycleModeList.size
-    }
+    override fun setObserverOnCompletionListener(callback: () -> Unit) {
+        val conditionalCallback = {
+            if (isLastMusic()) {
+                callback.invoke()
+            } else {
+                this.nextMusic()
+            }
+        }
 
-    fun isCycle(): Boolean {
-        return currentCycleMode != 0
-    }
-
-    fun getCycleType(): Int = currentCycleMode
-
-    fun isRandom():Boolean = random
-
-    fun getRandomType(): Int = if (random) 1 else 0
-
-    fun toogleRandom() {
-        this.random = !this.random
-
-        if (this.random) shuffleList()
+        super.setObserverOnCompletionListener(conditionalCallback)
     }
 
     private fun getMusicById(id: Long):Int {
@@ -94,6 +99,10 @@ class PlaylistMusicPlayer private constructor(
             return musicList.map{music -> music.contentUriId }.indexOf(id)
         }
         return 0
+    }
+
+    fun toogleModeCycle() {
+        this.currentCycleMode = (this.currentCycleMode + 1) % cycleModeList.size
     }
 
     private fun shuffleList() {

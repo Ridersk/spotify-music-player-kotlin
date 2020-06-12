@@ -7,7 +7,7 @@ import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 import java.io.FileDescriptor
 import java.util.*
 
-open class MusicPlayer (var context: Context) : MediaPlayer() {
+open class MusicPlayer(var context: Context) : MediaPlayer() {
 
     private val spotifyAudioManager: SpotifyAudioManager
     private var stoppedPlayer: Boolean = false
@@ -17,10 +17,7 @@ open class MusicPlayer (var context: Context) : MediaPlayer() {
     private var observerTimer: ((String) -> Unit)? = null
     private var observerProgress: ((Int) -> Unit)? = null
     private var progress: Int = 0
-
     private var observerStatusPlaying: () -> Unit = {}
-
-    private var stopedControls = false
 
     init {
         super.reset()
@@ -37,9 +34,7 @@ open class MusicPlayer (var context: Context) : MediaPlayer() {
     }
 
     fun playMusic() {
-        if (!stopedControls) {
-            this.startMusic()
-        }
+        this.startMusic()
     }
 
     private fun startMusic() {
@@ -57,10 +52,9 @@ open class MusicPlayer (var context: Context) : MediaPlayer() {
 
     private fun pauseMusic() {
         super.pause()
-        this.observerStatusPlaying.invoke()
     }
 
-    fun setObserverOnCompletionListener(callback: () -> Unit) {
+    open fun setObserverOnCompletionListener(callback: () -> Unit) {
         super.setOnCompletionListener {
             if (!super.isPlaying()) {
                 callback.invoke()
