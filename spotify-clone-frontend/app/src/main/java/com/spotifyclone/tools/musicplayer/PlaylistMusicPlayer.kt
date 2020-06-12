@@ -4,7 +4,9 @@ import android.content.Context
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
 
-class PlaylistController private constructor(var context: Context) : PlaylistObserver<Music>,
+class PlaylistMusicPlayer private constructor(
+    private var contextActivity: Context) : MusicPlayer(contextActivity),
+    PlaylistObserver<Music>,
     MusicProvider {
 
     private var musicList = mutableListOf<Music>()
@@ -24,7 +26,7 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
         alertChoosedMusic()
     }
 
-    fun chooseItem(position: Int) {
+    private fun chooseItem(position: Int) {
         this.musicPositionPlaying = if (position != -1) position else this.musicPositionPlaying
         alertChoosedMusic()
     }
@@ -38,6 +40,7 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
         for (observer in this.observers) {
             observer.chooseMusic(music)
         }
+        super.playMusic(music.contentUriId)
     }
 
     fun nextMusic() {
@@ -108,7 +111,7 @@ class PlaylistController private constructor(var context: Context) : PlaylistObs
     }
 
 
-    companion object : SingletonHolder<PlaylistController, Context>(::PlaylistController) {
+    companion object : SingletonHolder<PlaylistMusicPlayer, Context>(::PlaylistMusicPlayer) {
         const val CYCLE_MODE_ALL = "CYCLE_MODE_ALL"
         const val CYCLE_MODE_ONE = "CYCLE_MODE_ONE"
         const val CYCLE_MODE_OFF = "CYCLE_MODE_OFF"

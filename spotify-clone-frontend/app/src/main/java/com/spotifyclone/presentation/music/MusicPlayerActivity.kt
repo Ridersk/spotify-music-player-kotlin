@@ -11,8 +11,7 @@ import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 import com.spotifyclone.tools.musicplayer.MusicObserver
-import com.spotifyclone.tools.musicplayer.PlaylistController
-import com.spotifyclone.tools.musicplayer.SpotifyMediaController
+import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -22,13 +21,10 @@ import com.spotifyclone.components.buttons.ButtonStage
 
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
-    private lateinit var parentContext: Context
-    private val musicPlayer = SpotifyMediaController.getInstance(this@MusicPlayerActivity)
-    private val playlistController = PlaylistController.getInstance(this@MusicPlayerActivity)
-
+    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicPlayerActivity)
 
     init {
-        playlistController.addObserver(this)
+        playlistMusicPlayer.addObserver(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +45,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
     }
 
     override fun chooseMusic(music: Music) {
-        musicPlayer.playMusic(
-            playlistController.getCurrentMusic().contentUriId
-        )
         reloadActivity(
             music.title,
             music.artist,
@@ -80,13 +73,12 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
         insertAlbumArt(imageAlbum)
 
-        progressBar.setOnSeekBarChangeListener(musicPlayer.progressControl)
-
-        musicPlayer.setObserverMusicTime { time: String ->
+        playlistMusicPlayer.setObserverMusicTime { time: String ->
             runOnUiThread { timer.text = time }
         }
 
-        musicPlayer.setObserverProgressBar { progress: Int ->
+        progressBar.setOnSeekBarChangeListener(playlistMusicPlayer.progressControl)
+        playlistMusicPlayer.setObserverProgressBar { progress: Int ->
             progressBar.progress = progress
         }
 
@@ -96,32 +88,32 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
         buttonPlay.isActivated = true
         buttonPlay.setOnClickListener {
-            musicPlayer.playMusic()
-            buttonPlay.isActivated = musicPlayer.isPlaying
+            playlistMusicPlayer.playMusic()
+            buttonPlay.isActivated = playlistMusicPlayer.isPlaying
         }
 
-        musicPlayer.setObserverOnStatusPlaying {
+        playlistMusicPlayer.setObserverOnCompletionListener {
             buttonPlay.isActivated = false
         }
 
         buttonPrevious.setOnClickListener {
-            playlistController.previousMusic()
+            playlistMusicPlayer.previousMusic()
         }
 
         buttonNext.setOnClickListener {
-            playlistController.nextMusic()
+            playlistMusicPlayer.nextMusic()
         }
 
-        buttonRandom.setStatusProvider { playlistController.isRandom() }
-        buttonRandom.setMainButtonStatesProvider { playlistController.getRandomType() }
+        buttonRandom.setStatusProvider { playlistMusicPlayer.isRandom() }
+        buttonRandom.setMainButtonStatesProvider { playlistMusicPlayer.getRandomType() }
         buttonRandom.setOnClickListener {
-            playlistController.toogleRandom()
+            playlistMusicPlayer.toogleRandom()
         }
 
-        buttonRepeat.setStatusProvider {playlistController.isCycle()}
-        buttonRepeat.setMainButtonStatesProvider { playlistController.getCycleType() }
+        buttonRepeat.setStatusProvider {playlistMusicPlayer.isCycle()}
+        buttonRepeat.setMainButtonStatesProvider { playlistMusicPlayer.getCycleType() }
         buttonRepeat.setOnClickListener {
-            playlistController.toogleModeCycle()
+            playlistMusicPlayer.toogleModeCycle()
         }
 
         buttonQueue.setOnClickListener {
@@ -130,7 +122,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
 
     private fun startMusic() {
-        chooseMusic(playlistController.getCurrentMusic())
+        chooseMusic(playlistMusicPlayer.getCurrentMusic())
     }
 
     private fun insertAlbumArt(imageAlbum: ImageView) {

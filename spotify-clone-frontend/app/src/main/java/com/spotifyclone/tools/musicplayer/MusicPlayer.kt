@@ -3,12 +3,11 @@ package com.spotifyclone.tools.musicplayer
 import android.content.Context
 import android.media.MediaPlayer
 import android.widget.SeekBar
-import com.spotifyclone.tools.basepatterns.SingletonHolder
 import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 import java.io.FileDescriptor
 import java.util.*
 
-class SpotifyMediaController private constructor(var context: Context) : MediaPlayer() {
+open class MusicPlayer (var context: Context) : MediaPlayer() {
 
     private val spotifyAudioManager: SpotifyAudioManager
     private var stoppedPlayer: Boolean = false
@@ -61,7 +60,7 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
         this.observerStatusPlaying.invoke()
     }
 
-    fun setObserverOnStatusPlaying(callback: () -> Unit) {
+    fun setObserverOnCompletionListener(callback: () -> Unit) {
         super.setOnCompletionListener {
             if (!super.isPlaying()) {
                 callback.invoke()
@@ -165,5 +164,4 @@ class SpotifyMediaController private constructor(var context: Context) : MediaPl
         }
     }
 
-    companion object : SingletonHolder<SpotifyMediaController, Context>(::SpotifyMediaController)
 }

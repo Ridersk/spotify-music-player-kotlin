@@ -9,7 +9,7 @@ import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.music.MusicPlayerActivity
-import com.spotifyclone.tools.musicplayer.PlaylistController
+import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
 import com.spotifyclone.tools.musicplayer.PlaylistObserver
 import kotlinx.android.synthetic.main.activity_liked_songs.*
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.include_toolbar.*
 
 class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<Music> {
 
-    private val playlistController = PlaylistController.getInstance(this@LikedSongsActivity)
+    private val playlistController = PlaylistMusicPlayer.getInstance(this@LikedSongsActivity)
 
     lateinit var layout: ViewGroup
 
