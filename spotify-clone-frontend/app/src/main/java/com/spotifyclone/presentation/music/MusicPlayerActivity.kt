@@ -88,7 +88,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
         buttonPlay.isActivated = true
         buttonPlay.setOnClickListener {
-            playlistMusicPlayer.playMusic()
+            playlistMusicPlayer.tooglePlayMusic()
             buttonPlay.isActivated = playlistMusicPlayer.isPlaying
         }
 

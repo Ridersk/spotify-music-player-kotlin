@@ -61,7 +61,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
             )
             setHasFixedSize(true)
             adapter =
-                PlaylistMusicsAdapter(list) { music, position ->
+                PlaylistMusicsAdapter(list) { music ->
                     val intent =
                         MusicPlayerActivity.getStartIntent(
                             this@LikedSongsActivity,
@@ -71,7 +71,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
                             getString(EXTRA_PLAYLIST_NAME)
                         )
 
-                    chooseItem(music.contentUriId)
+                    chooseItem(music.id)
                     this@LikedSongsActivity.startActivity(intent)
                 }
         }

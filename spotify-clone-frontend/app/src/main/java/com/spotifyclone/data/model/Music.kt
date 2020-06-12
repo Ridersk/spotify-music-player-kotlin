@@ -7,7 +7,7 @@ class Music(
     contentUriId: Long? = -1L,
     albumUriId: Long? = -1L
 ) {
-    val index: Int
+    val id: Long
     var title: String = "Unknown Title"
     var artist: String = "Unknown Artist"
     var album: String = "Unknown Album"
@@ -31,10 +31,10 @@ class Music(
             this.albumUriId = albumUriId
         }
 
-        this.index = lastIndex++
+        this.id = lastId++
     }
 
     companion object {
-        private var lastIndex = 0
+        private var lastId:Long = 0
     }
 }

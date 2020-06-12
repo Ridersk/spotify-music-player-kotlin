@@ -25,24 +25,27 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         spotifyAudioManager = SpotifyAudioManager.getInstance(context)
     }
 
-    fun playMusic(contentUriId: Long) {
-        super.reset()
-        setMusicAttrs(contentUriId)
-        super.setDataSource(currentMusic)
-        super.prepare()
-        this.startMusic()
-    }
-
-    fun playMusic() {
-        this.startMusic()
-    }
-
-    private fun startMusic() {
+    fun tooglePlayMusic() {
         if (super.isPlaying()) {
             pauseMusic()
             return
         }
 
+        this.startMusic()
+    }
+
+    protected fun playMusic(contentUriId: Long, initPlaying: Boolean = true) {
+        super.reset()
+        setMusicAttrs(contentUriId)
+        super.setDataSource(currentMusic)
+        super.prepare()
+
+        if (initPlaying) {
+            this.startMusic()
+        }
+    }
+
+    private fun startMusic() {
         if (stoppedPlayer) {
             super.prepare()
         }
@@ -54,14 +57,14 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         super.pause()
     }
 
-    open fun setObserverOnCompletionListener(callback: () -> Unit) {
+    open fun setObserverOnCompletionListener(callbackObserver: () -> Unit) {
         super.setOnCompletionListener {
             if (!super.isPlaying()) {
-                callback.invoke()
+                callbackObserver.invoke()
             }
         }
 
-        this.observerStatusPlaying = callback
+        this.observerStatusPlaying = callbackObserver
     }
 
     fun setObserverMusicTime(callback: (time: String) -> Unit) {
@@ -133,11 +136,21 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         return Pair(minutes, seconds)
     }
 
+    private fun getProgress(): Int = calculateProgress(currentPosition)
+
+    fun isInit():Boolean = getProgress() == 0
+
+    fun isEnd():Boolean = getProgress() == 100
+
     private fun calculateProgress(positionMilisec: Int): Int =
         (positionMilisec * 100) / musicDurationMilisec
 
     private fun calculateMiliseconds(progress: Int): Int =
         (progress * musicDurationMilisec) / 100
+
+    protected fun getCurrentSec(): Int {
+        return this.currentPosition / 10000
+    }
 
     val progressControl = object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
