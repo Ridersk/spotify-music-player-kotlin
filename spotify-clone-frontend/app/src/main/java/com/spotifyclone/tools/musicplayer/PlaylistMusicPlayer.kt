@@ -14,7 +14,8 @@ class PlaylistMusicPlayer private constructor(
     private var musicQueueBase = mutableListOf<Music>()
     var musicQueueRunning = mutableListOf<Music>()
         private set
-    private var positionPlaying = 0
+    var positionPlaying = 0
+        private set
     private var currentMusicId: Long = -1
     private var observers = mutableListOf<MusicObserver>()
     private val modeCycleList = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ALL, CYCLE_MODE_ONE)

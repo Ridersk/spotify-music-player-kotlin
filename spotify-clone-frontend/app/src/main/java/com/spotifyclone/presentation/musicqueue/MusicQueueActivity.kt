@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
@@ -14,6 +15,7 @@ import com.spotifyclone.tools.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_music_queue.*
 import kotlinx.android.synthetic.main.activity_music_queue.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
+import java.util.*
 
 class MusicQueueActivity : BaseActivity() {
     private val playlistController = PlaylistMusicPlayer.getInstance(this@MusicQueueActivity)
@@ -52,6 +54,9 @@ class MusicQueueActivity : BaseActivity() {
 
     private fun buildQueue(recyclerMusicList: RecyclerView) {
         val list = playlistController.musicQueueRunning
+        val scopedList = list.subList(playlistController.positionPlaying + 1, list.size)
+
+        val musicQueueAdapter = MusicQueueAdapter(scopedList)
 
         with(recyclerMusicList) {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
@@ -60,8 +65,34 @@ class MusicQueueActivity : BaseActivity() {
                 false
             )
             setHasFixedSize(true)
-            adapter = MusicQueueAdapter(list) { music -> }
+            adapter = musicQueueAdapter
         }
+
+
+        val touchHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                dragged: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val draggedPosition = dragged.adapterPosition
+                val targetPosition = target.adapterPosition
+
+                Collections.swap(list, draggedPosition, targetPosition)
+
+                musicQueueAdapter.notifyItemMoved(draggedPosition, targetPosition)
+
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+        touchHelper.attachToRecyclerView(recyclerMusicList)
     }
 
     companion object {
