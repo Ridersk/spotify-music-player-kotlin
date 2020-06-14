@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import android.graphics.Bitmap
 import com.spotifyclone.components.buttons.ButtonStage
+import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
 
 
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
@@ -35,7 +36,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             ToolbarParameters(
                 toolbar = toolbarMain,
                 title = intent.getStringExtra(EXTRA_PLAYLIST),
-                subTitle = getString(R.string.music_toolbar_subTitle),
+                subTitle = getString(R.string.toolbar_subTitle_library),
                 option1 = Pair(R.drawable.ic_close, { super.onBackPressed() }),
                 option3 = Pair(R.drawable.ic_options, {})
             )
@@ -49,7 +50,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             music.title,
             music.artist,
             music.albumUriId,
-            "Test"
+            intent.getStringExtra(EXTRA_PLAYLIST)
         )
     }
 
@@ -120,6 +121,11 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
 
         buttonQueue.setOnClickListener {
+            val intent = MusicQueueActivity.getStartIntent(
+                this@MusicPlayerActivity,
+                intent.getStringExtra(EXTRA_PLAYLIST)
+            )
+            this@MusicPlayerActivity.startActivity(intent)
         }
     }
 
@@ -141,7 +147,8 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
     }
 
-    private fun reloadActivity(title: String, artist: String, albumUriId: Long, playlist: String) {
+    private fun reloadActivity(title: String, artist: String,
+                               albumUriId: Long, playlist: String? = "") {
         intent?.apply {
             putExtra(EXTRA_TITLE, title)
             putExtra(EXTRA_ARTIST, artist)

@@ -31,9 +31,13 @@
 
     <!-- Music Player Activity -->
     <string name="music_album_image">Music Album Image</string>
-    <string name="music_toolbar_subTitle">PLAYING FROM YOUR LIBRARY</string>
     <string name="music_progress_init_time">0:00</string>
 
+    <!-- Music Queue Activity -->
+    <string name="music_queue_txt_next_from">Next From:</string>
+    <string name="music_queue_txt_now_playing">Now Playing</string>
+    <string name="music_queue_txt_next_in_queue">Next In Queue</string>
+    <string name="music_queue_img_description_music_playing">Music Playing</string>
 
     <!-- Include Toolbar -->
     <string name="include_toolbar_img_description_btn1">Screen Close Button</string>
@@ -41,6 +45,8 @@
         Additional or Optional Button for some screens
     </string>
     <string name="include_toolbar_img_description_btn3">Screen Options Button</string>
+    <string name="toolbar_subTitle_library">PLAYING FROM YOUR LIBRARY</string>
+    <string name="toolbar_subTitle_playlist">PLAYING FROM YOUR PLAYLIST</string>
 
     <!-- Item Music -->
     <string name="item_music_img_description_download">Download Button</string>
@@ -50,5 +56,6 @@
         Download Button
     </string>
 
-
+    <!-- Item Queue Music -->
+    <string name="item_queue_music_img_description_playlist_button">Playlist Button</string>
 </resources>

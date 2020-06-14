@@ -12,7 +12,8 @@ class PlaylistMusicPlayer private constructor(
 
     private var originalMusicList = listOf<Music>()
     private var musicQueueBase = mutableListOf<Music>()
-    private var musicQueueRunning = mutableListOf<Music>()
+    var musicQueueRunning = mutableListOf<Music>()
+        private set
     private var positionPlaying = 0
     private var currentMusicId: Long = -1
     private var observers = mutableListOf<MusicObserver>()

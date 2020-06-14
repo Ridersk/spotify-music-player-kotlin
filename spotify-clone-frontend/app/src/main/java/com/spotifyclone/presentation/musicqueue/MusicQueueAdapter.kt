@@ -1,4 +1,4 @@
-package com.spotifyclone.presentation.playlist
+package com.spotifyclone.presentation.musicqueue
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,15 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.utils.TextUtils
-import kotlinx.android.synthetic.main.item_music.view.*
+import kotlinx.android.synthetic.main.item_queue_music.view.textMusicTitle
+import kotlinx.android.synthetic.main.item_queue_music.view.textMusicLabel
 
-open class PlaylistMusicsAdapter(
+class MusicQueueAdapter(
     private val musics: List<Music>,
     private val onItemClickListener: ((music: Music) -> Unit) = {}
-) : RecyclerView.Adapter<PlaylistMusicsAdapter.ViewHolder>() {
+): RecyclerView.Adapter<MusicQueueAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
-            R.layout.item_music, parent, false
+            R.layout.item_queue_music, parent, false
         )
 
         return ViewHolder(itemView, onItemClickListener)

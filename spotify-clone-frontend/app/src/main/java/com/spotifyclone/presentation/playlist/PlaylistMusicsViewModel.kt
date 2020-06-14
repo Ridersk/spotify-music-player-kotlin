@@ -8,7 +8,7 @@ import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 import java.lang.IllegalArgumentException
 
-class PlaylistMusicsViewModel(
+open class PlaylistMusicsViewModel(
     private val parentContext: Context
 ) : ViewModel() {
 

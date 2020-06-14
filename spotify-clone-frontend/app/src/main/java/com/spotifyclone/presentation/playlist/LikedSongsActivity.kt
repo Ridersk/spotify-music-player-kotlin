@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
@@ -56,7 +57,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
         with(layout.recyclerMusics) {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
                 this@LikedSongsActivity,
-                androidx.recyclerview.widget.RecyclerView.VERTICAL,
+                RecyclerView.VERTICAL,
                 false
             )
             setHasFixedSize(true)
