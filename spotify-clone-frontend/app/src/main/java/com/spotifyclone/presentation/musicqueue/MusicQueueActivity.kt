@@ -10,6 +10,7 @@ import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
+import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_music_queue.*
@@ -42,11 +43,13 @@ class MusicQueueActivity : BaseActivity() {
 
         val musicTitle = layout.textMusicTitle
         val musicLabel = layout.textMusicLabel
+        val imageAlbum = layout.imageAlbum
         val playlistName = layout.textPlaylistName
         val recyclerMusicList = layout.recyclerNextFromQueue
 
         musicTitle.text = currentMusic.title
         musicLabel.text = TextUtils.getMusicLabel(currentMusic.artist, currentMusic.album)
+        insertAlbumArt(imageAlbum, intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1))
         playlistName.text = intent.getStringExtra(EXTRA_PLAYLIST_NAME)
 
         buildQueue(recyclerMusicList)
@@ -97,13 +100,16 @@ class MusicQueueActivity : BaseActivity() {
 
     companion object {
         private const val EXTRA_PLAYLIST_NAME = "EXTRA_PLAYLIST_NAME"
+        private const val EXTRA_ALBUM_URI_ID = "EXTRA_ALBUM_URI_ID"
 
         fun getStartIntent(
             context: Context,
-            playlist: String?
+            playlist: String?,
+            albumUriId: Long
         ): Intent {
             return Intent(context, MusicQueueActivity::class.java).apply {
                 putExtra(EXTRA_PLAYLIST_NAME, playlist)
+                putExtra(EXTRA_ALBUM_URI_ID, albumUriId)
             }
         }
     }

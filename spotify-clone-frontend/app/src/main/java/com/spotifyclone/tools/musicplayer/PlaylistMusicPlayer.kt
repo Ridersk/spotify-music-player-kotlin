@@ -23,7 +23,9 @@ class PlaylistMusicPlayer private constructor(
     private var random = false
 
     val isCycle: () -> Boolean = { currentModeCycle != 0 }
-    val isLastMusic: () -> Boolean =
+    val isMusicFirst: () -> Boolean =
+        { this.positionPlaying == 0 }
+    val isMusicLast: () -> Boolean =
         { this.positionPlaying == this.musicQueueRunning.size - 1 }
     val getCycleType: () -> Int = { currentModeCycle }
     val isRandom: () -> Boolean = { random }
@@ -159,7 +161,7 @@ class PlaylistMusicPlayer private constructor(
 
     override fun setObserverOnCompletionListener(callbackObserver: () -> Unit) {
         val conditionalCallback = {
-            if ((isLastMusic() || super.isInit() || super.isEnd()) && !isCycle()) {
+            if (isMusicFirst() && super.isInit() && !isCycle()) {
                 callbackObserver.invoke()
             } else if (modeCycleList[currentModeCycle] == CYCLE_MODE_ONE) {
                 super.restartMusic()

@@ -73,7 +73,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         musicTitle.text = intent.getStringExtra(EXTRA_TITLE)
         musicArtist.text = intent.getStringExtra(EXTRA_ARTIST)
 
-        insertAlbumArt(imageAlbum)
+        insertAlbumArt(imageAlbum, intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1))
 
         totalTime.text = playlistMusicPlayer.getTotalTime()
 
@@ -123,7 +123,8 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         buttonQueue.setOnClickListener {
             val intent = MusicQueueActivity.getStartIntent(
                 this@MusicPlayerActivity,
-                intent.getStringExtra(EXTRA_PLAYLIST)
+                intent.getStringExtra(EXTRA_PLAYLIST),
+                intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
             )
             this@MusicPlayerActivity.startActivity(intent)
         }
@@ -132,19 +133,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     private fun startMusic() {
         chooseMusic(playlistMusicPlayer.getCurrentMusic())
-    }
-
-    private fun insertAlbumArt(imageAlbum: ImageView) {
-        val musicThumbnail: Bitmap? = MusicFileManagerApp.getAlbumArt(
-            intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1),
-            this@MusicPlayerActivity
-        )
-
-        if (musicThumbnail != null) {
-            imageAlbum.setImageBitmap(musicThumbnail)
-        } else {
-            imageAlbum.setImageDrawable(getDrawable(R.drawable.img_default_album_art))
-        }
     }
 
     private fun reloadActivity(title: String, artist: String,
@@ -166,8 +154,11 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         private const val EXTRA_ALBUM_URI_ID = "EXTRA_ALBUM_URI_ID"
 
         fun getStartIntent(
-            context: Context, title: String, artist: String,
-            albumUriId: Long, playlist: String
+            context: Context,
+            title: String,
+            artist: String,
+            albumUriId: Long,
+            playlist: String
         ): Intent {
             return Intent(context, MusicPlayerActivity::class.java).apply {
                 putExtra(EXTRA_TITLE, title)

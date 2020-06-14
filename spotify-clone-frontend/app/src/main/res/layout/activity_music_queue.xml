@@ -43,7 +43,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:contentDescription="@string/music_queue_img_description_music_playing"
-                        android:src="@drawable/img_album_art_test" />
+                        tools:src="@drawable/img_album_art_test" />
 
                     <TextView
                         android:id="@+id/textMusicTitle"

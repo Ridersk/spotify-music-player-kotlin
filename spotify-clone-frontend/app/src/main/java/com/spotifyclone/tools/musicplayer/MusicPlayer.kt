@@ -161,7 +161,7 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         (progress * musicDurationMilisec) / 100
 
     protected fun getCurrentSec(): Int {
-        return this.currentPosition / 10000
+        return this.currentPosition / 1000
     }
 
     val progressControl = object : SeekBar.OnSeekBarChangeListener {
