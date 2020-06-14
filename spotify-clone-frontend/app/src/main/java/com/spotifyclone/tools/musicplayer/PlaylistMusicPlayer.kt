@@ -16,14 +16,14 @@ class PlaylistMusicPlayer private constructor(
     private var positionPlaying = 0
     private var currentMusicId: Long = -1
     private var observers = mutableListOf<MusicObserver>()
-    private val cycleModeList = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ONE, CYCLE_MODE_ALL)
-    private var currentCycleMode = 0
+    private val modeCycleList = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ALL, CYCLE_MODE_ONE)
+    private var currentModeCycle = 0
     private var random = false
 
-    val isCycle: () -> Boolean = { currentCycleMode != 0 }
+    val isCycle: () -> Boolean = { currentModeCycle != 0 }
     val isLastMusic: () -> Boolean =
         { this.positionPlaying == this.musicQueueRunning.size - 1 }
-    val getCycleType: () -> Int = { currentCycleMode }
+    val getCycleType: () -> Int = { currentModeCycle }
     val isRandom: () -> Boolean = { random }
     val getRandomType: () -> Int = { if (random) 1 else 0 }
 
@@ -157,8 +157,10 @@ class PlaylistMusicPlayer private constructor(
 
     override fun setObserverOnCompletionListener(callbackObserver: () -> Unit) {
         val conditionalCallback = {
-            if (isLastMusic() || super.isInit() || super.isEnd()) {
+            if ((isLastMusic() || super.isInit() || super.isEnd()) && !isCycle()) {
                 callbackObserver.invoke()
+            } else if (modeCycleList[currentModeCycle] == CYCLE_MODE_ONE) {
+                super.restartMusic()
             } else {
                 this.nextMusic()
             }
@@ -185,7 +187,7 @@ class PlaylistMusicPlayer private constructor(
     }
 
     fun toogleModeCycle() {
-        this.currentCycleMode = (this.currentCycleMode + 1) % cycleModeList.size
+        this.currentModeCycle = (this.currentModeCycle + 1) % modeCycleList.size
 
         buildMusicQueue()
         val position = getPositionMusicById(currentMusicId, this.musicQueueRunning)

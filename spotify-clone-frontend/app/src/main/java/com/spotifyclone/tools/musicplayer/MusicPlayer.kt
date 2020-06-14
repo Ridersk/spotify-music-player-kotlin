@@ -53,6 +53,11 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         spotifyAudioManager.startMusic({ super.start() }, { this.pauseMusic() })
     }
 
+    protected fun restartMusic() {
+        super.seekTo(0)
+        this.startMusic()
+    }
+
     private fun pauseMusic() {
         super.pause()
     }
