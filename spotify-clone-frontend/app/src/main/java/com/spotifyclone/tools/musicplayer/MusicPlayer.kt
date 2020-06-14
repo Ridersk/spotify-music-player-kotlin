@@ -115,11 +115,18 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         }
     }
 
-    private fun setTimeOnObserverTimer(time: Pair<Int, Int>) {
-        observerTimer!!.invoke(
-            "${time.first}:${if (time.second < 10) "0" else ""}${time.second}"
-        )
+    fun getTotalTime(): String {
+        val time: Pair<Int, Int> = convertToMinutes(musicDurationMilisec)
+        return convertToFormatTimer(time)
     }
+
+    private fun setTimeOnObserverTimer(time: Pair<Int, Int>) {
+        observerTimer!!.invoke(convertToFormatTimer(time))
+    }
+
+    private fun convertToFormatTimer(time: Pair<Int, Int>): String =
+        "${time.first}:${if (time.second < 10) "0" else ""}${time.second}"
+
 
     private fun setProgressOnObserverProgress(progress: Int) {
         this.progress = progress

@@ -66,12 +66,15 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         val buttonRepeat: ButtonStage = layout.buttonRepeat
         val buttonQueue = layout.buttonMusicQueue
         val progressBar = layout.progressBarMusic
-        val timer = layout.textMusicTime
+        val totalTime = layout.textMusicTotalTime
+        val timer = layout.textMusicCurrentTime
 
         musicTitle.text = intent.getStringExtra(EXTRA_TITLE)
         musicArtist.text = intent.getStringExtra(EXTRA_ARTIST)
 
         insertAlbumArt(imageAlbum)
+
+        totalTime.text = playlistMusicPlayer.getTotalTime()
 
         playlistMusicPlayer.setObserverMusicTime { time: String ->
             runOnUiThread { timer.text = time }

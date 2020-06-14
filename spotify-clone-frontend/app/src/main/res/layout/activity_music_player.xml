@@ -91,8 +91,17 @@
                     android:thumbTint="@color/white" />
 
                 <TextView
-                    android:id="@+id/textMusicTime"
+                    android:id="@+id/textMusicCurrentTime"
                     style="@style/smallTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/progressBarMusic"
+                    android:text="@string/music_progress_init_time" />
+
+                <TextView
+                    android:id="@+id/textMusicTotalTime"
+                    style="@style/smallTextView"
+                    android:layout_alignParentEnd="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/progressBarMusic"
