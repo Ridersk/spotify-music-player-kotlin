@@ -4,18 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
-import android.widget.ImageView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
-import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
-import android.graphics.Bitmap
 import com.spotifyclone.components.buttons.ButtonStage
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
 
@@ -25,7 +22,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicPlayerActivity)
 
     init {
-        playlistMusicPlayer.addObserver(this)
+        playlistMusicPlayer.addMusicObserver(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +42,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         startMusic()
     }
 
-    override fun chooseMusic(music: Music) {
+    override fun changedMusic(music: Music) {
         reloadActivity(
             music.title,
             music.artist,
@@ -132,7 +129,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
 
     private fun startMusic() {
-        chooseMusic(playlistMusicPlayer.getCurrentMusic())
+        changedMusic(playlistMusicPlayer.getCurrentMusic())
     }
 
     private fun reloadActivity(title: String, artist: String,

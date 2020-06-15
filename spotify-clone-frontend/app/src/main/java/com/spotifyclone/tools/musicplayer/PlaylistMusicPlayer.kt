@@ -25,8 +25,6 @@ class PlaylistMusicPlayer private constructor(
     val isCycle: () -> Boolean = { currentModeCycle != 0 }
     val isMusicFirst: () -> Boolean =
         { this.positionPlaying == 0 }
-    val isMusicLast: () -> Boolean =
-        { this.positionPlaying == this.musicQueueRunning.size - 1 }
     val getCycleType: () -> Int = { currentModeCycle }
     val isRandom: () -> Boolean = { random }
     val getRandomType: () -> Int = { if (random) 1 else 0 }
@@ -47,20 +45,20 @@ class PlaylistMusicPlayer private constructor(
         initMusic()
     }
 
-    override fun addObserver(observer: MusicObserver) {
+    override fun addMusicObserver(observer: MusicObserver) {
         this.observers.add(observer)
     }
 
-    override fun alertChoosedMusic(music: Music) {
+    override fun alertChangedMusic(music: Music) {
         for (observer in this.observers) {
-            observer.chooseMusic(music)
+            observer.changedMusic(music)
         }
     }
 
     private fun initMusic(initPlaying: Boolean = true) {
         val music = getCurrentMusic()
         super.playMusic(music.contentUriId, initPlaying)
-        alertChoosedMusic(music)
+        alertChangedMusic(music)
     }
 
     private fun buildMusicQueue() {

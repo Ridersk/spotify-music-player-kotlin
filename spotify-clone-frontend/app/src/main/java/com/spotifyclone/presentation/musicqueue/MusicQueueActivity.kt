@@ -10,7 +10,7 @@ import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
-import com.spotifyclone.presentation.music.MusicPlayerActivity
+import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_music_queue.*
@@ -18,8 +18,13 @@ import kotlinx.android.synthetic.main.activity_music_queue.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import java.util.*
 
-class MusicQueueActivity : BaseActivity() {
-    private val playlistController = PlaylistMusicPlayer.getInstance(this@MusicQueueActivity)
+class MusicQueueActivity : BaseActivity(), MusicObserver {
+
+    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicQueueActivity)
+
+    init {
+        playlistMusicPlayer.addMusicObserver(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_music_queue)
@@ -36,10 +41,17 @@ class MusicQueueActivity : BaseActivity() {
         )
     }
 
+    override fun changedMusic(music: Music) {
+        reloadActivity(
+            music.albumUriId,
+            intent.getStringExtra(EXTRA_PLAYLIST_NAME)
+        )
+    }
+
     override fun initComponents() {
         val layout: ViewGroup = activityMusicQueue
 
-        val currentMusic: Music = playlistController.getCurrentMusic()
+        val currentMusic: Music = playlistMusicPlayer.getCurrentMusic()
 
         val musicTitle = layout.textMusicTitle
         val musicLabel = layout.textMusicLabel
@@ -55,9 +67,18 @@ class MusicQueueActivity : BaseActivity() {
         buildQueue(recyclerMusicList)
     }
 
+    private fun reloadActivity(albumUriId: Long, playlist: String? = "") {
+        intent?.apply {
+            putExtra(EXTRA_PLAYLIST_NAME, playlist)
+            putExtra(EXTRA_ALBUM_URI_ID, albumUriId)
+        }
+
+        initComponents()
+    }
+
     private fun buildQueue(recyclerMusicList: RecyclerView) {
-        val list = playlistController.musicQueueRunning
-        val scopedList = list.subList(playlistController.positionPlaying + 1, list.size)
+        val list = playlistMusicPlayer.musicQueueRunning
+        val scopedList = list.subList(playlistMusicPlayer.positionPlaying + 1, list.size)
 
         val musicQueueAdapter = MusicQueueAdapter(scopedList)
 
