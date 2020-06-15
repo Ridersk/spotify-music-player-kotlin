@@ -188,11 +188,6 @@ class PlaylistMusicPlayer private constructor(
         this.random = !this.random
 
         buildMusicQueue()
-//        val position = getPositionMusicById(currentMusicId, this.musicQueueRunning)
-
-//        if (position != -1) {
-//            this.positionPlaying = position
-//        }
     }
 
     fun toogleModeCycle() {

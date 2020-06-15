@@ -88,11 +88,12 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
                 RecyclerView.VERTICAL,
                 false
             )
-            setHasFixedSize(true)
+
             adapter = musicQueueAdapter
         }
 
 
+        val offsetPosOriginalList = list.size - scopedList.size
         val touchHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
@@ -104,7 +105,7 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
                 val draggedPosition = dragged.adapterPosition
                 val targetPosition = target.adapterPosition
 
-                Collections.swap(list, draggedPosition, targetPosition)
+                Collections.swap(list, draggedPosition + offsetPosOriginalList, targetPosition + offsetPosOriginalList)
 
                 musicQueueAdapter.notifyItemMoved(draggedPosition, targetPosition)
 
