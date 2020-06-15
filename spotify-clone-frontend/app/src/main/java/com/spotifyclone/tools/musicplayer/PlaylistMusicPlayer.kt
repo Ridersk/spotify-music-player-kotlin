@@ -3,6 +3,7 @@ package com.spotifyclone.tools.musicplayer
 import android.content.Context
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
+import java.util.*
 
 class PlaylistMusicPlayer private constructor(
     contextActivity: Context
@@ -62,10 +63,15 @@ class PlaylistMusicPlayer private constructor(
     }
 
     private fun buildMusicQueue() {
-        this.musicQueueBase = if (isRandom()) {
-            shuffleQueue(this.originalMusicList)
+        if (isRandom()) {
+            val shuffledList: MutableList<Music> = shuffleQueue(this.originalMusicList)
+            val position = getPositionMusicById(currentMusicId, shuffledList)
+            Collections.swap(shuffledList, 0, position)
+            this.positionPlaying = 0
+            this.musicQueueBase = shuffledList
         } else {
-            this.originalMusicList.toMutableList()
+            this.musicQueueBase = this.originalMusicList.toMutableList()
+            this.positionPlaying = getPositionMusicById(currentMusicId, this.musicQueueRunning)
         }
 
         this.musicQueueRunning = initQueue(this.musicQueueBase)
@@ -182,10 +188,11 @@ class PlaylistMusicPlayer private constructor(
         this.random = !this.random
 
         buildMusicQueue()
-        val position = getPositionMusicById(currentMusicId, this.musicQueueRunning)
-        if (position != -1) {
-            this.positionPlaying = position
-        }
+//        val position = getPositionMusicById(currentMusicId, this.musicQueueRunning)
+
+//        if (position != -1) {
+//            this.positionPlaying = position
+//        }
     }
 
     fun toogleModeCycle() {

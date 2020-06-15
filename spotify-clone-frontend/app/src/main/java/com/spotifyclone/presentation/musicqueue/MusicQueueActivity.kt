@@ -78,7 +78,7 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
 
     private fun buildQueue(recyclerMusicList: RecyclerView) {
         val list = playlistMusicPlayer.musicQueueRunning
-        val scopedList = list.subList(playlistMusicPlayer.positionPlaying + 1, list.size)
+        val scopedList: List<Music> = list.subList(playlistMusicPlayer.positionPlaying + 1, list.size)
 
         val musicQueueAdapter = MusicQueueAdapter(scopedList)
 
