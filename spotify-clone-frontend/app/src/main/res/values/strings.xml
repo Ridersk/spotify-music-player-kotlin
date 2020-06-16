@@ -38,6 +38,8 @@
     <string name="music_queue_txt_now_playing">Now Playing</string>
     <string name="music_queue_txt_next_in_queue">Next In Queue</string>
     <string name="music_queue_img_description_music_playing">Music Playing</string>
+    <string name="music_queue_dialog_add_music">ADD TO QUEUE</string>
+    <string name="music_queue_dialog_remove_music">REMOVE</string>
 
     <!-- Include Toolbar -->
     <string name="include_toolbar_img_description_btn1">Screen Close Button</string>

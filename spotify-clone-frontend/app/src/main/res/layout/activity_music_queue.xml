@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityMusicQueue"
     android:layout_width="match_parent"
@@ -8,9 +8,11 @@
     tools:context=".presentation.musicqueue.MusicQueueActivity">
 
     <include layout="@layout/include_toolbar" />
+    <include layout="@layout/dialog_small" />
 
     <ScrollView
         android:layout_width="match_parent"
+        android:layout_below="@id/toolbarMain"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin">
@@ -71,57 +73,12 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layoutNextInQueue"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerNextFromQueue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/music_queue_txt_next_in_queue" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerNextInQueue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    tools:listitem="@layout/item_queue_music" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/layoutNextFrom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtNextFrom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/music_queue_txt_next_from" />
-
-                <TextView
-                    android:id="@+id/textPlaylistName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/txtNextFrom"
-                    android:paddingStart="6dp"
-                    android:paddingEnd="@dimen/activity_horizontal_margin"
-                    tools:text="Playlist Name" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerNextFromQueue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/txtNextFrom"
-                    android:layout_marginTop="22dp"
-                    tools:listitem="@layout/item_queue_music" />
-            </RelativeLayout>
+                android:layout_marginTop="22dp"
+                tools:listitem="@layout/item_queue_music" />
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>

@@ -204,6 +204,11 @@ class PlaylistMusicPlayer private constructor(
         return list.shuffled().toMutableList()
     }
 
+    fun removeMusics(musics: MutableList<Music>) {
+        this.musicQueueRunning
+            .removeAll(musics)
+    }
+
     companion object : SingletonHolder<PlaylistMusicPlayer, Context>(::PlaylistMusicPlayer) {
         const val CYCLE_MODE_ALL = "CYCLE_MODE_ALL"
         const val CYCLE_MODE_ONE = "CYCLE_MODE_ONE"

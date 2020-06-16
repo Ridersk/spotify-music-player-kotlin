@@ -17,6 +17,8 @@ import com.spotifyclone.components.buttons.ButtonStage
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
 
 
+
+
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicPlayerActivity)
@@ -52,6 +54,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
     }
 
     override fun initComponents() {
+
         val layout: ViewGroup = activityMusicPlayer
         val musicTitle = layout.textMusicTitle
         val musicArtist = layout.textMusicArtist
