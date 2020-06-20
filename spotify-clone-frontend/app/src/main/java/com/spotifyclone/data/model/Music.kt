@@ -1,5 +1,7 @@
 package com.spotifyclone.data.model
 
+import java.util.*
+
 class Music(
     title: String? = "",
     artist: String? = "",
@@ -7,7 +9,7 @@ class Music(
     contentUriId: Long? = -1L,
     albumUriId: Long? = -1L
 ) {
-    val id: Long
+    val id: UUID
     var title: String = "Unknown Title"
     var artist: String = "Unknown Artist"
     var album: String = "Unknown Album"
@@ -31,10 +33,6 @@ class Music(
             this.albumUriId = albumUriId
         }
 
-        this.id = lastId++
-    }
-
-    companion object {
-        private var lastId:Long = 0
+        this.id = UUID.randomUUID()
     }
 }

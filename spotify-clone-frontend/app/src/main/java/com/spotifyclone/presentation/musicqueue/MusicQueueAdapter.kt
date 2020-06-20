@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_queue_music.view.*
 
 class MusicQueueAdapter(
     private val items: List<QueueItem>,
-    private val onItemClickListener: ((music: Music) -> Unit) = {},
+    private val onItemClickListener: ((music: QueueItem) -> Unit) = {},
     private val onCheckboxClickListener: ((music: QueueMusic) -> Unit)
 ) : RecyclerView.Adapter<MusicQueueAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -59,7 +59,7 @@ class MusicQueueAdapter(
 
     class ViewHolderItem(
         itemView: View,
-        private val onItemClickListener: ((music: Music) -> Unit) = {},
+        private val onItemClickListener: ((music: QueueItem) -> Unit) = {},
         private val onCheckboxClickListener: (music: QueueMusic) -> Unit
     ) : ViewHolder(itemView) {
         private val title = itemView.textMusicTitle
@@ -71,7 +71,7 @@ class MusicQueueAdapter(
             musiclabel.text = TextUtils.getMusicLabel(music.music.artist, music.music.album)
 
             itemView.setOnClickListener {
-                onItemClickListener.invoke(music.music)
+                onItemClickListener.invoke(music)
             }
 
             checkbox.isChecked = music.checked

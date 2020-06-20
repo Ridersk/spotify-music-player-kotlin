@@ -1,6 +1,8 @@
 package com.spotifyclone.tools.musicplayer
 
+import java.util.*
+
 interface PlaylistObserver<T> {
     fun receiverList(list: List<T>)
-    fun chooseItem(id: Long)
+    fun chooseMusic(id: UUID)
 }

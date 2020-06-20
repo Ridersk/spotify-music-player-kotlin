@@ -3,6 +3,7 @@ package com.spotifyclone.tools.musicplayer
 import android.content.Context
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
+import com.spotifyclone.tools.utils.ListUtils
 import java.util.*
 
 class PlaylistMusicPlayer private constructor(
@@ -12,14 +13,16 @@ class PlaylistMusicPlayer private constructor(
     MusicProvider {
 
     private var originalMusicList = listOf<Music>()
-    private var musicQueueBase = mutableListOf<Music>()
-    var musicQueueRunning = mutableListOf<Music>()
+    private var normalMusicQueueBase: MutableList<Music> = mutableListOf()
+    var normalMusicQueueRunning: MutableList<Music> = mutableListOf()
         private set
-    var positionPlaying = 0
+    var priorityMusicQueue: MutableList<Music> = mutableListOf()
         private set
-    private var currentMusicId: Long = -1
-    private var observers = mutableListOf<MusicObserver>()
-    private val modeCycleList = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ALL, CYCLE_MODE_ONE)
+    var positionPlaying: Int = 0
+        private set
+    private lateinit var currentMusicId: UUID
+    private var observers: MutableList<MusicObserver> = mutableListOf()
+    private val modeCycleList: List<String> = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ALL, CYCLE_MODE_ONE)
     private var currentModeCycle = 0
     private var random = false
 
@@ -35,15 +38,16 @@ class PlaylistMusicPlayer private constructor(
         this.originalMusicList = list.toMutableList()
     }
 
-    override fun chooseItem(id: Long) {
+    override fun chooseMusic(id: UUID) {
         this.currentMusicId = id
         buildMusicQueue()
 
-        val position = getPositionMusicById(currentMusicId, this.musicQueueRunning)
+        val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
         if (position != -1) {
             this.positionPlaying = position
         }
-        initMusic()
+        val music = getCurrentMusic()
+        initMusic(music)
     }
 
     override fun addMusicObserver(observer: MusicObserver) {
@@ -56,8 +60,7 @@ class PlaylistMusicPlayer private constructor(
         }
     }
 
-    private fun initMusic(initPlaying: Boolean = true) {
-        val music = getCurrentMusic()
+    private fun initMusic(music: Music, initPlaying: Boolean = true) {
         super.playMusic(music.contentUriId, initPlaying)
         alertChangedMusic(music)
     }
@@ -68,17 +71,20 @@ class PlaylistMusicPlayer private constructor(
             val position = getPositionMusicById(currentMusicId, shuffledList)
             Collections.swap(shuffledList, 0, position)
             this.positionPlaying = 0
-            this.musicQueueBase = shuffledList
+            this.normalMusicQueueBase = shuffledList
         } else {
-            this.musicQueueBase = this.originalMusicList.toMutableList()
-            this.positionPlaying = getPositionMusicById(currentMusicId, this.musicQueueRunning)
+            this.normalMusicQueueBase = this.originalMusicList.toMutableList()
+            this.positionPlaying =
+                getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
         }
 
-        this.musicQueueRunning = initQueue(this.musicQueueBase)
+        this.normalMusicQueueRunning = initQueue(this.normalMusicQueueBase)
 
         if (isCycle()) {
-            this.musicQueueRunning.addAll(cloneList(this.musicQueueBase))
+            this.normalMusicQueueRunning.addAll(copyList(this.normalMusicQueueBase))
         }
+
+        this.priorityMusicQueue = mutableListOf()
     }
 
     private fun initQueue(list: MutableList<Music>): MutableList<Music> {
@@ -87,7 +93,7 @@ class PlaylistMusicPlayer private constructor(
         return result
     }
 
-    private fun cloneList(list: List<Music>): MutableList<Music> {
+    private fun copyList(list: List<Music>): MutableList<Music> {
         val newList = mutableListOf<Music>()
 
         for (music in list) {
@@ -106,18 +112,26 @@ class PlaylistMusicPlayer private constructor(
     }
 
     fun nextMusic() {
-        var position: Int = positionPlaying + 1
-        var initPlaying = true
+        if (priorityMusicQueue.isEmpty()) {
+            var position: Int = positionPlaying + 1
+            var initPlaying = true
 
-        if (this.musicQueueRunning.size - position <= this.musicQueueBase.size && isCycle()) {
-            this.musicQueueRunning =
-                concatenateList(this.musicQueueRunning, cloneList(this.musicQueueBase))
-        } else if (position >= this.musicQueueRunning.size && !isCycle()) {
-            position = 0
-            initPlaying = false
+            if (this.normalMusicQueueRunning.size - position <= this.normalMusicQueueBase.size && isCycle()) {
+                this.normalMusicQueueRunning =
+                    concatenateList(
+                        this.normalMusicQueueRunning,
+                        copyList(this.normalMusicQueueBase)
+                    )
+            } else if (position >= this.normalMusicQueueRunning.size && !isCycle()) {
+                this.normalMusicQueueRunning = this.normalMusicQueueBase
+                position = 0
+                initPlaying = false
+            }
+
+            nextMusicQueue(position, initPlaying)
+        } else {
+            nextMusicFromPriorityQueue()
         }
-
-        nextMusicQueue(position, initPlaying)
     }
 
     fun previousMusic() {
@@ -127,9 +141,12 @@ class PlaylistMusicPlayer private constructor(
             position = positionPlaying - 1
             if (position < 0) {
                 if (isCycle()) {
-                    this.musicQueueRunning =
-                        concatenateList(cloneList(this.musicQueueBase), this.musicQueueRunning)
-                    position = this.musicQueueBase.size - 1
+                    this.normalMusicQueueRunning =
+                        concatenateList(
+                            copyList(this.normalMusicQueueBase),
+                            this.normalMusicQueueRunning
+                        )
+                    position = this.normalMusicQueueBase.size - 1
                 } else {
                     position = 0
                 }
@@ -142,15 +159,23 @@ class PlaylistMusicPlayer private constructor(
     }
 
     private fun nextMusicQueue(position: Int, initPlaying: Boolean = true) {
-        this.currentMusicId = this.musicQueueRunning[position].id
+        this.currentMusicId = this.normalMusicQueueRunning[position].id
 
         this.positionPlaying = if (position != -1) position else this.positionPlaying
-        initMusic(initPlaying)
+        val music = getCurrentMusic()
+        initMusic(music, initPlaying)
+    }
+
+    private fun nextMusicFromPriorityQueue() {
+        this.currentMusicId = this.priorityMusicQueue[0].id
+        val music = this.priorityMusicQueue[0]
+        initMusic(music, true)
+        this.priorityMusicQueue.removeAt(0)
     }
 
     fun getCurrentMusic(): Music {
-        return if (positionPlaying >= 0 && positionPlaying < musicQueueRunning.size) {
-            musicQueueRunning[positionPlaying]
+        return if (positionPlaying >= 0 && positionPlaying < normalMusicQueueRunning.size) {
+            normalMusicQueueRunning[positionPlaying]
         } else {
             Music()
         }
@@ -177,11 +202,8 @@ class PlaylistMusicPlayer private constructor(
         super.setObserverOnCompletionListener(conditionalCallback)
     }
 
-    private fun getPositionMusicById(id: Long, musicList: List<Music>): Int {
-        if (id != -1L) {
-            return musicList.map { music -> music.id }.indexOf(id)
-        }
-        return 0
+    private fun getPositionMusicById(id: UUID, musicList: List<Music>): Int {
+        return musicList.map { music -> music.id }.indexOf(id)
     }
 
     fun toogleRandom() {
@@ -194,7 +216,7 @@ class PlaylistMusicPlayer private constructor(
         this.currentModeCycle = (this.currentModeCycle + 1) % modeCycleList.size
 
         buildMusicQueue()
-        val position = getPositionMusicById(currentMusicId, this.musicQueueRunning)
+        val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
         if (position != -1) {
             this.positionPlaying = position
         }
@@ -204,9 +226,20 @@ class PlaylistMusicPlayer private constructor(
         return list.shuffled().toMutableList()
     }
 
-    fun removeMusics(musics: MutableList<Music>) {
-        this.musicQueueRunning
-            .removeAll(musics)
+    fun recreatePriorityMusicQueue(musics: List<Music>) {
+        this.priorityMusicQueue = copyList(musics)
+    }
+
+    fun updateMusicsFromNormalList(musics: List<Music>, start: Int) {
+        this.normalMusicQueueRunning =
+            ListUtils.swapAllAt(this.normalMusicQueueRunning, musics, start) as MutableList<Music>
+    }
+
+    fun firstNotPlayedFromNormalQueue(): Int {
+        if (this.positionPlaying < this.normalMusicQueueRunning.size - 1) {
+            return this.positionPlaying + 1
+        }
+        return this.normalMusicQueueRunning.size
     }
 
     companion object : SingletonHolder<PlaylistMusicPlayer, Context>(::PlaylistMusicPlayer) {

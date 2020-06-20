@@ -16,10 +16,11 @@ import com.spotifyclone.tools.musicplayer.PlaylistObserver
 import kotlinx.android.synthetic.main.activity_liked_songs.*
 import kotlinx.android.synthetic.main.activity_liked_songs.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
+import java.util.*
 
 class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<Music> {
 
-    private val playlistController = PlaylistMusicPlayer.getInstance(this@LikedSongsActivity)
+    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@LikedSongsActivity)
 
     lateinit var layout: ViewGroup
 
@@ -49,9 +50,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
         setMusicList()
     }
 
-    override fun getPlaylistName() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getPlaylistName() {}
 
     override fun receiverList(list: List<Music>) {
         with(layout.recyclerMusics) {
@@ -72,14 +71,14 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
                             getString(EXTRA_PLAYLIST_NAME)
                         )
 
-                    chooseItem(music.id)
+                    chooseMusic(music.id)
                     this@LikedSongsActivity.startActivity(intent)
                 }
         }
     }
 
-    override fun chooseItem(id: Long) {
-        playlistController.chooseItem(id)
+    override fun chooseMusic(id: UUID) {
+        playlistMusicPlayer.chooseMusic(id)
     }
 
     private fun setMusicList() {
@@ -89,7 +88,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
 
         val playlistObserverProvider = PlaylistObserverProvider()
 
-        playlistObserverProvider.addReceiver(playlistController)
+        playlistObserverProvider.addReceiver(playlistMusicPlayer)
         playlistObserverProvider.addReceiver(this)
         viewModel.musicsLiveData.observe(this, playlistObserverProvider)
 
