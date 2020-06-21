@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ButtonStage">
+        <attr name="mainImage" format="reference" />
+        <attr name="statusImage" format="reference" />
+    </declare-styleable>
+</resources>
