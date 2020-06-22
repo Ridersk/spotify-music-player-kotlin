@@ -11,7 +11,7 @@ import androidx.core.content.PermissionChecker
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.home.HomeActivity
 import com.spotifyclone.presentation.login.LoginActivity
-import com.spotifyclone.presentation.playlist.LikedSongsActivity
+import com.spotifyclone.presentation.playlist.LocalSongsActivity
 
 
 class MainActivity : BaseActivity() {
@@ -69,7 +69,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun getActivityBeingTested(): Intent {
-        return Intent(context, LikedSongsActivity::class.java)
+        return Intent(context, LocalSongsActivity::class.java)
     }
 
     companion object {

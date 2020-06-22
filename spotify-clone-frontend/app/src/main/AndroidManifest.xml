@@ -25,7 +25,7 @@
         <activity android:name=".presentation.home.HomeActivity" />
         <activity android:name=".presentation.login.LoginActivity" />
         <activity android:name=".presentation.login.CredentialsActivity" />
-        <activity android:name=".presentation.playlist.LikedSongsActivity" />
+        <activity android:name=".presentation.playlist.LocalSongsActivity" />
         <activity android:name=".presentation.music.MusicPlayerActivity" />
         <activity android:name=".presentation.musicqueue.MusicQueueActivity" />
     </application>

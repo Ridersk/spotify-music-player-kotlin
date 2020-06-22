@@ -24,10 +24,10 @@
     <string name="home_toolbar_title" />
     <string name="home_label_recommendedPlaylists">Good Morning</string>
 
-    <!-- Liked Songs Activity -->
-    <string name="liked_playlist_title">Liked Songs</string>
-    <string name="liked_button_random_play">SHUFFLE PLAY</string>
-    <string name="liked_text_downloaded_songs">Downloaded Songs</string>
+    <!-- Local Songs Activity -->
+    <string name="local_songs_title">Local Songs</string>
+    <string name="local_songs_button_random_play">SHUFFLE PLAY</string>
+    <string name="local_songs_text_downloaded_songs">Downloaded Songs</string>
 
     <!-- Music Player Activity -->
     <string name="music_album_image">Music Album Image</string>

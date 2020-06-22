@@ -2,11 +2,11 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activityLikedSongs"
+    android:id="@+id/activityLocalSongs"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.spotifyclone.presentation.playlist.LikedSongsActivity">
+    tools:context="com.spotifyclone.presentation.playlist.LocalSongsActivity">
 
     <include layout="@layout/include_toolbar" />
 
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            tools:text="Liked Songs" />
+            tools:text="Local Songs" />
 
         <Button
             android:id="@+id/buttonRandomPlay"
@@ -60,8 +60,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:checked="true"
-                app:thumbTint="@color/green"
-                app:trackTint="@color/darkGreen"
+                app:thumbTint="@color/selector_switch_button_thumb"
+                app:trackTint="@color/selector_switch_button_track"
                 android:layout_toEndOf="@+id/textDownloadedSongs" />
         </RelativeLayout>
 
