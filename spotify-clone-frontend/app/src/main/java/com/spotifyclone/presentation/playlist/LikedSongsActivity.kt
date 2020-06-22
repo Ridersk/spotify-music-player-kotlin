@@ -4,19 +4,25 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
+import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.music.MusicPlayerActivity
+import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
+import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
+import com.spotifyclone.tools.musicplayer.PlaylistObserver
 import kotlinx.android.synthetic.main.activity_liked_songs.*
 import kotlinx.android.synthetic.main.activity_liked_songs.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
+import java.util.*
 
-class LikedSongsActivity : BaseActivity(), PlaylistInterface {
+class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<Music> {
 
+    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@LikedSongsActivity)
+
+    lateinit var layout: ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_liked_songs)
@@ -34,51 +40,63 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface {
     }
 
     override fun initComponents() {
-        val layout: ViewGroup = activityLikedSongs
+        layout = activityLikedSongs
         with(layout) {
             textTitle.text = intent.getStringExtra(EXTRA_TITLE)
             buttonRandomPlay.text = getString(R.string.liked_button_random_play)
             textDownloadedSongs.text = getString(R.string.liked_text_downloaded_songs)
         }
 
-        setMusicList(layout)
+        setMusicList()
     }
 
-    override fun getPlaylistName() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getPlaylistName() {}
 
-    private fun setMusicList(layout: ViewGroup) {
-        val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
-            .ViewModelFactory(this@LikedSongsActivity).create(PlaylistMusicsViewModel::class.java)
-
-        viewModel.musicsLiveData.observe(this, Observer {
-            it?.let { musics ->
-                with(layout.recyclerMusics) {
-                    layoutManager =
-                        LinearLayoutManager(this@LikedSongsActivity, RecyclerView.VERTICAL, false)
-                    setHasFixedSize(true)
-                    adapter = PlaylistMusicsAdapter(musics) { music ->
-                        val intent = MusicPlayerActivity.getStartIntent(
+    override fun receiverList(list: List<Music>) {
+        with(layout.recyclerMusics) {
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+                this@LikedSongsActivity,
+                RecyclerView.VERTICAL,
+                false
+            )
+            setHasFixedSize(true)
+            adapter =
+                PlaylistMusicsAdapter(list) { music ->
+                    val intent =
+                        MusicPlayerActivity.getStartIntent(
                             this@LikedSongsActivity,
-                            music.name,
+                            music.title,
                             music.artist,
-                            music.contentUriId,
-                            getString(PLAYLIST_NAME)
+                            music.albumUriId,
+                            getString(EXTRA_PLAYLIST_NAME)
                         )
 
-                        this@LikedSongsActivity.startActivity(intent)
-                    }
+                    chooseMusic(music.id)
+                    this@LikedSongsActivity.startActivity(intent)
                 }
-            }
-        })
+        }
+    }
 
+    override fun chooseMusic(id: UUID) {
+        playlistMusicPlayer.chooseMusic(id)
+    }
+
+    private fun setMusicList() {
+        val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
+            .ViewModelFactory(this@LikedSongsActivity)
+            .create(PlaylistMusicsViewModel::class.java)
+
+        val playlistObserverProvider = PlaylistObserverProvider()
+
+        playlistObserverProvider.addReceiver(playlistMusicPlayer)
+        playlistObserverProvider.addReceiver(this)
+        viewModel.musicsLiveData.observe(this, playlistObserverProvider)
 
         viewModel.getMusics()
     }
 
     companion object {
-        private const val PLAYLIST_NAME: Int = R.string.liked_playlist_title
+        private const val EXTRA_PLAYLIST_NAME: Int = R.string.liked_playlist_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
         fun getStartIntent(context: Context, title: String): Intent {

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:layout_marginBottom="14dp"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/checkboxMusic"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/selector_checkbox"
+        android:buttonTint="@color/transparent" />
+
+    <TextView
+        android:id="@+id/textMusicTitle"
+        style="@style/mediumTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_toStartOf="@id/buttonPlaylist"
+        android:layout_toEndOf="@id/checkboxMusic"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingEnd="10dp"
+        tools:ignore="RtlSymmetry"
+        tools:text="Music Name" />
+
+    <TextView
+        android:id="@+id/textMusicLabel"
+        style="@style/smallTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textMusicTitle"
+        android:layout_marginStart="20dp"
+        android:layout_toStartOf="@id/buttonPlaylist"
+        android:layout_toEndOf="@id/checkboxMusic"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingEnd="10dp"
+        android:textColor="@color/lightGray"
+        tools:ignore="RtlSymmetry"
+        tools:text="Artist • Album Name" />
+
+    <ImageButton
+        android:id="@+id/buttonPlaylist"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:backgroundTint="@color/transparent"
+        android:contentDescription="@string/item_queue_music_img_description_playlist_button"
+        android:paddingStart="0dp"
+        android:paddingTop="0dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="0dp"
+        android:src="@drawable/ic_playlist" />
+</RelativeLayout>
