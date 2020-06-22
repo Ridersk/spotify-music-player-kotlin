@@ -11,6 +11,7 @@ import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
+import com.spotifyclone.tools.utils.ImageUtils
 import com.spotifyclone.tools.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_music_queue.*
 import kotlinx.android.synthetic.main.activity_music_queue.view.*
@@ -60,8 +61,11 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
 
         musicTitle.text = currentMusic.title
         musicLabel.text = TextUtils.getMusicLabel(currentMusic.artist, currentMusic.album)
-        insertAlbumArt(imageAlbum, intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1))
-
+        ImageUtils.insertBitmapInView(
+            applicationContext,
+            imageAlbum,
+            intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
+        )
 
         musicQueueView.create()
         createDialog({ musicQueueView.addMusics() }, { musicQueueView.removeMusics() })

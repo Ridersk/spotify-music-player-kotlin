@@ -12,7 +12,7 @@ class RecommendedPlaylistsViewModel : ViewModel() {
 
     fun getRecommendedPlaylists() {
         val recommendedList = listOf(
-            Playlist("Liked Songs"),
+            Playlist("Local Songs"),
             Playlist("Synthwave"),
             Playlist("Wake radio"),
             Playlist("Holographic"),

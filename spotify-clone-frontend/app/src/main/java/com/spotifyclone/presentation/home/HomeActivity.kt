@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
-import com.spotifyclone.presentation.playlist.LikedSongsActivity
+import com.spotifyclone.presentation.playlist.LocalSongsActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_home.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -51,7 +51,7 @@ class HomeActivity : BaseActivity() {
                 with(recommendedPlaylistGrid) {
                     adapter = RecommendedPlaylistsAdapter(playlists) { playlist ->
                         val intent =
-                            LikedSongsActivity.getStartIntent(this@HomeActivity, playlist.title)
+                            LocalSongsActivity.getStartIntent(this@HomeActivity, playlist.title)
                         this@HomeActivity.startActivity(intent)
                     }
                 }

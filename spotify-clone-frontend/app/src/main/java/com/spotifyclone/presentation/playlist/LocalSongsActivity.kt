@@ -3,6 +3,7 @@ package com.spotifyclone.presentation.playlist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
@@ -13,19 +14,19 @@ import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
 import com.spotifyclone.tools.musicplayer.PlaylistObserver
-import kotlinx.android.synthetic.main.activity_liked_songs.*
-import kotlinx.android.synthetic.main.activity_liked_songs.view.*
+import kotlinx.android.synthetic.main.activity_playlist.*
+import kotlinx.android.synthetic.main.activity_playlist.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import java.util.*
 
-class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<Music> {
+class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<Music> {
 
-    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@LikedSongsActivity)
+    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@LocalSongsActivity)
 
     lateinit var layout: ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_liked_songs)
+        setContentView(R.layout.activity_playlist)
 
         setupToolbar(
             ToolbarParameters(
@@ -40,11 +41,12 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
     }
 
     override fun initComponents() {
-        layout = activityLikedSongs
+        layout = activityLocalSongs
         with(layout) {
             textTitle.text = intent.getStringExtra(EXTRA_TITLE)
-            buttonRandomPlay.text = getString(R.string.liked_button_random_play)
-            textDownloadedSongs.text = getString(R.string.liked_text_downloaded_songs)
+            buttonRandomPlay.text = getString(R.string.local_songs_button_random_play)
+            textDownloadedSongs.visibility = View.INVISIBLE
+            swicthDownloadedSongs.visibility = View.INVISIBLE
         }
 
         setMusicList()
@@ -55,7 +57,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
     override fun receiverList(list: List<Music>) {
         with(layout.recyclerMusics) {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-                this@LikedSongsActivity,
+                this@LocalSongsActivity,
                 RecyclerView.VERTICAL,
                 false
             )
@@ -64,7 +66,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
                 PlaylistMusicsAdapter(list) { music ->
                     val intent =
                         MusicPlayerActivity.getStartIntent(
-                            this@LikedSongsActivity,
+                            this@LocalSongsActivity,
                             music.title,
                             music.artist,
                             music.albumUriId,
@@ -72,7 +74,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
                         )
 
                     chooseMusic(music.id)
-                    this@LikedSongsActivity.startActivity(intent)
+                    this@LocalSongsActivity.startActivity(intent)
                 }
         }
     }
@@ -83,7 +85,7 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
 
     private fun setMusicList() {
         val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
-            .ViewModelFactory(this@LikedSongsActivity)
+            .ViewModelFactory(this@LocalSongsActivity)
             .create(PlaylistMusicsViewModel::class.java)
 
         val playlistObserverProvider = PlaylistObserverProvider()
@@ -96,11 +98,11 @@ class LikedSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
     }
 
     companion object {
-        private const val EXTRA_PLAYLIST_NAME: Int = R.string.liked_playlist_title
+        private const val EXTRA_PLAYLIST_NAME: Int = R.string.local_songs_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
         fun getStartIntent(context: Context, title: String): Intent {
-            return Intent(context, LikedSongsActivity::class.java).apply {
+            return Intent(context, LocalSongsActivity::class.java).apply {
                 putExtra(EXTRA_TITLE, title)
             }
         }
