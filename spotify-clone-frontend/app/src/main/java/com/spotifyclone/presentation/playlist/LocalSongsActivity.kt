@@ -3,6 +3,7 @@ package com.spotifyclone.presentation.playlist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
@@ -13,8 +14,8 @@ import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
 import com.spotifyclone.tools.musicplayer.PlaylistObserver
-import kotlinx.android.synthetic.main.activity_local_songs.*
-import kotlinx.android.synthetic.main.activity_local_songs.view.*
+import kotlinx.android.synthetic.main.activity_playlist.*
+import kotlinx.android.synthetic.main.activity_playlist.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import java.util.*
 
@@ -25,7 +26,7 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
     lateinit var layout: ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_local_songs)
+        setContentView(R.layout.activity_playlist)
 
         setupToolbar(
             ToolbarParameters(
@@ -44,7 +45,8 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
         with(layout) {
             textTitle.text = intent.getStringExtra(EXTRA_TITLE)
             buttonRandomPlay.text = getString(R.string.local_songs_button_random_play)
-            textDownloadedSongs.text = getString(R.string.local_songs_text_downloaded_songs)
+            textDownloadedSongs.visibility = View.INVISIBLE
+            swicthDownloadedSongs.visibility = View.INVISIBLE
         }
 
         setMusicList()

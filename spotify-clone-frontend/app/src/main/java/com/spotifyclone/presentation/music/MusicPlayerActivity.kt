@@ -15,8 +15,7 @@ import kotlinx.android.synthetic.main.activity_music_player.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import com.spotifyclone.components.buttons.ButtonStage
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
-
-
+import com.spotifyclone.tools.utils.ImageUtils
 
 
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
@@ -73,7 +72,11 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         musicTitle.text = intent.getStringExtra(EXTRA_TITLE)
         musicArtist.text = intent.getStringExtra(EXTRA_ARTIST)
 
-        insertAlbumArt(imageAlbum, intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1))
+        ImageUtils.insertBitmapInView(
+            applicationContext,
+            imageAlbum,
+            intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
+        )
 
         totalTime.text = playlistMusicPlayer.getTotalTime()
 
@@ -114,7 +117,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             playlistMusicPlayer.toogleRandom()
         }
 
-        buttonRepeat.setStatusProvider {playlistMusicPlayer.isCycle()}
+        buttonRepeat.setStatusProvider { playlistMusicPlayer.isCycle() }
         buttonRepeat.setMainButtonStatesProvider { playlistMusicPlayer.getCycleType() }
         buttonRepeat.setOnClickListener {
             playlistMusicPlayer.toogleModeCycle()
@@ -135,8 +138,10 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         changedMusic(playlistMusicPlayer.getCurrentMusic())
     }
 
-    private fun reloadActivity(title: String, artist: String,
-                               albumUriId: Long, playlist: String? = "") {
+    private fun reloadActivity(
+        title: String, artist: String,
+        albumUriId: Long, playlist: String? = ""
+    ) {
         intent?.apply {
             putExtra(EXTRA_TITLE, title)
             putExtra(EXTRA_ARTIST, artist)

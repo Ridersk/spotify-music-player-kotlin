@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/iconOption1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerVertical="true"
             tools:src="@drawable/ic_close"
             android:contentDescription="@string/include_toolbar_img_description_btn1" />
@@ -60,8 +60,8 @@
 
         <ImageView
             android:id="@+id/iconOption2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
             android:layout_toStartOf="@+id/iconOption3"
@@ -70,8 +70,8 @@
 
         <ImageView
             android:id="@+id/iconOption3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             tools:src="@drawable/ic_options"
