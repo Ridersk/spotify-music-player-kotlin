@@ -7,9 +7,9 @@ import android.view.View
 import android.view.Window
 import android.widget.Button
 import com.spotifyclone.R
-import kotlinx.android.synthetic.main.dialog_small.*
+import kotlinx.android.synthetic.main.dialog_bottom.*
 
-class SmallDialog(
+class CustomDialog(
     private val contextActivity: Context
 ) : Dialog(contextActivity), View.OnClickListener {
 
@@ -18,7 +18,7 @@ class SmallDialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        super.setContentView(R.layout.dialog_small)
+        super.setContentView(R.layout.dialog_bottom)
         super.onCreate(savedInstanceState)
 
         initComponents()

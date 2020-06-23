@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dialogSmall"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialogSmall"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:layout_alignParentBottom="true"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:text="@string/music_queue_dialog_remove_music" />
+        tools:text="@string/music_queue_dialog_remove_music" />
 
     <Button
         android:id="@+id/btnAdd"
@@ -28,5 +28,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:text="@string/music_queue_dialog_add_music" />
+        tools:text="@string/music_queue_dialog_add_music" />
 </RelativeLayout>

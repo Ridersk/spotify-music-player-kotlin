@@ -15,8 +15,8 @@ import com.spotifyclone.tools.utils.ImageUtils
 import com.spotifyclone.tools.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_music_queue.*
 import kotlinx.android.synthetic.main.activity_music_queue.view.*
-import kotlinx.android.synthetic.main.dialog_small.*
-import kotlinx.android.synthetic.main.dialog_small.view.*
+import kotlinx.android.synthetic.main.dialog_bottom.*
+import kotlinx.android.synthetic.main.dialog_bottom.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 
 class MusicQueueActivity : BaseActivity(), MusicObserver {
@@ -96,6 +96,9 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
         dialog = dialogSmall
         val addButton = dialog.btnAdd
         val removeButton = dialog.btnRemove
+
+        addButton.text = getString(R.string.music_queue_dialog_add_music)
+        removeButton.text = getString(R.string.music_queue_dialog_remove_music)
 
         addButton.setOnClickListener {
             funcAddMusic.invoke()

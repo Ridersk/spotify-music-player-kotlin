@@ -1,5 +1,6 @@
 package com.spotifyclone.presentation.playlist
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -37,6 +38,8 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
             )
         )
 
+        super.addRequiredPermissionToInit(Manifest.permission.READ_EXTERNAL_STORAGE)
+        super.addRequiredPermissionToInit(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         super.onCreate(savedInstanceState)
     }
 

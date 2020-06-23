@@ -8,7 +8,7 @@
     tools:context=".presentation.musicqueue.MusicQueueActivity">
 
     <include layout="@layout/include_toolbar" />
-    <include layout="@layout/dialog_small" />
+    <include layout="@layout/dialog_bottom" />
 
     <ScrollView
         android:layout_width="match_parent"
