@@ -8,7 +8,7 @@ class DesenvolUtils {
 
     companion object {
         fun appInDesenvol(): Boolean {
-            return false
+            return true
         }
 
         fun getActivityBeingTested(context: Context): Intent {

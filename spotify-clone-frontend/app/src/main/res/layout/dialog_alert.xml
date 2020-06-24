@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialogAlert"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_dialog_alert"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingTop="50dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="50dp">
+
+    <TextView
+        android:id="@+id/dialogTxtTitle"
+        style="@style/subTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        tools:text="Some Warning" />
+
+    <TextView
+        android:id="@+id/dialogTxtDescription"
+        style="@style/smallTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogTxtTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textStyle="normal"
+        tools:text="Description of the dialog" />
+
+    <Button
+        android:id="@+id/dialogBtnMain"
+        style="@style/primaryButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogTxtDescription"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:padding="0dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/ic_primary_button_small"
+        tools:text="MAIN ACTION" />
+
+    <Button
+        android:id="@+id/dialogBtnOptional"
+        android:layout_width="wrap_content"
+        android:minWidth="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogBtnMain"
+        android:layout_centerHorizontal="true"
+        android:background="@color/transparent"
+        android:textColor="@color/black"
+        tools:text="MAIN ACTION" />
+
+</RelativeLayout>

@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.spotifyclone.components.dialogs.CustomDialog
 
 class AppPermissions {
     companion object {
@@ -12,7 +13,8 @@ class AppPermissions {
             activity: Activity,
             permission: String,
             onGranted: () -> Unit,
-            onRevokedCallback: ActivityResultLauncher<String>
+            onRevokedCallback: ActivityResultLauncher<String>,
+            userNotificationDialog: CustomDialog? = null
         ) {
             when {
                 ContextCompat.checkSelfPermission(
@@ -26,7 +28,7 @@ class AppPermissions {
                     permission
                 )
                 -> {
-                    println("Give the fuck permission")
+                    userNotificationDialog?.let { dialog -> dialog.show() }
                 }
                 else -> {
                     onRevokedCallback.launch(
@@ -40,7 +42,8 @@ class AppPermissions {
             activity: Activity,
             permissions: List<String>,
             onGranted: () -> Unit,
-            onRevokedCallback: ActivityResultLauncher<Array<String>>
+            onRevokedCallback: ActivityResultLauncher<Array<String>>,
+            userNotificationDialog: CustomDialog? = null
         ) {
             val grantedPermissions = mutableListOf<String>()
             for (permission in permissions) {
@@ -54,9 +57,8 @@ class AppPermissions {
                     ActivityCompat.shouldShowRequestPermissionRationale(
                         activity,
                         permission
-                    )
-                    -> {
-                        println("Give the fuck permissions")
+                    ) -> {
+                        userNotificationDialog?.let { dialog -> dialog.show() }
                     }
                 }
             }
@@ -64,7 +66,7 @@ class AppPermissions {
             if (grantedPermissions.size == permissions.size) {
                 onGranted.invoke()
             } else {
-                val notGrantedPermissions =
+                val notGrantedPermissions: List<String> =
                     permissions.filterNot { permission -> grantedPermissions.contains(permission) }
                 onRevokedCallback.launch(
                     Array(notGrantedPermissions.size) { i -> notGrantedPermissions[i] }

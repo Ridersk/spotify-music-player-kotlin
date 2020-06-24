@@ -5,6 +5,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.spotifyclone.R
+import com.spotifyclone.components.dialogs.CustomDialog
 import com.spotifyclone.tools.permissions.AppPermissions
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.android.synthetic.main.include_toolbar.view.*
@@ -14,6 +16,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private var toolbarArgs: ToolbarParameters? = null
     private var requiredPermissions = mutableListOf<String>()
+    private var notGrantedPermissions = listOf<String>()
+    private lateinit var requiredPermissionDialog: CustomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,11 +62,24 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun addRequiredPermissionToInit (permission: String) {
+    protected fun addRequiredPermission(permission: String) {
         this.requiredPermissions.add(permission)
     }
 
-    private fun requestPermissionsAndInit () {
+    protected fun addRequiredPermissionDialog(title: String, description: String) {
+        this.requiredPermissionDialog = CustomDialog.Builder(this)
+            .title(title)
+            .description(description)
+            .mainButton(getString(R.string.dialog_alert_btn_permissions_allow_storage_access)) {
+                requestMultiplePermissionLauncher.launch(
+                    Array(notGrantedPermissions.size) { i -> notGrantedPermissions[i] }
+                )
+            }
+            .optionalButton(getString(R.string.dialog_alert_btn_permissions_cancel))
+            .build()
+    }
+
+    private fun requestPermissionsAndInit() {
         AppPermissions.checkMultiplePermissions(
             this,
             this.requiredPermissions,
@@ -75,12 +92,15 @@ abstract class BaseActivity : AppCompatActivity() {
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { resultList: MutableMap<String, Boolean> ->
-            val notGrantedPermissions = resultList.filterNot { permission -> permission.value }
+            notGrantedPermissions = resultList.filterNot { permission -> permission.value }
+                .map { permission -> permission.key }
 
             if (notGrantedPermissions.isEmpty()) {
                 initComponents()
             } else {
-                // MSG
+                if (this::requiredPermissionDialog.isInitialized) {
+                    requiredPermissionDialog.show()
+                }
             }
         }
 

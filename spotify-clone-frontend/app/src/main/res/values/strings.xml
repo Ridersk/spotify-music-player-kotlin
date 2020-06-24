@@ -60,4 +60,12 @@
 
     <!-- Item Queue Music -->
     <string name="item_queue_music_img_description_playlist_button">Playlist Button</string>
+
+    <!-- Dialog Alert Permissions -->
+    <string name="dialog_alert_txt_permissions_title">We Need Your Permission</string>
+    <string name="dialog_alert_txt_permissions_description">This is necessary so that you can listen to your songs stored on the device</string>
+    <string name="dialog_alert_btn_permissions_allow_storage_access">Accept</string>
+    <string name="dialog_alert_btn_permissions_cancel">Cancel</string>
+
+
 </resources>

@@ -93,7 +93,7 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
     }
 
     private fun createDialog(funcAddMusic: () -> Unit, funcRemoveMusic: () -> Unit) {
-        dialog = dialogSmall
+        dialog = dialogBottom
         val addButton = dialog.btnAdd
         val removeButton = dialog.btnRemove
 

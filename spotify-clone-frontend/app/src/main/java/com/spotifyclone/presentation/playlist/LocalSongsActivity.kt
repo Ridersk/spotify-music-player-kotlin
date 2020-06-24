@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
+import com.spotifyclone.components.dialogs.CustomDialog
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
@@ -23,8 +24,7 @@ import java.util.*
 class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<Music> {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@LocalSongsActivity)
-
-    lateinit var layout: ViewGroup
+    private lateinit var layout: ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_playlist)
@@ -38,8 +38,12 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
             )
         )
 
-        super.addRequiredPermissionToInit(Manifest.permission.READ_EXTERNAL_STORAGE)
-        super.addRequiredPermissionToInit(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        super.addRequiredPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        super.addRequiredPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        super.addRequiredPermissionDialog(
+            getString(R.string.dialog_alert_txt_permissions_title),
+            getString(R.string.dialog_alert_txt_permissions_description)
+        )
         super.onCreate(savedInstanceState)
     }
 
