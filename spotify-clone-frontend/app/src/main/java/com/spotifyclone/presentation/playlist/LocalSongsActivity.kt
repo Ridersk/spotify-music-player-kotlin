@@ -1,13 +1,16 @@
 package com.spotifyclone.presentation.playlist
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
+import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.music.MusicPlayerActivity
@@ -22,8 +25,7 @@ import java.util.*
 class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<Music> {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@LocalSongsActivity)
-
-    lateinit var layout: ViewGroup
+    private lateinit var layout: ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_playlist)
@@ -37,6 +39,13 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
             )
         )
 
+        super.addRequiredPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        super.addRequiredPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        super.addRequiredPermissionDialog(
+            getString(R.string.dialog_alert_txt_permissions_title),
+            getString(R.string.dialog_alert_txt_permissions_description)
+        )
+        super.callInitComponentsWithoutPermission = true
         super.onCreate(savedInstanceState)
     }
 
@@ -85,14 +94,31 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
 
     private fun setMusicList() {
         val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
-            .ViewModelFactory(this@LocalSongsActivity)
+            .ViewModelFactory(PlaylistMusicsDataSourceLocal(this))
             .create(PlaylistMusicsViewModel::class.java)
 
         val playlistObserverProvider = PlaylistObserverProvider()
 
         playlistObserverProvider.addReceiver(playlistMusicPlayer)
         playlistObserverProvider.addReceiver(this)
+
         viewModel.musicsLiveData.observe(this, playlistObserverProvider)
+        viewModel.viewFlipperLiveData.observe(
+            this,
+            Observer { viewResult: ViewFlipperPlayslistMusics ->
+                viewResult.let {
+                    viewFlipperPlaylist.displayedChild = viewResult.showChild
+
+                    viewResult.warningResId?.let { errorMessageResId ->
+                        txtEmptySongList.text = getString(errorMessageResId)
+                    }
+
+                    viewResult.descriptionErrorResId?.let { descriptionErrorResId ->
+                        txtDescriptionEmptySongList.text = getString(descriptionErrorResId)
+
+                    }
+                }
+            })
 
         viewModel.getMusics()
     }

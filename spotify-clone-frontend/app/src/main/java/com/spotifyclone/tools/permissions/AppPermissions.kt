@@ -1,41 +1,78 @@
 package com.spotifyclone.tools.permissions
 
-import android.Manifest
 import android.app.Activity
-import android.content.ContentValues
-import android.content.Context
-import android.os.Build
-import android.util.Log
+import android.content.pm.PackageManager
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
-import androidx.core.content.PermissionChecker
+import androidx.core.content.ContextCompat
+import com.spotifyclone.components.dialogs.CustomDialog
 
 class AppPermissions {
     companion object {
-        fun isStoragePermissionGranted(
-            context: Context,
-            activity: Activity
-        ): Boolean {
-            if (Build.VERSION.SDK_INT >= 23) {
-                return if (PermissionChecker.checkSelfPermission(
-                        context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ) == PermissionChecker.PERMISSION_GRANTED
-                ) {
-                    Log.v(ContentValues.TAG, "Permission is granted")
-                    true
-                } else {
-                    Log.v(ContentValues.TAG, "Permission is revoked")
-                    ActivityCompat.requestPermissions(
-                        activity,
-                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                        1
-                    )
-                    false
+        fun checkPermission(
+            activity: Activity,
+            permission: String,
+            onGranted: () -> Unit,
+            onRevokedCallback: ActivityResultLauncher<String>,
+            userNotificationDialog: CustomDialog? = null
+        ) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    activity,
+                    permission
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    onGranted.invoke()
                 }
-            } else { //permission is automatically granted on sdk<23 upon installation
-                Log.v(ContentValues.TAG, "Permission is granted")
-                return true
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    permission
+                )
+                -> {
+                    userNotificationDialog?.let { dialog -> dialog.show() }
+                }
+                else -> {
+                    onRevokedCallback.launch(
+                        permission
+                    )
+                }
             }
         }
+
+        fun checkMultiplePermissions(
+            activity: Activity,
+            permissions: List<String>,
+            onGranted: () -> Unit,
+            onRevokedCallback: ActivityResultLauncher<Array<String>>,
+            userNotificationDialog: CustomDialog? = null
+        ) {
+            val grantedPermissions = mutableListOf<String>()
+            for (permission in permissions) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        activity,
+                        permission
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        grantedPermissions.add(permission)
+                    }
+                    ActivityCompat.shouldShowRequestPermissionRationale(
+                        activity,
+                        permission
+                    ) -> {
+                        userNotificationDialog?.let { dialog -> dialog.show() }
+                    }
+                }
+            }
+
+            if (grantedPermissions.size == permissions.size) {
+                onGranted.invoke()
+            } else {
+                val notGrantedPermissions: List<String> =
+                    permissions.filterNot { permission -> grantedPermissions.contains(permission) }
+                onRevokedCallback.launch(
+                    Array(notGrantedPermissions.size) { i -> notGrantedPermissions[i] }
+                )
+            }
+        }
+
     }
 }

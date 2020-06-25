@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
                 Intent(context, LoginActivity::class.java)
             }
         }
-
         context.startActivity(intent)
     }
 }
