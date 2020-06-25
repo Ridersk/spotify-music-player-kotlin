@@ -28,6 +28,8 @@
     <string name="local_songs_title">Local Songs</string>
     <string name="local_songs_button_random_play">SHUFFLE PLAY</string>
     <string name="local_songs_text_downloaded_songs">Downloaded Songs</string>
+    <string name="local_songs_text_empty_list">There Is Nothing Here</string>
+    <string name="local_songs_text_empty_list_description">Verify if you gave the permition of access the local storage on device settings</string>
 
     <!-- Music Player Activity -->
     <string name="music_album_image">Music Album Image</string>
@@ -66,6 +68,5 @@
     <string name="dialog_alert_txt_permissions_description">This is necessary so that you can listen to your songs stored on the device</string>
     <string name="dialog_alert_btn_permissions_allow_storage_access">Accept</string>
     <string name="dialog_alert_btn_permissions_cancel">Cancel</string>
-
 
 </resources>

@@ -18,6 +18,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private var requiredPermissions = mutableListOf<String>()
     private var notGrantedPermissions = listOf<String>()
     private lateinit var requiredPermissionDialog: CustomDialog
+    protected var callInitComponentsWithoutPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +76,11 @@ abstract class BaseActivity : AppCompatActivity() {
                     Array(notGrantedPermissions.size) { i -> notGrantedPermissions[i] }
                 )
             }
-            .optionalButton(getString(R.string.dialog_alert_btn_permissions_cancel))
+            .optionalButton(getString(R.string.dialog_alert_btn_permissions_cancel)) {
+                if (callInitComponentsWithoutPermission) {
+                    initComponents()
+                }
+            }
             .build()
     }
 
