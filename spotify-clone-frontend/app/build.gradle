@@ -32,8 +32,7 @@ android {
     sourceSets {
         main {
             res.srcDirs = [
-                    'src/main/res',
-                    'src/main/res/custom-component'
+                    'src/main/res'
             ]
         }
     }
@@ -53,7 +52,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.3.0-alpha01'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
 

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        tools:text="@string/music_queue_dialog_remove_music" />
+        tools:text="@string/music_queue_fragment_remove_music" />
 
     <Button
         android:id="@+id/btnAdd"
@@ -28,5 +28,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        tools:text="@string/music_queue_dialog_add_music" />
+        tools:text="@string/music_queue_fragment_add_music" />
 </RelativeLayout>

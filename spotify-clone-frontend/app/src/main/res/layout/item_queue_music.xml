@@ -51,7 +51,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:backgroundTint="@color/transparent"
-        android:contentDescription="@string/item_queue_music_img_description_playlist_button"
+        android:contentDescription="@string/img_description_playlist_button"
         android:paddingStart="0dp"
         android:paddingTop="0dp"
         android:paddingEnd="0dp"

@@ -9,7 +9,6 @@
     <string name="login_button_sign_up">SIGN UP FREE</string>
     <string name="login_button_facebook">CONTINUE WITH FACEBOOK</string>
     <string name="login_button_login">LOG IN</string>
-    <string name="login_spotify_img_description_brand">Spotify Logo</string>
 
     <!-- Login Credentials Activity-->
     <string name="credentials_toolbar_title" />
@@ -32,41 +31,35 @@
     <string name="local_songs_text_empty_list_description">Verify if you gave the permition of access the local storage on device settings</string>
 
     <!-- Music Player Activity -->
-    <string name="music_album_image">Music Album Image</string>
     <string name="music_progress_init_time">0:00</string>
 
     <!-- Music Queue Activity -->
     <string name="music_queue_txt_next_from">Next From:</string>
     <string name="music_queue_txt_now_playing">Now Playing</string>
     <string name="music_queue_txt_next_in_queue">Next In Queue</string>
-    <string name="music_queue_img_description_music_playing">Music Playing</string>
-    <string name="music_queue_dialog_add_music">ADD TO QUEUE</string>
-    <string name="music_queue_dialog_remove_music">REMOVE</string>
+    <string name="music_queue_fragment_add_music">ADD TO QUEUE</string>
+    <string name="music_queue_fragment_remove_music">REMOVE</string>
 
     <!-- Include Toolbar -->
-    <string name="include_toolbar_img_description_btn1">Screen Close Button</string>
-    <string name="include_toolbar_img_description_btn2">
-        Additional or Optional Button for some screens
-    </string>
-    <string name="include_toolbar_img_description_btn3">Screen Options Button</string>
     <string name="toolbar_subTitle_library">PLAYING FROM YOUR LIBRARY</string>
     <string name="toolbar_subTitle_playlist">PLAYING FROM YOUR PLAYLIST</string>
-
-    <!-- Item Music -->
-    <string name="item_music_img_description_download">Download Button</string>
-
-    <!-- Item Recommended Playlist -->
-    <string name="item_recommended_playlist_img_description_playlist_card_background">
-        Download Button
-    </string>
-
-    <!-- Item Queue Music -->
-    <string name="item_queue_music_img_description_playlist_button">Playlist Button</string>
 
     <!-- Dialog Alert Permissions -->
     <string name="dialog_alert_txt_permissions_title">We Need Your Permission</string>
     <string name="dialog_alert_txt_permissions_description">This is necessary so that you can listen to your songs stored on the device</string>
     <string name="dialog_alert_btn_permissions_allow_storage_access">Accept</string>
     <string name="dialog_alert_btn_permissions_cancel">Cancel</string>
+
+    <!-- Image Descriptions -->
+    <string name="img_description_album_image">Music Album Image</string>
+    <string name="img_description_brand">Spotify Logo</string>
+    <string name="img_description_music_playing">Music Playing</string>
+    <string name="img_description_toolbar_btn1">Screen Close Button</string>
+    <string name="img_description_toolbar_btn2">Additional or Optional Button for some screens</string>
+    <string name="img_description_toolbar_btn3">Screen Options Button</string>
+    <string name="img_description_download">Download Button</string>
+    <string name="img_description_playlist_button">Playlist Button</string>
+    <string name="img_description_favorite_music">Favorite Music</string>
+    <string name="img_description_play_button">Play Button</string>
 
 </resources>

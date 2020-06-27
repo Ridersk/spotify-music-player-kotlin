@@ -37,7 +37,7 @@
             android:maxWidth="15dp"
             android:maxHeight="15dp"
             android:src="@drawable/ic_download"
-            android:contentDescription="@string/item_music_img_description_download" />
+            android:contentDescription="@string/img_description_download" />
 
         <TextView
             android:id="@+id/textMusicLabel"
