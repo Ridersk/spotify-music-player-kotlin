@@ -1,6 +1,5 @@
 package com.spotifyclone.presentation.home
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,14 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.spotifyclone.R
-import com.spotifyclone.presentation.playlist.LocalSongsActivity
+import com.spotifyclone.presentation.base.BaseActivity
+import com.spotifyclone.presentation.playlist.LocalSongsFragment
 import kotlinx.android.synthetic.main.fragment_home_page.*
 import kotlinx.android.synthetic.main.fragment_home_page.view.*
 
-class HomeFragment(private val parentContext: Context): Fragment() {
+class HomeFragment(private val parentActivity: BaseActivity): Fragment() {
 
     companion object {
-        fun getInstance(context: Context): Fragment {
+        fun getInstance(context: BaseActivity): Fragment {
             val activityTabFragment = HomeFragment(context)
             val bundle = Bundle()
             activityTabFragment.arguments = bundle
@@ -45,9 +45,10 @@ class HomeFragment(private val parentContext: Context): Fragment() {
             it?.let { playlists ->
                 with(recommendedPlaylistGrid) {
                     adapter = RecommendedPlaylistsAdapter(playlists) { playlist ->
-                        val intent =
-                            LocalSongsActivity.getStartIntent(parentContext, playlist.title)
-                        parentContext.startActivity(intent)
+//                        val fragment: Fragment =
+//                            LocalSongsFragment.getInstance(parentActivity, playlist.title)
+//                        parentActivity.startActivityFromFragment(fragment, parentActivity.intent, 0)
+                        parentActivity.changeFragment()
                     }
                 }
             }

@@ -1,58 +1,64 @@
 package com.spotifyclone.presentation.playlist
 
-import android.Manifest
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
 import com.spotifyclone.presentation.base.BaseActivity
-import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
 import com.spotifyclone.tools.musicplayer.PlaylistObserver
-import kotlinx.android.synthetic.main.activity_playlist.*
-import kotlinx.android.synthetic.main.activity_playlist.view.*
-import kotlinx.android.synthetic.main.include_toolbar.*
+import kotlinx.android.synthetic.main.fragment_playlist.*
+import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import java.util.*
 
-class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<Music> {
+class LocalSongsFragment(private val parentActivity: BaseActivity) : Fragment(), PlaylistInterface,
+    PlaylistObserver<Music> {
 
-    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@LocalSongsActivity)
+    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(parentActivity)
     private lateinit var layout: ViewGroup
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_playlist)
-
-        setupToolbar(
-            ToolbarParameters(
-                toolbar = toolbarMain,
-                title = intent.getStringExtra(EXTRA_TITLE),
-                option1 = Pair(R.drawable.ic_back, { super.onBackPressed() }),
-                option3 = Pair(R.drawable.ic_options, {})
-            )
-        )
-
-        super.addRequiredPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-        super.addRequiredPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        super.addRequiredPermissionDialog(
-            getString(R.string.dialog_alert_txt_permissions_title),
-            getString(R.string.dialog_alert_txt_permissions_description)
-        )
-        super.callInitComponentsWithoutPermission = true
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_playlist, container, false)
     }
 
-    override fun initComponents() {
-        layout = activityLocalSongs
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //        parentActivity.setupToolbar(
+//            ToolbarParameters(
+//                toolbar = toolbarMain,
+//                title = requireArguments().getString(EXTRA_TITLE),
+//                option1 = Pair(R.drawable.ic_back, { }),
+//                option3 = Pair(R.drawable.ic_options, {})
+//            )
+//        )
+
+//        super.addRequiredPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+//        super.addRequiredPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//        super.addRequiredPermissionDialog(
+//            getString(R.string.dialog_alert_txt_permissions_title),
+//            getString(R.string.dialog_alert_txt_permissions_description)
+//        )
+//        super.callInitComponentsWithoutPermission = true
+
+
+        initComponents()
+    }
+
+    private fun initComponents() {
+        layout = fragmentPlaylist
         with(layout) {
-            textTitle.text = intent.getStringExtra(EXTRA_TITLE)
+//            textTitle.text = requireArguments().getString(EXTRA_TITLE)
             buttonRandomPlay.text = getString(R.string.local_songs_button_random_play)
             textDownloadedSongs.visibility = View.INVISIBLE
             swicthDownloadedSongs.visibility = View.INVISIBLE
@@ -66,7 +72,7 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
     override fun receiverList(list: List<Music>) {
         with(layout.recyclerMusics) {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-                this@LocalSongsActivity,
+                parentActivity,
                 RecyclerView.VERTICAL,
                 false
             )
@@ -75,7 +81,7 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
                 PlaylistMusicsAdapter(list) { music ->
                     val intent =
                         MusicPlayerActivity.getStartIntent(
-                            this@LocalSongsActivity,
+                            parentActivity,
                             music.title,
                             music.artist,
                             music.albumUriId,
@@ -83,7 +89,7 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
                         )
 
                     chooseMusic(music.id)
-                    this@LocalSongsActivity.startActivity(intent)
+                    parentActivity.startActivity(intent)
                 }
         }
     }
@@ -94,7 +100,7 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
 
     private fun setMusicList() {
         val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
-            .ViewModelFactory(PlaylistMusicsDataSourceLocal(this))
+            .ViewModelFactory(PlaylistMusicsDataSourceLocal(parentActivity))
             .create(PlaylistMusicsViewModel::class.java)
 
         val playlistObserverProvider = PlaylistObserverProvider()
@@ -127,10 +133,11 @@ class LocalSongsActivity : BaseActivity(), PlaylistInterface, PlaylistObserver<M
         private const val EXTRA_PLAYLIST_NAME: Int = R.string.local_songs_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
-        fun getStartIntent(context: Context, title: String): Intent {
-            return Intent(context, LocalSongsActivity::class.java).apply {
-                putExtra(EXTRA_TITLE, title)
-            }
+        fun getInstance(context: BaseActivity, title: String): Fragment {
+            val bundle = Bundle()
+            bundle.putString(EXTRA_TITLE, title)
+
+            return LocalSongsFragment(context)
         }
 
     }

@@ -1,15 +1,19 @@
 package com.spotifyclone.presentation
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.spotifyclone.R
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
+import com.spotifyclone.R
+import com.spotifyclone.presentation.base.BaseActivity
+import com.spotifyclone.presentation.login.LoginActivity
+import com.spotifyclone.presentation.playlist.LocalSongsFragment
+import com.spotifyclone.tools.session.UserSession
 import kotlinx.android.synthetic.main.include_bottom_navigation_menu.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     val context = this@MainActivity
     var pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -24,13 +28,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (UserSession.getUserStatus() == UserSession.USER_LOGGED) {
+            initMainActivity()
+        } else {
+            val intent = Intent(context, LoginActivity::class.java)
+            context.startActivity(intent)
+        }
+    }
+
+    private fun initMainActivity() {
         val activityTabAdapter = PageTabAdapter(this, 3)
         tabViewPager.adapter = activityTabAdapter
 
         tabViewPager.registerOnPageChangeCallback(pageChangeCallback)
 
         bottomNavMenu.setOnNavigationItemSelectedListener { item ->
-            when(item.itemId) {
+            when (item.itemId) {
                 R.id.page1 -> {
                     tabViewPager.currentItem = 0
                     true
@@ -46,19 +59,6 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-
-//        val intent: Intent = if (DesenvolUtils.appInDesenvol()) {
-//            DesenvolUtils.getActivityBeingTested(context)
-//        } else {
-//            if (UserSession.getUserStatus() == UserSession.USER_LOGGED) {
-//                Intent(context, HomeActivity::class.java)
-//            } else {
-//                Intent(context, LoginActivity::class.java)
-//            }
-//        }
-//
-//        context.startActivity(intent)
     }
 
     override fun onDestroy() {

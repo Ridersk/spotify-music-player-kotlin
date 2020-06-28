@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.spotifyclone.R
 import com.spotifyclone.components.dialogs.CustomDialog
+import com.spotifyclone.presentation.home.HomeFragment
+import com.spotifyclone.presentation.playlist.LocalSongsFragment
 import com.spotifyclone.tools.permissions.AppPermissions
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.android.synthetic.main.include_toolbar.view.*
 
@@ -30,7 +33,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun setupToolbar(toolbarArgs: ToolbarParameters) {
+    public fun setupToolbar(toolbarArgs: ToolbarParameters) {
         this.toolbarArgs = toolbarArgs
 
         val toolbar: Toolbar = toolbarArgs.toolbar
@@ -63,25 +66,8 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun addRequiredPermission(permission: String) {
-        this.requiredPermissions.add(permission)
-    }
-
-    protected fun addRequiredPermissionDialog(title: String, description: String) {
-        this.requiredPermissionDialog = CustomDialog.Builder(this)
-            .title(title)
-            .description(description)
-            .mainButton(getString(R.string.dialog_alert_btn_permissions_allow_storage_access)) {
-                requestMultiplePermissionLauncher.launch(
-                    Array(notGrantedPermissions.size) { i -> notGrantedPermissions[i] }
-                )
-            }
-            .optionalButton(getString(R.string.dialog_alert_btn_permissions_cancel)) {
-                if (callInitComponentsWithoutPermission) {
-                    initComponents()
-                }
-            }
-            .build()
+    fun changeFragment() {
+        tabViewPager.currentItem = 2
     }
 
     private fun requestPermissionsAndInit() {
@@ -109,5 +95,5 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         }
 
-    protected abstract fun initComponents()
+    protected open fun initComponents() {}
 }
