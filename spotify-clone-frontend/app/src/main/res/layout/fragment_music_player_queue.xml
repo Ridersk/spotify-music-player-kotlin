@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="142dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_alignParentTop="true"
+        android:elevation="2dp"
+        android:progress="50"
+        android:progressBackgroundTint="@color/gray"
+        android:progressTint="@color/white" />
+
+    <RelativeLayout
+        android:id="@+id/layoutMusicControl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progressBar"
+        android:layout_marginTop="16dp"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/btncPrevious"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_previous_music"
+            android:contentDescription="@string/img_description_previous_music" />
+
+        <ImageButton
+            android:id="@+id/btnPlayPause"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="48dp"
+            android:layout_toEndOf="@id/btncPrevious"
+            android:background="@drawable/selector_fragment_queue_button_play"
+            android:contentDescription="@string/img_description_play_button"/>
+
+        <ImageButton
+            android:id="@+id/btnNext"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/btnPlayPause"
+            android:background="@drawable/ic_next_music"
+            android:contentDescription="@string/img_description_next_music"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_below="@id/layoutMusicControl"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="36dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_devices"
+            android:contentDescription="@string/img_description_devices" />
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_height="wrap_content"
+            tools:text="Devices Available"/>
+    </LinearLayout>
+</RelativeLayout>

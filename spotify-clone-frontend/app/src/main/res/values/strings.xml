@@ -61,5 +61,8 @@
     <string name="img_description_playlist_button">Playlist Button</string>
     <string name="img_description_favorite_music">Favorite Music</string>
     <string name="img_description_play_button">Play Button</string>
+    <string name="img_description_devices">Devices</string>
+    <string name="img_description_next_music">Next Music</string>
+    <string name="img_description_previous_music">Previous Music</string>
 
 </resources>
