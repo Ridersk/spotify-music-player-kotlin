@@ -52,6 +52,11 @@
     <string name="toolbar_subTitle_library">PLAYING FROM YOUR LIBRARY</string>
     <string name="toolbar_subTitle_playlist">PLAYING FROM YOUR PLAYLIST</string>
 
+    <!-- Bottom Navigation Menu -->
+    <string name="txt_bottom_menu_label_1">Home</string>
+    <string name="txt_bottom_menu_label_2">Search</string>
+    <string name="txt_bottom_menu_label_3">Your Library</string>
+
     <!-- Item Music -->
     <string name="item_music_img_description_download">Download Button</string>
 
