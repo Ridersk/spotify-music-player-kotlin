@@ -1,70 +1,54 @@
 package com.spotifyclone.presentation
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
-import android.widget.Toast
-import androidx.viewpager2.widget.ViewPager2
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.login.LoginActivity
-import com.spotifyclone.presentation.playlist.LocalSongsFragment
+import com.spotifyclone.presentation.maintab.PageTabAdapter
 import com.spotifyclone.tools.session.UserSession
 import kotlinx.android.synthetic.main.include_bottom_navigation_menu.*
 
-
 class MainActivity : BaseActivity() {
+
+    private lateinit var tabAdapter: PageTabAdapter
     val context = this@MainActivity
-    var pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
-        override fun onPageSelected(position: Int) {
-            Toast.makeText(this@MainActivity, "Selected position: $position", Toast.LENGTH_SHORT)
-                .show()
-            super.onPageSelected(position)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         if (UserSession.getUserStatus() == UserSession.USER_LOGGED) {
-            initMainActivity()
+            initMainViewTabs()
         } else {
             val intent = Intent(context, LoginActivity::class.java)
             context.startActivity(intent)
         }
+
+
+        super.addRequiredPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        super.addRequiredPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        super.addRequiredPermissionDialog(
+            getString(R.string.dialog_alert_txt_permissions_title),
+            getString(R.string.dialog_alert_txt_permissions_description)
+        )
+        super.onCreate(savedInstanceState)
     }
 
-    private fun initMainActivity() {
-        val activityTabAdapter = PageTabAdapter(this, 3)
-        tabViewPager.adapter = activityTabAdapter
-
-        tabViewPager.registerOnPageChangeCallback(pageChangeCallback)
-
-        bottomNavMenu.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.page1 -> {
-                    tabViewPager.currentItem = 0
-                    true
-                }
-                R.id.page2 -> {
-                    tabViewPager.currentItem = 1
-                    true
-                }
-                R.id.page3 -> {
-                    tabViewPager.currentItem = 2
-                    true
-                }
-                else -> false
-            }
+    override fun onBackPressed() {
+        if (!tabAdapter.onBackPressed()) {
+            super.onBackPressed()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        tabViewPager.unregisterOnPageChangeCallback(pageChangeCallback)
+    private fun initMainViewTabs() {
+        tabAdapter = PageTabAdapter(this, containerViewPager)
+        containerViewPager.adapter = tabAdapter
+        containerViewPager.isUserInputEnabled = false
+
+        bottomNavMenu.setOnNavigationItemSelectedListener { item: MenuItem -> tabAdapter.selectTab(item)}
     }
-
-
 }

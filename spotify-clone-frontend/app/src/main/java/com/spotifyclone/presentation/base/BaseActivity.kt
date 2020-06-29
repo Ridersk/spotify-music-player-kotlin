@@ -7,10 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.spotifyclone.R
 import com.spotifyclone.components.dialogs.CustomDialog
-import com.spotifyclone.presentation.home.HomeFragment
-import com.spotifyclone.presentation.playlist.LocalSongsFragment
 import com.spotifyclone.tools.permissions.AppPermissions
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.android.synthetic.main.include_toolbar.view.*
 
@@ -21,7 +18,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private var requiredPermissions = mutableListOf<String>()
     private var notGrantedPermissions = listOf<String>()
     private lateinit var requiredPermissionDialog: CustomDialog
-    protected var callInitComponentsWithoutPermission = false
+    private var callInitComponentsWithoutPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +30,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    public fun setupToolbar(toolbarArgs: ToolbarParameters) {
+    fun setupToolbar(toolbarArgs: ToolbarParameters) {
         this.toolbarArgs = toolbarArgs
 
         val toolbar: Toolbar = toolbarArgs.toolbar
@@ -66,8 +63,25 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    fun changeFragment() {
-        tabViewPager.currentItem = 2
+    protected fun addRequiredPermission(permission: String) {
+        this.requiredPermissions.add(permission)
+    }
+
+    protected fun addRequiredPermissionDialog(title: String, description: String) {
+        this.requiredPermissionDialog = CustomDialog.Builder(this)
+            .title(title)
+            .description(description)
+            .mainButton(getString(R.string.dialog_alert_btn_permissions_allow_storage_access)) {
+                requestMultiplePermissionLauncher.launch(
+                    Array(notGrantedPermissions.size) { i -> notGrantedPermissions[i] }
+                )
+            }
+            .optionalButton(getString(R.string.dialog_alert_btn_permissions_cancel)) {
+                if (callInitComponentsWithoutPermission) {
+                    initComponents()
+                }
+            }
+            .build()
     }
 
     private fun requestPermissionsAndInit() {

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
-import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
@@ -19,10 +18,10 @@ import kotlinx.android.synthetic.main.fragment_playlist.*
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import java.util.*
 
-class LocalSongsFragment(private val parentActivity: BaseActivity) : Fragment(), PlaylistInterface,
+class LocalSongsFragment : Fragment(), PlaylistInterface,
     PlaylistObserver<Music> {
 
-    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(parentActivity)
+    private lateinit var playlistMusicPlayer: PlaylistMusicPlayer
     private lateinit var layout: ViewGroup
 
     override fun onCreateView(
@@ -34,31 +33,14 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) : Fragment(),
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //        parentActivity.setupToolbar(
-//            ToolbarParameters(
-//                toolbar = toolbarMain,
-//                title = requireArguments().getString(EXTRA_TITLE),
-//                option1 = Pair(R.drawable.ic_back, { }),
-//                option3 = Pair(R.drawable.ic_options, {})
-//            )
-//        )
-
-//        super.addRequiredPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-//        super.addRequiredPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//        super.addRequiredPermissionDialog(
-//            getString(R.string.dialog_alert_txt_permissions_title),
-//            getString(R.string.dialog_alert_txt_permissions_description)
-//        )
-//        super.callInitComponentsWithoutPermission = true
-
-
+        playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context!!)
         initComponents()
     }
 
     private fun initComponents() {
         layout = fragmentPlaylist
         with(layout) {
-//            textTitle.text = requireArguments().getString(EXTRA_TITLE)
+            textTitle.text = requireArguments().getString(EXTRA_TITLE)
             buttonRandomPlay.text = getString(R.string.local_songs_button_random_play)
             textDownloadedSongs.visibility = View.INVISIBLE
             swicthDownloadedSongs.visibility = View.INVISIBLE
@@ -72,7 +54,7 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) : Fragment(),
     override fun receiverList(list: List<Music>) {
         with(layout.recyclerMusics) {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-                parentActivity,
+                context,
                 RecyclerView.VERTICAL,
                 false
             )
@@ -81,7 +63,7 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) : Fragment(),
                 PlaylistMusicsAdapter(list) { music ->
                     val intent =
                         MusicPlayerActivity.getStartIntent(
-                            parentActivity,
+                            context,
                             music.title,
                             music.artist,
                             music.albumUriId,
@@ -89,7 +71,7 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) : Fragment(),
                         )
 
                     chooseMusic(music.id)
-                    parentActivity.startActivity(intent)
+                    context.startActivity(intent)
                 }
         }
     }
@@ -100,7 +82,7 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) : Fragment(),
 
     private fun setMusicList() {
         val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
-            .ViewModelFactory(PlaylistMusicsDataSourceLocal(parentActivity))
+            .ViewModelFactory(PlaylistMusicsDataSourceLocal(context!!))
             .create(PlaylistMusicsViewModel::class.java)
 
         val playlistObserverProvider = PlaylistObserverProvider()
@@ -133,11 +115,11 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) : Fragment(),
         private const val EXTRA_PLAYLIST_NAME: Int = R.string.local_songs_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
-        fun getInstance(context: BaseActivity, title: String): Fragment {
+        fun getInstance(title: String): Fragment {
             val bundle = Bundle()
             bundle.putString(EXTRA_TITLE, title)
 
-            return LocalSongsFragment(context)
+            return LocalSongsFragment()
         }
 
     }

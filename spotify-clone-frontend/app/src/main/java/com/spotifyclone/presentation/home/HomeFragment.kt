@@ -7,27 +7,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.spotifyclone.R
-import com.spotifyclone.presentation.base.BaseActivity
+import com.spotifyclone.presentation.maintab.IWrapperFragment
 import com.spotifyclone.presentation.playlist.LocalSongsFragment
 import kotlinx.android.synthetic.main.fragment_home_page.*
 import kotlinx.android.synthetic.main.fragment_home_page.view.*
 
-class HomeFragment(private val parentActivity: BaseActivity): Fragment() {
+class HomeFragment : Fragment() {
 
-    companion object {
-        fun getInstance(context: BaseActivity): Fragment {
-            val activityTabFragment = HomeFragment(context)
-            val bundle = Bundle()
-            activityTabFragment.arguments = bundle
-            return activityTabFragment
-        }
-    }
+    private lateinit var mListener: IWrapperFragment
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mListener = this.parentFragment as IWrapperFragment
         return inflater.inflate(R.layout.fragment_home_page, container, false)
     }
 
@@ -45,16 +39,22 @@ class HomeFragment(private val parentActivity: BaseActivity): Fragment() {
             it?.let { playlists ->
                 with(recommendedPlaylistGrid) {
                     adapter = RecommendedPlaylistsAdapter(playlists) { playlist ->
-//                        val fragment: Fragment =
-//                            LocalSongsFragment.getInstance(parentActivity, playlist.title)
-//                        parentActivity.startActivityFromFragment(fragment, parentActivity.intent, 0)
-                        parentActivity.changeFragment()
+                        val playlistFragment = LocalSongsFragment.getInstance("Test")
+                        val args = Bundle()
+                        mListener.onReplace(playlistFragment, args)
                     }
                 }
             }
         })
-
-
         viewModel.getRecommendedPlaylists()
+    }
+
+    companion object {
+        fun getInstance(): Fragment {
+            val homeFragment = HomeFragment()
+            val bundle = Bundle()
+            homeFragment.arguments = bundle
+            return homeFragment
+        }
     }
 }
