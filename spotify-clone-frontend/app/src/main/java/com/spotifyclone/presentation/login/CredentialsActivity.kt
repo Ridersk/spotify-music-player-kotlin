@@ -18,7 +18,6 @@ class CredentialsActivity : BaseActivity() {
 
         setupToolbar(
             ToolbarParameters(
-                toolbar = toolbarMain,
                 title = getString(R.string.credentials_toolbar_title),
                 option1 = Pair(R.drawable.ic_back, {})
             )

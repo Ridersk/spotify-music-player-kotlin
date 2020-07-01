@@ -1,6 +1,7 @@
 package com.spotifyclone.presentation.base
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +15,6 @@ import kotlinx.android.synthetic.main.include_toolbar.view.*
 
 abstract class BaseActivity : AppCompatActivity() {
 
-    private var toolbarArgs: ToolbarParameters? = null
-    private var requiredPermissions = mutableListOf<String>()
     private var notGrantedPermissions = listOf<String>()
     private lateinit var requiredPermissionDialog: CustomDialog
     private var callInitComponentsWithoutPermission = false
@@ -23,51 +22,75 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (requiredPermissions.isNotEmpty()) {
-            requestPermissionsAndInit()
-        } else {
-            initComponents()
-        }
+        initComponents()
     }
 
-    fun setupToolbar(toolbarArgs: ToolbarParameters) {
-        this.toolbarArgs = toolbarArgs
+    protected fun setupToolbar(toolbarArgs: ToolbarParameters) {
+        setSupportActionBar(buildToolbar(toolbarArgs))
+    }
 
-        val toolbar: Toolbar = toolbarArgs.toolbar
+    fun updateToolbar (toolbarArgs: ToolbarParameters) {
+        buildToolbar(toolbarArgs)
+    }
 
-        toolbar.let {
-            with(toolbar) {
+    private fun buildToolbar (toolbarArgs: ToolbarParameters): Toolbar {
+        val toolbar: Toolbar = toolbarMain
+        with(toolbar) {
+            if (toolbarArgs.title != null && toolbarArgs.title.isNotEmpty()) {
+                textToolbarTitle.visibility = View.VISIBLE
                 textToolbarTitle.text = toolbarArgs.title
-                textToolbarSubtitle.text = toolbarArgs.subTitle
-
-                if (toolbarArgs.option1 != null && toolbarArgs.option1.first > 0) {
-                    iconOption1.setImageDrawable(getDrawable(toolbarArgs.option1.first))
-                    iconOption1.setOnClickListener {
-                        toolbarArgs.option1.second.invoke()
-                    }
-                }
-                if (toolbarArgs.option2 != null && toolbarArgs.option2.first > 0) {
-                    iconOption2.setImageDrawable(getDrawable(toolbarArgs.option2.first))
-                    iconOption2.setOnClickListener {
-                        toolbarArgs.option2.second.invoke()
-                    }
-                }
-                if (toolbarArgs.option3 != null && toolbarArgs.option3.first > 0) {
-                    iconOption3.setImageDrawable(getDrawable(toolbarArgs.option3.first))
-                    iconOption3.setOnClickListener {
-                        toolbarArgs.option3.second.invoke()
-                    }
-                }
+            } else {
+                textToolbarTitle.visibility = View.GONE
             }
-            setSupportActionBar(toolbarMain)
+
+            if (toolbarArgs.subTitle != null && toolbarArgs.subTitle.isNotEmpty()) {
+                textToolbarSubtitle.visibility = View.VISIBLE
+                textToolbarSubtitle.text = toolbarArgs.subTitle
+            } else {
+                textToolbarSubtitle.visibility = View.GONE
+            }
+
+            if (toolbarArgs.option1 != null && toolbarArgs.option1.first > 0) {
+                iconOption1.setImageDrawable(getDrawable(toolbarArgs.option1.first))
+                iconOption1.setOnClickListener {
+                    toolbarArgs.option1.second.invoke()
+                }
+                iconOption1.visibility = View.VISIBLE
+            } else {
+                iconOption1.setImageDrawable(null)
+                iconOption1.setOnClickListener {}
+                iconOption1.visibility = View.GONE
+            }
+
+
+            if (toolbarArgs.option2 != null && toolbarArgs.option2.first > 0) {
+                iconOption2.setImageDrawable(getDrawable(toolbarArgs.option2.first))
+                iconOption2.setOnClickListener {
+                    toolbarArgs.option2.second.invoke()
+                }
+                iconOption2.visibility = View.VISIBLE
+            } else {
+                iconOption2.setImageDrawable(null)
+                iconOption2.setOnClickListener {}
+                iconOption2.visibility = View.GONE
+            }
+
+            if (toolbarArgs.option3 != null && toolbarArgs.option3.first > 0) {
+                iconOption3.setImageDrawable(getDrawable(toolbarArgs.option3.first))
+                iconOption3.setOnClickListener {
+                    toolbarArgs.option3.second.invoke()
+                }
+                iconOption3.visibility = View.VISIBLE
+            } else {
+                iconOption3.setImageDrawable(null)
+                iconOption3.setOnClickListener {}
+                iconOption3.visibility = View.GONE
+            }
         }
+        return toolbar
     }
 
-    protected fun addRequiredPermission(permission: String) {
-        this.requiredPermissions.add(permission)
-    }
-
-    protected fun addRequiredPermissionDialog(title: String, description: String) {
+    fun addRequiredPermissionDialog(title: String, description: String) {
         this.requiredPermissionDialog = CustomDialog.Builder(this)
             .title(title)
             .description(description)
@@ -84,13 +107,18 @@ abstract class BaseActivity : AppCompatActivity() {
             .build()
     }
 
-    private fun requestPermissionsAndInit() {
-        AppPermissions.checkMultiplePermissions(
-            this,
-            this.requiredPermissions,
-            this::initComponents,
-            requestMultiplePermissionLauncher
-        )
+    private lateinit var callbackRequestPermission: () -> Unit
+
+    fun requestPermissions(requiredPermissions: List<String>, callback: () -> Unit) {
+        callbackRequestPermission = callback
+        notGrantedPermissions = AppPermissions.checkMultiplePermissions(this, requiredPermissions)
+        if (notGrantedPermissions.isNotEmpty()) {
+            requestMultiplePermissionLauncher.launch(
+                Array(notGrantedPermissions.size) { i -> notGrantedPermissions[i] }
+            )
+        } else  {
+            callback.invoke()
+        }
     }
 
     private val requestMultiplePermissionLauncher: ActivityResultLauncher<Array<String>> =
@@ -101,7 +129,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 .map { permission -> permission.key }
 
             if (notGrantedPermissions.isEmpty()) {
-                initComponents()
+                callbackRequestPermission.invoke()
             } else {
                 if (this::requiredPermissionDialog.isInitialized) {
                     requiredPermissionDialog.show()

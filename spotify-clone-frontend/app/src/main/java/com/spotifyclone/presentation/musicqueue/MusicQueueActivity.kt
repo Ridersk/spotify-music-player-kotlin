@@ -35,7 +35,6 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
 
         setupToolbar(
             ToolbarParameters(
-                toolbar = toolbarMain,
                 title = intent.getStringExtra(EXTRA_PLAYLIST_NAME),
                 subTitle = getString(R.string.toolbar_subTitle_library),
                 option1 = Pair(R.drawable.ic_close, { super.onBackPressed() })

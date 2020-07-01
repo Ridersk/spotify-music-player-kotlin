@@ -7,6 +7,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
+import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.login.LoginActivity
 import com.spotifyclone.presentation.maintab.PageTabAdapter
 import com.spotifyclone.tools.session.UserSession
@@ -21,20 +22,14 @@ class MainActivity : BaseActivity() {
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_main)
 
+        super.setupToolbar(ToolbarParameters())
+
         if (UserSession.getUserStatus() == UserSession.USER_LOGGED) {
             initMainViewTabs()
         } else {
             val intent = Intent(context, LoginActivity::class.java)
             context.startActivity(intent)
         }
-
-
-        super.addRequiredPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-        super.addRequiredPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        super.addRequiredPermissionDialog(
-            getString(R.string.dialog_alert_txt_permissions_title),
-            getString(R.string.dialog_alert_txt_permissions_description)
-        )
         super.onCreate(savedInstanceState)
     }
 

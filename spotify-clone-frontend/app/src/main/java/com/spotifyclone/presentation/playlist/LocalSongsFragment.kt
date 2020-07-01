@@ -1,5 +1,6 @@
 package com.spotifyclone.presentation.playlist
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
+import com.spotifyclone.presentation.base.BaseActivity
+import com.spotifyclone.presentation.base.BaseScreenFragment
+import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
@@ -18,7 +22,8 @@ import kotlinx.android.synthetic.main.fragment_playlist.*
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import java.util.*
 
-class LocalSongsFragment : Fragment(), PlaylistInterface,
+class LocalSongsFragment(private val parentActivity: BaseActivity) :
+    BaseScreenFragment(parentActivity), PlaylistInterface,
     PlaylistObserver<Music> {
 
     private lateinit var playlistMusicPlayer: PlaylistMusicPlayer
@@ -32,12 +37,8 @@ class LocalSongsFragment : Fragment(), PlaylistInterface,
         return inflater.inflate(R.layout.fragment_playlist, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun initComponents() {
         playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context!!)
-        initComponents()
-    }
-
-    private fun initComponents() {
         layout = fragmentPlaylist
         with(layout) {
             textTitle.text = requireArguments().getString(EXTRA_TITLE)
@@ -108,18 +109,34 @@ class LocalSongsFragment : Fragment(), PlaylistInterface,
                 }
             })
 
-        viewModel.getMusics()
+        parentActivity.addRequiredPermissionDialog(
+            getString(R.string.dialog_alert_txt_permissions_title),
+            getString(R.string.dialog_alert_txt_permissions_description)
+        )
+
+        parentActivity.requestPermissions(
+            listOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) { viewModel.getMusics() }
     }
+
+    override fun getToolbar(): ToolbarParameters =
+        ToolbarParameters(
+            option1 = Pair(R.drawable.ic_back, { parentActivity.onBackPressed() }),
+            option3 = Pair(R.drawable.ic_options, {})
+        )
 
     companion object {
         private const val EXTRA_PLAYLIST_NAME: Int = R.string.local_songs_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
-        fun getInstance(title: String): Fragment {
+        fun getInstance(parent: BaseActivity, title: String): Fragment {
             val bundle = Bundle()
             bundle.putString(EXTRA_TITLE, title)
 
-            return LocalSongsFragment()
+            return LocalSongsFragment(parent)
         }
 
     }
