@@ -1,8 +1,9 @@
 package com.spotifyclone.tools.permissions
 
-import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
+import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.spotifyclone.components.dialogs.CustomDialog
 
@@ -10,10 +11,12 @@ class AppPermissions {
     companion object {
 
         fun checkMultiplePermissions(
-            activity: Activity,
+            activity: ComponentActivity,
             permissions: List<String>,
+            onGranted: () -> Unit,
+            onRevoke: () -> Unit,
             userNotificationDialog: CustomDialog? = null
-        ): List<String> {
+        ) {
             val grantedPermissions = mutableListOf<String>()
             for (permission in permissions) {
                 when {
@@ -32,7 +35,30 @@ class AppPermissions {
                 }
             }
 
-            return permissions.filterNot { permission -> grantedPermissions.contains(permission) }
+            val notGrantedPermissions: List<String> =
+                permissions.filterNot { permission -> grantedPermissions.contains(permission) }
+
+            if (grantedPermissions.size == permissions.size) {
+                onGranted.invoke()
+            } else {
+                requestPermissionLauncher(activity, notGrantedPermissions, onGranted, onRevoke)
+            }
+        }
+
+        private fun requestPermissionLauncher(activity: ComponentActivity, notGrantedPermissionsInit: List<String>, onGranted: () -> Unit, onRevoke: () -> Unit) {
+            var notGrantedPermissions = notGrantedPermissionsInit
+            activity.registerForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions()
+            ) { resultList: MutableMap<String, Boolean> ->
+                notGrantedPermissions = resultList.filterNot { permission -> permission.value }
+                    .map { permission -> permission.key }
+
+                if (notGrantedPermissions.isEmpty()) {
+                    onGranted.invoke()
+                } else {
+                    onRevoke.invoke()
+                }
+            }.launch(notGrantedPermissions.toTypedArray())
         }
 
     }

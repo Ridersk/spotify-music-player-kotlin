@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
+import com.spotifyclone.components.dialogs.CustomDialog
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
 import com.spotifyclone.presentation.base.BaseActivity
@@ -18,6 +19,7 @@ import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
 import com.spotifyclone.tools.musicplayer.PlaylistObserver
+import com.spotifyclone.tools.permissions.AppPermissions
 import kotlinx.android.synthetic.main.fragment_playlist.*
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import java.util.*
@@ -28,6 +30,13 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
 
     private lateinit var playlistMusicPlayer: PlaylistMusicPlayer
     private lateinit var layout: ViewGroup
+    private lateinit var viewModel: PlaylistMusicsViewModel
+    private lateinit var requiredPermissionDialog: CustomDialog
+    private val requiredPermissions = listOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,7 +91,7 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
     }
 
     private fun setMusicList() {
-        val viewModel: PlaylistMusicsViewModel = PlaylistMusicsViewModel
+        this.viewModel = PlaylistMusicsViewModel
             .ViewModelFactory(PlaylistMusicsDataSourceLocal(context!!))
             .create(PlaylistMusicsViewModel::class.java)
 
@@ -109,17 +118,33 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
                 }
             })
 
-        parentActivity.addRequiredPermissionDialog(
+        this.addDialog(
             getString(R.string.dialog_alert_txt_permissions_title),
             getString(R.string.dialog_alert_txt_permissions_description)
         )
 
-        parentActivity.requestPermissions(
-            listOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        ) { viewModel.getMusics() }
+        this.requestPermissions(this.requiredPermissions) { viewModel.getMusics() }
+    }
+
+    private fun requestPermissions(requiredPermissions: List<String>, callback: () -> Unit) {
+        AppPermissions.checkMultiplePermissions(
+            parentActivity,
+            requiredPermissions,
+            callback,
+            { requiredPermissionDialog.show() }
+        )
+    }
+
+    private fun addDialog(title: String, description: String) {
+        this.requiredPermissionDialog = CustomDialog.Builder(parentActivity)
+            .title(title)
+            .description(description)
+            .mainButton(getString(R.string.dialog_alert_btn_permissions_allow_storage_access)) {
+                this.requestPermissions(this.requiredPermissions) { viewModel.getMusics() }
+
+            }
+            .optionalButton(getString(R.string.dialog_alert_btn_permissions_cancel)) {}
+            .build()
     }
 
     override fun getToolbar(): ToolbarParameters =
