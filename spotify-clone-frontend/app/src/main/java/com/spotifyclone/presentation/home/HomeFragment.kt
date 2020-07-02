@@ -10,7 +10,7 @@ import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.BaseScreenFragment
 import com.spotifyclone.presentation.base.ToolbarParameters
-import com.spotifyclone.presentation.maintab.IWrapperFragment
+import com.spotifyclone.presentation.main.IWrapperFragment
 import com.spotifyclone.presentation.playlist.LocalSongsFragment
 import kotlinx.android.synthetic.main.fragment_home_page.*
 import kotlinx.android.synthetic.main.fragment_home_page.view.*

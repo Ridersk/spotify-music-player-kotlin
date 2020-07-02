@@ -1,6 +1,5 @@
 package com.spotifyclone.presentation
 
-import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -9,7 +8,7 @@ import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.login.LoginActivity
-import com.spotifyclone.presentation.maintab.PageTabAdapter
+import com.spotifyclone.presentation.main.PageTabAdapter
 import com.spotifyclone.tools.session.UserSession
 import kotlinx.android.synthetic.main.include_bottom_navigation_menu.*
 
