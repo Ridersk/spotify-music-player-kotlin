@@ -16,8 +16,8 @@ class PlaylistMusicsDataSourceLocal(private val context: Context) : PlaylistMusi
             resultCallback.invoke(
                 MusicsResult.ApiError(
                     ERROR_NOT_FOUND,
-                    R.string.local_songs_text_empty_list,
-                    R.string.local_songs_text_empty_list_description
+                    R.string.fragment_local_songs_text_empty_list,
+                    R.string.fragment_local_songs_text_empty_list_description
                 )
             )
         }

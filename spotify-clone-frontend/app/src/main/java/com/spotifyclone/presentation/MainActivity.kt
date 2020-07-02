@@ -9,6 +9,7 @@ import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.login.LoginActivity
 import com.spotifyclone.presentation.main.PageTabAdapter
+import com.spotifyclone.presentation.music.MusicPlayerFragment
 import com.spotifyclone.tools.session.UserSession
 import kotlinx.android.synthetic.main.include_bottom_navigation_menu.*
 
@@ -23,12 +24,11 @@ class MainActivity : BaseActivity() {
 
         super.setupToolbar(ToolbarParameters())
 
-        if (UserSession.getUserStatus() == UserSession.USER_LOGGED) {
-            initMainViewTabs()
-        } else {
+        if (UserSession.getUserStatus() != UserSession.USER_LOGGED) {
             val intent = Intent(context, LoginActivity::class.java)
             context.startActivity(intent)
         }
+
         super.onCreate(savedInstanceState)
     }
 
@@ -38,11 +38,33 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun initMainViewTabs() {
+    override fun initComponents() {
+        initMainView()
+        initMusicPlayerFragment()
+    }
+
+    private fun initMainView() {
         tabAdapter = PageTabAdapter(this, containerViewPager)
         containerViewPager.adapter = tabAdapter
         containerViewPager.isUserInputEnabled = false
 
-        bottomNavMenu.setOnNavigationItemSelectedListener { item: MenuItem -> tabAdapter.selectTab(item)}
+        getString(R.string.dialog_alert_btn_permissions_cancel)
+
+        bottomNavMenu.setOnNavigationItemSelectedListener { item: MenuItem ->
+            tabAdapter.selectTab(
+                item
+            )
+        }
+    }
+
+    private fun initMusicPlayerFragment() {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val musicPlayerFragment =
+            MusicPlayerFragment.getInstance("Titulo Teste", "Artista Desconhecido", -1L)
+
+        fragmentTransaction.add(R.id.containerMusicPlayer, musicPlayerFragment)
+        fragmentTransaction.commit()
+
     }
 }

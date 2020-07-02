@@ -10,6 +10,7 @@
         android:id="@+id/containerMusicPlayer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
         android:layout_above="@id/bottomNavMenu"/>
 
     <androidx.viewpager2.widget.ViewPager2

@@ -101,7 +101,7 @@ class MusicQueueView(
     ): MutableList<QueueItem> {
         val priorityQueue: MutableList<QueueItem> = convertMusicListToItemQueue(
             list = priorityList,
-            headerTitle = context.getString(R.string.music_queue_txt_next_in_queue),
+            headerTitle = context.getString(R.string.music_queue_next_in_queue),
             type = QueueHeader.TYPE_PRIORITY_QUEUE
         )
 
@@ -110,7 +110,7 @@ class MusicQueueView(
                 normalList,
                 playlistMusicPlayer.firstNotPlayedFromNormalQueue()
             ),
-            headerTitle = context.getString(R.string.music_queue_txt_next_from),
+            headerTitle = context.getString(R.string.music_queue_next_from),
             headerSubtitle = playlistName,
             type = QueueHeader.TYPE_NORMAL_QUEUE
         )

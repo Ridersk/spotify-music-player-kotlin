@@ -1,62 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentMusicPlayer"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="60dp"
     android:layout_above="@id/bottomNavMenu"
+    android:elevation="10dp"
+    android:background="@color/darkGray"
     android:orientation="vertical">
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:elevation="2dp"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_alignParentTop="true"
-        android:progressTint="@color/white"
-        android:progressBackgroundTint="@color/gray"
-        android:progress="50"
         android:layout_width="match_parent"
-        android:layout_height="3dp"/>
+        android:layout_height="3dp"
+        android:layout_alignParentTop="true"
+        android:elevation="2dp"
+        android:progress="0"
+        android:progressBackgroundTint="@color/gray"
+        android:progressTint="@color/white" />
 
     <ImageView
         android:id="@+id/imgAlbum"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:contentDescription="@string/img_description_album_image"
+        android:scaleType="fitCenter"
         android:src="@drawable/img_album_art_test" />
 
     <LinearLayout
         android:id="@+id/layoutMusicRunning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/imgAlbum"
-        android:layout_toStartOf="@id/layoutActions"
         android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/layoutActions"
+        android:layout_toEndOf="@id/imgAlbum"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/layoutMusicLabel"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txtMusicLabel"
+            style="@style/smallTextView"
+            android:layout_marginStart="8dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <TextView
-                android:id="@+id/txtMusicTitle"
-                style="@style/smallTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:textColor="@color/white"
-                tools:text="Session" />
-
-            <TextView
-                android:id="@+id/txtMusicArtist"
-                style="@style/smallTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="• Linking Park" />
-        </LinearLayout>
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/white"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Session • Linking Park Linking Park Linking Park" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -79,27 +70,35 @@
                 tools:text="my-pc" />
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/layoutActions"
         android:layout_width="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_height="match_parent">
-        <ImageButton
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:tint="@color/selector_button_color"
-            android:layout_gravity="center"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/ic_heart"
-            android:contentDescription="@string/img_description_favorite_music"/>
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true">
 
         <ImageButton
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:contentDescription="@string/img_description_favorite_music"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:src="@drawable/ic_heart"
+            android:tint="@color/selector_button_color" />
+
+        <ImageButton
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:contentDescription="@string/img_description_play_button"
             android:padding="0dp"
-            android:background="@drawable/selector_fragment_button_play"
-            android:contentDescription="@string/img_description_play_button"/>
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:src="@drawable/selector_fragment_button_play" />
     </LinearLayout>
 </RelativeLayout>

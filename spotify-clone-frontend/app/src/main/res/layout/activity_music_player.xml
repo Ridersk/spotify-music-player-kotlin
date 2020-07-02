@@ -47,6 +47,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/buttonFavoriteMusic"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     tools:text="Music Name" />
 
                 <TextView
@@ -57,6 +59,8 @@
                     android:layout_below="@id/textMusicTitle"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/buttonFavoriteMusic"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@color/lightGray"
                     tools:text="Music's Artist" />
 
@@ -96,16 +100,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/progressBarMusic"
-                    android:text="@string/music_progress_init_time" />
+                    android:text="@string/activity_music_player_progress_init_time" />
 
                 <TextView
                     android:id="@+id/textMusicTotalTime"
                     style="@style/smallTextView"
-                    android:layout_alignParentEnd="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/progressBarMusic"
-                    android:text="@string/music_progress_init_time" />
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/activity_music_player_progress_init_time" />
             </RelativeLayout>
 
 
@@ -120,8 +124,8 @@
                     android:layout_width="@dimen/icon_music_player_size"
                     android:layout_height="@dimen/icon_music_player_size"
                     android:layout_alignParentStart="true"
-                    custom:mainImage="@drawable/selector_button_random"
                     android:layout_centerVertical="true"
+                    custom:mainImage="@drawable/selector_button_random"
                     custom:statusImage="@drawable/ic_circle" />
 
 

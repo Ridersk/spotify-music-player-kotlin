@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_playlist.*
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import java.util.*
 
-class LocalSongsFragment(private val parentActivity: BaseActivity) :
+class LocalSongsFragment private constructor(private val parentActivity: BaseActivity) :
     BaseScreenFragment(parentActivity), PlaylistInterface,
     PlaylistObserver<Music> {
 
@@ -51,7 +51,7 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
         layout = fragmentPlaylist
         with(layout) {
             textTitle.text = requireArguments().getString(EXTRA_TITLE)
-            buttonRandomPlay.text = getString(R.string.local_songs_button_random_play)
+            buttonRandomPlay.text = getString(R.string.fragment_local_songs_button_random_play)
             textDownloadedSongs.visibility = View.INVISIBLE
             swicthDownloadedSongs.visibility = View.INVISIBLE
         }
@@ -119,8 +119,8 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
             })
 
         this.addDialog(
-            getString(R.string.dialog_alert_txt_permissions_title),
-            getString(R.string.dialog_alert_txt_permissions_description)
+            getString(R.string.dialog_alert_permissions_title),
+            getString(R.string.dialog_alert_permissions_description)
         )
 
         this.requestPermissions(this.requiredPermissions) { viewModel.getMusics() }
@@ -154,13 +154,12 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
         )
 
     companion object {
-        private const val EXTRA_PLAYLIST_NAME: Int = R.string.local_songs_title
+        private const val EXTRA_PLAYLIST_NAME: Int = R.string.fragment_local_songs_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
         fun getInstance(parent: BaseActivity, title: String): Fragment {
             val bundle = Bundle()
             bundle.putString(EXTRA_TITLE, title)
-
             return LocalSongsFragment(parent)
         }
 

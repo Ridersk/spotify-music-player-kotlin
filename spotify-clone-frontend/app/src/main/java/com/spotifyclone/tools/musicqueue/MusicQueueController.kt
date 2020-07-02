@@ -4,12 +4,10 @@ import android.content.Context
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
-import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.model.QueueHeader
 import com.spotifyclone.data.model.QueueItem
 import com.spotifyclone.data.model.QueueMusic
 import com.spotifyclone.presentation.musicqueue.MusicQueueAdapter
-import com.spotifyclone.tools.utils.ListUtils
 import java.util.*
 
 class MusicQueueController(
@@ -104,7 +102,7 @@ class MusicQueueController(
             itemQueue.add(
                 0,
                 QueueHeader(
-                    context.getString(R.string.music_queue_txt_next_in_queue),
+                    context.getString(R.string.music_queue_next_in_queue),
                     type = QueueHeader.TYPE_PRIORITY_QUEUE
                 )
             )
