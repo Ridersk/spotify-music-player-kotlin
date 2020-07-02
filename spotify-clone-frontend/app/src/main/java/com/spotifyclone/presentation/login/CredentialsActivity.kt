@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
 import com.spotifyclone.R
+import com.spotifyclone.presentation.MainActivity
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
-import com.spotifyclone.presentation.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_credentials.*
 import kotlinx.android.synthetic.main.activity_credentials.view.*
 import kotlinx.android.synthetic.main.activity_login.view.loginButton
@@ -18,7 +18,6 @@ class CredentialsActivity : BaseActivity() {
 
         setupToolbar(
             ToolbarParameters(
-                toolbar = toolbarMain,
                 title = getString(R.string.credentials_toolbar_title),
                 option1 = Pair(R.drawable.ic_back, {})
             )
@@ -35,7 +34,7 @@ class CredentialsActivity : BaseActivity() {
         layout.forgotPassword.text = getString(R.string.credentials_button_forgot_password)
 
         layout.loginButton.setOnClickListener {
-            val intent = Intent(this@CredentialsActivity, HomeActivity::class.java)
+            val intent = Intent(this@CredentialsActivity, MainActivity::class.java)
             this@CredentialsActivity.startActivity(intent)
         }
     }

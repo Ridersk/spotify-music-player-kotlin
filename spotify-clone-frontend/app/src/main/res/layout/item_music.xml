@@ -52,7 +52,7 @@
             tools:ignore="RtlSymmetry" />
     </LinearLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonOptions"
         android:layout_width="20dp"
         android:layout_height="21dp"

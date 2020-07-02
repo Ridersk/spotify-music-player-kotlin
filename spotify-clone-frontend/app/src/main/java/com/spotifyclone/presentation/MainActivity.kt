@@ -1,29 +1,49 @@
 package com.spotifyclone.presentation
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.spotifyclone.presentation.home.HomeActivity
+import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_main.*
+import com.spotifyclone.R
+import com.spotifyclone.presentation.base.BaseActivity
+import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.login.LoginActivity
-import com.spotifyclone.tools.permissions.AppPermissions
+import com.spotifyclone.presentation.maintab.PageTabAdapter
 import com.spotifyclone.tools.session.UserSession
-import com.spotifyclone.tools.utils.desenvolutils.DesenvolUtils
+import kotlinx.android.synthetic.main.include_bottom_navigation_menu.*
 
+class MainActivity : BaseActivity() {
 
-class MainActivity : AppCompatActivity() {
+    private lateinit var tabAdapter: PageTabAdapter
     val context = this@MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val intent: Intent = if (DesenvolUtils.appInDesenvol()) {
-            DesenvolUtils.getActivityBeingTested(context)
+        setTheme(R.style.AppTheme)
+        setContentView(R.layout.activity_main)
+
+        super.setupToolbar(ToolbarParameters())
+
+        if (UserSession.getUserStatus() == UserSession.USER_LOGGED) {
+            initMainViewTabs()
         } else {
-            if (UserSession.getUserStatus() == UserSession.USER_LOGGED) {
-                Intent(context, HomeActivity::class.java)
-            } else {
-                Intent(context, LoginActivity::class.java)
-            }
+            val intent = Intent(context, LoginActivity::class.java)
+            context.startActivity(intent)
         }
-        context.startActivity(intent)
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onBackPressed() {
+        if (!tabAdapter.onBackPressed()) {
+            super.onBackPressed()
+        }
+    }
+
+    private fun initMainViewTabs() {
+        tabAdapter = PageTabAdapter(this, containerViewPager)
+        containerViewPager.adapter = tabAdapter
+        containerViewPager.isUserInputEnabled = false
+
+        bottomNavMenu.setOnNavigationItemSelectedListener { item: MenuItem -> tabAdapter.selectTab(item)}
     }
 }

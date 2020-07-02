@@ -7,9 +7,7 @@
     android:layout_height="55dp"
     android:contentInsetLeft="0dp"
     android:contentInsetRight="0dp"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginStart="@dimen/activity_horizontal_margin"
-    android:layout_marginEnd="@dimen/activity_vertical_margin"
+    android:elevation="10dp"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp">
 
@@ -18,64 +16,68 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/iconOption1"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            tools:src="@drawable/ic_close"
-            android:contentDescription="@string/img_description_toolbar_btn1" />
-
-        <LinearLayout
-            android:id="@+id/layoutToolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:background="@null"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:contentDescription="@string/img_description_toolbar_btn1"
+            tools:src="@drawable/ic_close" />
+
+        <RelativeLayout
+            android:id="@+id/layoutToolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@id/iconOption2"
             android:layout_toEndOf="@id/iconOption1"
-            android:layout_centerVertical="true"
-            android:paddingTop="3dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="3dp">
 
             <TextView
                 android:id="@+id/textToolbarSubtitle"
                 style="@style/smallTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:textAlignment="center"
                 tools:text="PLAYING FROM YOUR LIBRARY" />
 
             <TextView
                 android:id="@+id/textToolbarTitle"
                 style="@style/smallTextView"
-                android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:layout_below="@id/textToolbarSubtitle"
                 android:textAlignment="center"
+                android:textStyle="bold"
                 tools:text="Local Songs" />
-        </LinearLayout>
+        </RelativeLayout>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/iconOption2"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
             android:layout_toStartOf="@+id/iconOption3"
-            tools:src="@drawable/ic_heart"
-            android:contentDescription="@string/img_description_toolbar_btn2" />
+            android:background="@null"
+            android:contentDescription="@string/img_description_toolbar_btn2"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            tools:src="@drawable/ic_heart" />
 
         <ImageView
             android:id="@+id/iconOption3"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            tools:src="@drawable/ic_options"
-            android:contentDescription="@string/img_description_toolbar_btn3" />
-
+            android:background="@null"
+            android:contentDescription="@string/img_description_toolbar_btn3"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            tools:src="@drawable/ic_options" />
     </RelativeLayout>
 </androidx.appcompat.widget.Toolbar>

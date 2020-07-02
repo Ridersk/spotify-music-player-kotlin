@@ -12,7 +12,6 @@ import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import kotlinx.android.synthetic.main.activity_music_player.*
 import kotlinx.android.synthetic.main.activity_music_player.view.*
-import kotlinx.android.synthetic.main.include_toolbar.*
 import com.spotifyclone.components.buttons.ButtonStage
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
 import com.spotifyclone.tools.utils.ImageUtils
@@ -32,7 +31,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
         setupToolbar(
             ToolbarParameters(
-                toolbar = toolbarMain,
                 title = intent.getStringExtra(EXTRA_PLAYLIST),
                 subTitle = getString(R.string.toolbar_subTitle_library),
                 option1 = Pair(R.drawable.ic_close, { super.onBackPressed() }),
