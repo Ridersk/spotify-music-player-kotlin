@@ -1,9 +1,9 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
     <dimen name="image_album_width">320dp</dimen>
     <dimen name="image_album_height">320dp</dimen>
-    <dimen name="icon_music_player_width">22dp</dimen>
-    <dimen name="icon_music_player_height">22dp</dimen>
+    <dimen name="icon_toolbar_size">16dp</dimen>
+    <dimen name="icon_music_player_size">22dp</dimen>
 </resources>
