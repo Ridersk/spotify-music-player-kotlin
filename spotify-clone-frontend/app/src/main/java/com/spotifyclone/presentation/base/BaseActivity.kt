@@ -82,5 +82,12 @@ abstract class BaseActivity : AppCompatActivity() {
         return toolbar
     }
 
+    override fun onBackPressed() {
+        this.removeComponents()
+        super.finish()
+        super.onBackPressed()
+    }
+
     protected open fun initComponents() {}
+    protected open fun removeComponents() {}
 }

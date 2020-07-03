@@ -27,12 +27,22 @@ class PlaylistMusicPlayer private constructor(
     private var random = false
 
     val isCycle: () -> Boolean = { currentModeCycle != 0 }
-    val isMusicFirst: () -> Boolean =
-        { this.positionPlaying == 0 }
     val getCycleType: () -> Int = { currentModeCycle }
     val isRandom: () -> Boolean = { random }
     val getRandomType: () -> Int = { if (random) 1 else 0 }
 
+    init {
+        super.setObserverOnNextMusic(this::handleCallbackNextMusic)
+    }
+
+    private fun handleCallbackNextMusic(state: Int) {
+        if (state == STATE_MUSIC_END_FROM_PLAYER &&
+            modeCycleList[currentModeCycle] == CYCLE_MODE_ONE) {
+            super.restartMusic()
+        } else if (state == STATE_MUSIC_END_FROM_PLAYER){
+            this.nextMusic(STATE_MUSIC_END_FROM_PLAYER)
+        }
+    }
 
     override fun receiverList(list: List<Music>) {
         this.originalMusicList = list.toMutableList()
@@ -47,21 +57,27 @@ class PlaylistMusicPlayer private constructor(
             this.positionPlaying = position
         }
         val music = getCurrentMusic()
-        initMusic(music)
+        initMusic(music, STATE_NEXT_MUSIC_FROM_USER)
     }
 
     override fun addMusicObserver(observer: MusicObserver) {
         this.observers.add(observer)
     }
 
+    override fun removeMusicObserver(observer: MusicObserver) {
+        this.observers.remove(observer)
+    }
+
     override fun alertChangedMusic(music: Music) {
-        for (observer in this.observers) {
-            observer.changedMusic(music)
+        synchronized(this) {
+            this.observers.forEach { observer ->
+                observer.changedMusic(music)
+            }
         }
     }
 
-    private fun initMusic(music: Music, initPlaying: Boolean = true) {
-        super.playMusic(music.contentUriId, initPlaying)
+    private fun initMusic(music: Music, state: Int) {
+        super.playMusicFromPlaylist(music.contentUriId, state)
         alertChangedMusic(music)
     }
 
@@ -111,10 +127,10 @@ class PlaylistMusicPlayer private constructor(
         return newList
     }
 
-    fun nextMusic() {
+    fun nextMusic(state: Int = STATE_NEXT_MUSIC_FROM_USER) {
+        var nState = state
         if (priorityMusicQueue.isEmpty()) {
             var position: Int = positionPlaying + 1
-            var initPlaying = true
 
             if (this.normalMusicQueueRunning.size - position <= this.normalMusicQueueBase.size && isCycle()) {
                 this.normalMusicQueueRunning =
@@ -125,10 +141,10 @@ class PlaylistMusicPlayer private constructor(
             } else if (position >= this.normalMusicQueueRunning.size && !isCycle()) {
                 this.normalMusicQueueRunning = this.normalMusicQueueBase
                 position = 0
-                initPlaying = false
+                nState = STATE_RESTART_PLAYLIST
             }
 
-            nextMusicQueue(position, initPlaying)
+            nextMusicQueue(position, nState)
         } else {
             nextMusicFromPriorityQueue()
         }
@@ -155,21 +171,25 @@ class PlaylistMusicPlayer private constructor(
             position = positionPlaying
         }
 
-        nextMusicQueue(position)
+        nextMusicQueue(position, STATE_NEXT_MUSIC_FROM_USER)
     }
 
-    private fun nextMusicQueue(position: Int, initPlaying: Boolean = true) {
-        this.currentMusicId = this.normalMusicQueueRunning[position].id
+    private fun nextMusicQueue(position: Int, state: Int) {
+        if (position >= 0 && position < this.normalMusicQueueRunning.size) {
+            this.currentMusicId = this.normalMusicQueueRunning[position].id
+        } else {
+            this.currentMusicId = this.normalMusicQueueRunning[0].id
+        }
 
         this.positionPlaying = if (position != -1) position else this.positionPlaying
         val music = getCurrentMusic()
-        initMusic(music, initPlaying)
+        initMusic(music, state)
     }
 
     private fun nextMusicFromPriorityQueue() {
         this.currentMusicId = this.priorityMusicQueue[0].id
         val music = this.priorityMusicQueue[0]
-        initMusic(music, true)
+        initMusic(music, STATE_NEXT_MUSIC_FROM_USER)
         this.priorityMusicQueue.removeAt(0)
     }
 
@@ -186,20 +206,6 @@ class PlaylistMusicPlayer private constructor(
         result.addAll(list1)
         result.addAll(list2)
         return result.toMutableList()
-    }
-
-    override fun setObserverOnCompletionListener(callbackObserver: () -> Unit) {
-        val conditionalCallback = {
-            if (isMusicFirst() && super.isInit() && !isCycle()) {
-                callbackObserver.invoke()
-            } else if (modeCycleList[currentModeCycle] == CYCLE_MODE_ONE) {
-                super.restartMusic()
-            } else {
-                this.nextMusic()
-            }
-        }
-
-        super.setObserverOnCompletionListener(conditionalCallback)
     }
 
     private fun getPositionMusicById(id: UUID, musicList: List<Music>): Int {

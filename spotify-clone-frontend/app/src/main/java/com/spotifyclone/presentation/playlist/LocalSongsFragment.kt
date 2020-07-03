@@ -72,7 +72,7 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
             adapter =
                 PlaylistMusicsAdapter(list) { music ->
                     val intent =
-                        MusicPlayerActivity.getStartIntent(
+                        MusicPlayerActivity.getIntent(
                             context,
                             music.title,
                             music.artist,

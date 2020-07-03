@@ -15,32 +15,37 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     private var musicDurationMilisec: Int = 1
     private var blockUpdateProgress = false
     private var observerTimer: ((String) -> Unit)? = null
-    private var observerProgress: ((Int) -> Unit)? = null
+    private var observersProgress: MutableList<Pair<Context, ((Int) -> Unit)>> = mutableListOf()
+    private var observerNextMusic: (state: Int) -> Unit = {}
     private var progress: Int = 0
-    private var observerStatusPlaying: () -> Unit = {}
+    private val observersStatusPlaying: MutableList<Pair<Context, () -> Unit>> =
+        mutableListOf()
 
     init {
         super.reset()
         musicRefresh()
         spotifyAudioManager = SpotifyAudioManager.getInstance(context)
+        registerForObserverOnCompletionListener()
     }
 
     fun tooglePlayMusic() {
         if (super.isPlaying()) {
             pauseMusic()
+            this.notifyObserversWhenStateChange(STATE_CHANGED_FROM_USER_INPUT)
             return
         }
 
         this.startMusic()
+        this.notifyObserversWhenStateChange(STATE_CHANGED_FROM_USER_INPUT)
     }
 
-    protected fun playMusic(contentUriId: Long, initPlaying: Boolean = true) {
+    protected fun playMusicFromPlaylist(contentUriId: Long, state: Int) {
         super.reset()
         setMusicAttrs(contentUriId)
         super.setDataSource(currentMusic)
         super.prepare()
 
-        if (initPlaying) {
+        if (state != STATE_RESTART_PLAYLIST) {
             this.startMusic()
         }
     }
@@ -62,22 +67,52 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         super.pause()
     }
 
-    open fun setObserverOnCompletionListener(callbackObserver: () -> Unit) {
+    private fun registerForObserverOnCompletionListener() {
         super.setOnCompletionListener {
-            if (!super.isPlaying()) {
-                callbackObserver.invoke()
+            if (!super.isPlaying() && getCurrentSec() > 0) {
+                notifyObserversWhenStateChange(STATE_MUSIC_END_FROM_PLAYER)
             }
         }
+    }
 
-        this.observerStatusPlaying = callbackObserver
+    private fun notifyObserversWhenStateChange(state: Int) {
+        if (state == STATE_CHANGED_FROM_USER_INPUT || (state == STATE_RESTART_PLAYLIST)) {
+            synchronized(this) {
+                this.observersStatusPlaying.forEach { observer ->
+                    observer.second.invoke()
+                }
+            }
+        } else {
+            this.observerNextMusic.invoke(state)
+        }
+    }
+
+    open fun setObserverOnMusicState(context: Context, callback: () -> Unit) {
+        val observer = Pair(context, callback)
+
+        this.observersStatusPlaying.add(observer)
+    }
+
+    fun removeObserverOnMusicState(context: Context) {
+        this.observersStatusPlaying.map { observer -> observer.first }.toMutableList()
+            .remove(context)
     }
 
     fun setObserverMusicTime(callback: (time: String) -> Unit) {
         observerTimer = callback
     }
 
-    fun setObserverProgressBar(callback: (progress: Int) -> Unit) {
-        observerProgress = callback
+    fun removeObserverMusicTime() {
+        observerTimer = null
+    }
+
+    fun setObserverProgressBar(context: Context, callback: (progress: Int) -> Unit) {
+        val observer = Pair(context, callback)
+        this.observersProgress.add(observer)
+    }
+
+    fun removeObserverProgressBar(context: Context) {
+        this.observersProgress.map { observer -> observer.first }.toMutableList().remove(context)
     }
 
     private fun setMusicAttrs(contentUriId: Long) {
@@ -115,8 +150,8 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     }
 
     private fun updateProgressbarObserver() {
-        if (!blockUpdateProgress && observerProgress != null) {
-            setProgressOnObserverProgress(calculateProgress(currentPosition))
+        if (!blockUpdateProgress && observersProgress.isNotEmpty()) {
+            notifyMusicProgress(calculateProgress(currentPosition))
         }
     }
 
@@ -133,9 +168,12 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         "${time.first}:${if (time.second < 10) "0" else ""}${time.second}"
 
 
-    private fun setProgressOnObserverProgress(progress: Int) {
+    private fun notifyMusicProgress(progress: Int) {
         this.progress = progress
-        observerProgress!!.invoke(progress)
+
+        this.observersProgress.forEach { observer ->
+            observer.second.invoke(progress)
+        }
     }
 
     private fun updateProgressOnMusicPlayer() {
@@ -147,12 +185,6 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         val seconds: Int = (milisec / 1000) % 60
         return Pair(minutes, seconds)
     }
-
-    private fun getProgress(): Int = calculateProgress(currentPosition)
-
-    fun isInit():Boolean = getProgress() == 0
-
-    fun isEnd():Boolean = getProgress() == 100
 
     private fun calculateProgress(positionMilisec: Int): Int =
         (positionMilisec * 100) / musicDurationMilisec
@@ -167,7 +199,7 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     val progressControl = object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             if (fromUser) {
-                setProgressOnObserverProgress(progress)
+                notifyMusicProgress(progress)
                 setTimeOnObserverTimer(convertToMinutes(calculateMiliseconds(progress)))
             }
         }
@@ -181,6 +213,17 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
             blockUpdateProgress = false
             updateProgressOnMusicPlayer()
         }
+    }
+
+    protected fun setObserverOnNextMusic(callback: (state: Int) -> Unit) {
+        this.observerNextMusic = callback
+    }
+
+    companion object {
+        const val STATE_CHANGED_FROM_USER_INPUT = 0
+        const val STATE_MUSIC_END_FROM_PLAYER = 1
+        const val STATE_RESTART_PLAYLIST = 2
+        const val STATE_NEXT_MUSIC_FROM_USER = 3
     }
 
 }
