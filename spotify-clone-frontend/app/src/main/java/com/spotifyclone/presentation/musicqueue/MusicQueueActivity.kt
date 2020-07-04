@@ -23,6 +23,7 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicQueueActivity)
     private lateinit var dialog: View
+    private lateinit var musicQueueView: MusicQueueView
 
     init {
         playlistMusicPlayer.addMusicObserver(this)
@@ -30,8 +31,6 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_music_queue)
-        super.onCreate(savedInstanceState)
-
 
         setupToolbar(
             ToolbarParameters(
@@ -40,7 +39,9 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
                 option1 = Pair(R.drawable.ic_close, { super.onBackPressed() })
             )
         )
-
+        super.onCreate(savedInstanceState)
+        musicQueueView = createRecyclerViewMusicQueue()
+        musicQueueView.create()
     }
 
     override fun changedMusic(music: Music) {
@@ -56,7 +57,6 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
         val musicTitle = layout.textMusicTitle
         val musicLabel = layout.textMusicLabel
         val imageAlbum = layout.imageAlbum
-        val musicQueueView = createRecyclerViewMusicQueue(layout)
 
         musicTitle.text = currentMusic.title
         musicLabel.text = TextUtils.getMusicLabel(currentMusic.artist, currentMusic.album)
@@ -65,17 +65,17 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
             imageAlbum,
             intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
         )
-
-        musicQueueView.create()
         createDialog({ musicQueueView.addMusics() }, { musicQueueView.removeMusics() })
     }
 
-    private fun createRecyclerViewMusicQueue(layout: ViewGroup): MusicQueueView {
-        val recyclerViewMusicQueue = layout.recyclerNextFromQueue
+    private fun updateMusicQueue () {
+        musicQueueView.update()
+    }
 
+    private fun createRecyclerViewMusicQueue(): MusicQueueView {
         return MusicQueueView(
             this@MusicQueueActivity,
-            recyclerViewMusicQueue,
+            recyclerNextFromQueue,
             intent.getStringExtra(EXTRA_PLAYLIST_NAME)
         ) {
             toogleDialog()
@@ -87,8 +87,8 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
             putExtra(EXTRA_PLAYLIST_NAME, playlist)
             putExtra(EXTRA_ALBUM_URI_ID, albumUriId)
         }
-
         initComponents()
+        updateMusicQueue()
     }
 
     private fun createDialog(funcAddMusic: () -> Unit, funcRemoveMusic: () -> Unit) {

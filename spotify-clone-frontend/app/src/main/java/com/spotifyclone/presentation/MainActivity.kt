@@ -14,6 +14,7 @@ import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.presentation.music.MusicPlayerFragment
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.session.UserSession
+import kotlinx.android.synthetic.main.fragment_music_player.*
 import kotlinx.android.synthetic.main.include_bottom_navigation_menu.*
 
 class MainActivity : BaseActivity() {
@@ -43,11 +44,11 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initComponents() {
-        initMainView()
-        initMusicPlayerFragment()
+        createTabsMainView()
+        createMusicPlayerFragment()
     }
 
-    private fun initMainView() {
+    private fun createTabsMainView() {
         tabAdapter = PageTabAdapter(this, containerViewPager)
         containerViewPager.adapter = tabAdapter
         containerViewPager.isUserInputEnabled = false
@@ -59,11 +60,11 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun initMusicPlayerFragment() {
+    private fun createMusicPlayerFragment() {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         val musicPlayerFragment =
-            MusicPlayerFragment.getInstance(this, "Titulo Teste", "Artista Desconhecido", -1L)
+            MusicPlayerFragment.getInstanceFragment(this)
         fragmentTransaction.add(R.id.containerMusicPlayer, musicPlayerFragment)
         fragmentTransaction.commit()
 

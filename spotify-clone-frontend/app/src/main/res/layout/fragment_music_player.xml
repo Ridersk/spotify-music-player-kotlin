@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragmentMusicPlayer"
     android:layout_width="match_parent"
     android:layout_height="60dp"
@@ -29,48 +28,12 @@
         android:scaleType="centerCrop"
         android:src="@drawable/img_album_art_test" />
 
-    <LinearLayout
-        android:id="@+id/layoutMusicRunning"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/containerMusicPlayerViewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_height="match_parent"
         android:layout_toStartOf="@id/layoutActions"
-        android:layout_toEndOf="@id/imgAlbum"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/txtMusicLabel"
-            style="@style/smallTextView"
-            android:layout_marginStart="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:textColor="@color/white"
-            android:maxLines="1"
-            android:ellipsize="end"
-            tools:text="Session • Linking Park Linking Park Linking Park" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_speaker" />
-
-            <TextView
-                style="@style/smallTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textColor="@color/green"
-                tools:text="my-pc" />
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_toEndOf="@id/imgAlbum"/>
 
     <LinearLayout
         android:id="@+id/layoutActions"

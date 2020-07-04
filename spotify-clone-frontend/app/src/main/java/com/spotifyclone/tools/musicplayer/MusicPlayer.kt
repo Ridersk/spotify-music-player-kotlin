@@ -171,8 +171,10 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     private fun notifyMusicProgress(progress: Int) {
         this.progress = progress
 
-        this.observersProgress.forEach { observer ->
-            observer.second.invoke(progress)
+        synchronized(this) {
+            this.observersProgress.forEach { observer ->
+                observer.second.invoke(progress)
+            }
         }
     }
 

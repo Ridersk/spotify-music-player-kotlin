@@ -1,5 +1,6 @@
 package com.spotifyclone.data.model
 
+import com.google.gson.Gson
 import java.util.*
 
 class Music(
@@ -34,5 +35,10 @@ class Music(
         }
 
         this.id = UUID.randomUUID()
+    }
+
+    fun deepCopy(): Music {
+        val json = Gson().toJson(this)
+        return Gson().fromJson(json, Music::class.java)
     }
 }

@@ -2,13 +2,10 @@ package com.spotifyclone.presentation.music
 
 import android.content.Context
 import android.os.Bundle
-import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.text.buildSpannedString
-import androidx.core.text.color
+import androidx.viewpager2.widget.ViewPager2
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseFragment
@@ -18,10 +15,24 @@ import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.utils.ImageUtils
 import kotlinx.android.synthetic.main.fragment_music_player.*
 
-class MusicPlayerFragment private constructor(private val parentContext: Context) : BaseFragment(),
+class MusicPlayerFragment private constructor(
+    private val parentContext: Context
+) : BaseFragment(),
     MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(parentContext)
+    private var musicList = mutableListOf<Music>()
+    private lateinit var itemsMusicLabelAdapter: ItemsMusicPlayerFragmentAdapter
+    private var currentPosition = 0
+    private val callbackViewPager = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            if (position > currentPosition) {
+                playlistMusicPlayer.nextMusic()
+            } else playlistMusicPlayer.previousMusic()
+            currentPosition = position
+            super.onPageSelected(position)
+        }
+    }
 
     init {
         playlistMusicPlayer.addMusicObserver(this)
@@ -35,14 +46,12 @@ class MusicPlayerFragment private constructor(private val parentContext: Context
         return inflater.inflate(R.layout.fragment_music_player, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        createMusicSliderViewPager()
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     override fun initComponents() {
-        val label: SpannedString = buildSpannedString {
-            append(requireArguments().getString(EXTRA_MUSIC_TITLE))
-            color(ContextCompat.getColor(requireContext(), R.color.lightGray)) {
-                append(" • ${requireArguments().getString(EXTRA_MUSIC_ARTIST)}")
-            }
-        }
-        txtMusicLabel.text = label
         ImageUtils.insertBitmapInView(
             activity!!.applicationContext,
             imgAlbum,
@@ -60,7 +69,7 @@ class MusicPlayerFragment private constructor(private val parentContext: Context
         }
 
         playlistMusicPlayer.setObserverProgressBar(parentContext) { progress: Int ->
-            progressBar.progress = progress
+            progressBar?.progress = progress
         }
     }
 
@@ -68,30 +77,53 @@ class MusicPlayerFragment private constructor(private val parentContext: Context
         reload(music)
     }
 
+    override fun updatedList(newMusicList: List<Music>) {
+        updateMusicSliderViewPager(newMusicList)
+    }
+
     private fun reload(music: Music) {
         arguments?.apply {
-            putString(EXTRA_MUSIC_TITLE, music.title)
-            putString(EXTRA_MUSIC_ARTIST, music.artist)
             putLong(EXTRA_ALBUM_URI_ID, music.albumUriId)
         }
         initComponents()
+        updateMusicSliderViewPager(playlistMusicPlayer.getCompleteListInContext().toMutableList())
+    }
+
+    private fun updateMusicSliderViewPager(newMusicList: List<Music>) {
+        if (this.musicList != newMusicList) {
+            this.musicList.clear()
+            this.musicList.addAll(newMusicList)
+        }
+
+//        containerMusicPlayerViewPager.post {
+            itemsMusicLabelAdapter.notifyDataSetChanged()
+//        }
+    }
+
+    private fun createMusicSliderViewPager() {
+        musicList = playlistMusicPlayer.getCompleteListInContext().toMutableList()
+        itemsMusicLabelAdapter = ItemsMusicPlayerFragmentAdapter(
+            requireActivity(),
+            this.musicList,
+            this::callOnClick
+        )
+        containerMusicPlayerViewPager.adapter = itemsMusicLabelAdapter
+        containerMusicPlayerViewPager.registerOnPageChangeCallback(callbackViewPager)
+    }
+
+    private fun callOnClick() {
+        fragmentMusicPlayer.callOnClick()
     }
 
     companion object : SingletonHolder<MusicPlayerFragment, Context>(::MusicPlayerFragment) {
-        private const val EXTRA_MUSIC_TITLE = "EXTRA_MUSIC_TITLE"
-        private const val EXTRA_MUSIC_ARTIST = "EXTRA_MUSIC_ARTIST"
         private const val EXTRA_ALBUM_URI_ID = "EXTRA_ALBUM_URI_ID"
 
-        fun getInstance(
+        fun getInstanceFragment(
             context: Context,
-            musicTitle: String,
-            musicArtist: String,
-            albumUrId: Long
+            albumUrId: Long = -1
         ): MusicPlayerFragment {
             val fragment = this.getInstance(context)
             val bundle = Bundle()
-            bundle.putString(EXTRA_MUSIC_TITLE, musicTitle)
-            bundle.putString(EXTRA_MUSIC_ARTIST, musicArtist)
             bundle.putLong(EXTRA_ALBUM_URI_ID, albumUrId)
             fragment.arguments = bundle
             return fragment

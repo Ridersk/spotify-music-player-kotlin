@@ -24,18 +24,17 @@ class MusicQueueView(
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context)
     private var selectedMusics = mutableListOf<QueueMusic>()
-    private var itemQueue = mutableListOf<QueueItem>()
+    private val itemQueue = mutableListOf<QueueItem>()
     private lateinit var musicQueueAdapter: MusicQueueAdapter
     private lateinit var musicQueueController: MusicQueueController
 
-    private var priorityListHeaderPosition: Int = 0
-    private var normalListHeaderPosition: Int = 0
-
     fun create() {
-        val normalMusicList: MutableList<Music> = playlistMusicPlayer.normalMusicQueueRunning
-        val priorityMusicList: MutableList<Music> = playlistMusicPlayer.priorityMusicQueue
-
-        itemQueue = buildRecyclerQueue(normalMusicList, priorityMusicList)
+        itemQueue.addAll(
+            buildRecyclerQueue(
+                playlistMusicPlayer.normalMusicQueueRunning,
+                playlistMusicPlayer.priorityMusicQueue
+            )
+        )
 
         musicQueueAdapter = MusicQueueAdapter(
             items = itemQueue,
@@ -58,11 +57,23 @@ class MusicQueueView(
         ItemTouchHelper(musicQueueController).attachToRecyclerView(recyclerView)
     }
 
-    override fun receiverList(list: List<Music>) {
+    fun update() {
+        itemQueue.clear()
+        itemQueue.addAll(
+            buildRecyclerQueue(
+                playlistMusicPlayer.normalMusicQueueRunning,
+                playlistMusicPlayer.priorityMusicQueue
+            )
+        )
+
+        musicQueueAdapter.notifyDataSetChanged()
     }
+
+    override fun receiverList(list: List<Music>) {}
 
     override fun chooseMusic(id: UUID) {
         playlistMusicPlayer.chooseMusic(id)
+        musicQueueAdapter.notifyDataSetChanged()
     }
 
     private fun createCallback(): MusicQueueController {
@@ -79,9 +90,6 @@ class MusicQueueView(
     }
 
     private fun updateQueues(priorityHeaderPos: Int, normalHeaderPos: Int) {
-        this.priorityListHeaderPosition = priorityListHeaderPosition
-        this.normalListHeaderPosition = normalListHeaderPosition
-
         val priorityList: List<Music> = if (normalHeaderPos > 0) {
             ListUtils.sublist(itemQueue, priorityHeaderPos + 1, normalHeaderPos)
                 .map { item -> (item as QueueMusic).music }
@@ -139,7 +147,7 @@ class MusicQueueView(
                 QueueMusic(
                     position = index,
                     checked = false,
-                    music = list[index]
+                    music = list[index].deepCopy()
                 )
             })
             return itemQueue
