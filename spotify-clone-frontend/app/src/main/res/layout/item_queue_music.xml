@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/textMusicTitle"
-        style="@style/mediumTextView"
+        style="@style/mediumText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -30,7 +30,7 @@
 
     <TextView
         android:id="@+id/textMusicLabel"
-        style="@style/smallTextView"
+        style="@style/smallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textMusicTitle"

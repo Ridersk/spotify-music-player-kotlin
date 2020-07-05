@@ -30,7 +30,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             ToolbarParameters(
                 title = intent.getStringExtra(EXTRA_PLAYLIST),
                 subTitle = getString(R.string.toolbar_subTitle_library),
-                option1 = Pair(R.drawable.ic_close, { super.onBackPressed() }),
+                option1 = Pair(R.drawable.ic_arrow_down, { super.onBackPressed() }),
                 option3 = Pair(R.drawable.ic_options, {})
             )
         )

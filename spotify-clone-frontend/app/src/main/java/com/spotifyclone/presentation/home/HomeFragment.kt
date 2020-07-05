@@ -52,7 +52,6 @@ class HomeFragment private constructor(private val parentActivity: BaseActivity)
 
     override fun getToolbar(): ToolbarParameters =
         ToolbarParameters(
-            subTitle = getString(R.string.toolbar_subTitle_library),
             option3 = Pair(R.drawable.ic_settings, {})
         )
 

@@ -32,6 +32,8 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
     private lateinit var layout: ViewGroup
     private lateinit var viewModel: PlaylistMusicsViewModel
     private lateinit var requiredPermissionDialog: CustomDialog
+    private val musicList: MutableList<Music> = mutableListOf()
+    private lateinit var playlistAdapter: PlaylistMusicsAdapter
     private val requiredPermissions = listOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -49,19 +51,37 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
     override fun initComponents() {
         playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context!!)
         layout = fragmentPlaylist
-        with(layout) {
-            textTitle.text = requireArguments().getString(EXTRA_TITLE)
-            buttonRandomPlay.text = getString(R.string.fragment_local_songs_button_random_play)
-            textDownloadedSongs.visibility = View.INVISIBLE
-            swicthDownloadedSongs.visibility = View.INVISIBLE
-        }
-
+        textTitle.text = requireArguments().getString(EXTRA_TITLE)
+        buttonRandomPlay.text = getString(R.string.fragment_local_songs_button_random_play)
+        layoutMusicControl.visibility = View.GONE
         setMusicList()
+    }
+
+    override fun onResume() {
+        val selected =  this.musicList.indexOfFirst { music ->  music.id == playlistMusicPlayer.getCurrentMusic()?.id }
+        this.playlistAdapter.select(selected)
+        this.playlistAdapter.notifyDataSetChanged()
+        super.onResume()
     }
 
     override fun getPlaylistName() {}
 
     override fun receiverList(list: List<Music>) {
+        this.musicList.addAll(list)
+        this.playlistAdapter = PlaylistMusicsAdapter(parentActivity, this.musicList) { music ->
+            val intent =
+                MusicPlayerActivity.getIntent(
+                    parentActivity,
+                    music.title,
+                    music.artist,
+                    music.albumUriId?:-1,
+                    getString(EXTRA_PLAYLIST_NAME)
+                )
+
+            chooseMusic(music.id)
+            parentActivity.startActivity(intent)
+        }
+
         with(layout.recyclerMusics) {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
                 context,
@@ -69,20 +89,7 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
                 false
             )
             setHasFixedSize(true)
-            adapter =
-                PlaylistMusicsAdapter(list) { music ->
-                    val intent =
-                        MusicPlayerActivity.getIntent(
-                            context,
-                            music.title,
-                            music.artist,
-                            music.albumUriId?:-1,
-                            getString(EXTRA_PLAYLIST_NAME)
-                        )
-
-                    chooseMusic(music.id)
-                    context.startActivity(intent)
-                }
+            adapter = playlistAdapter
         }
     }
 

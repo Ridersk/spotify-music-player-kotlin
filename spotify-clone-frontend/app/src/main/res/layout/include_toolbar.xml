@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/textToolbarSubtitle"
-                style="@style/smallTextView"
+                style="@style/littleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -47,7 +47,7 @@
 
             <TextView
                 android:id="@+id/textToolbarTitle"
-                style="@style/smallTextView"
+                style="@style/littleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textToolbarSubtitle"

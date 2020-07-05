@@ -43,7 +43,7 @@
 
                 <TextView
                     android:id="@+id/textMusicTitle"
-                    style="@style/smallMediumTextView"
+                    style="@style/smallMediumText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -54,7 +54,7 @@
 
                 <TextView
                     android:id="@+id/textMusicArtist"
-                    style="@style/smallTextView"
+                    style="@style/smallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textMusicTitle"
@@ -97,7 +97,7 @@
 
                 <TextView
                     android:id="@+id/textMusicCurrentTime"
-                    style="@style/smallTextView"
+                    style="@style/smallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/progressBarMusic"
@@ -105,7 +105,7 @@
 
                 <TextView
                     android:id="@+id/textMusicTotalTime"
-                    style="@style/smallTextView"
+                    style="@style/smallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/progressBarMusic"
