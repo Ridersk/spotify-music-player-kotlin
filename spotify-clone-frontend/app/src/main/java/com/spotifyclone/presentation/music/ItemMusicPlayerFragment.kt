@@ -26,29 +26,36 @@ class ItemMusicPlayerFragment(private val onclickCallback: () -> Unit): BaseFrag
     }
 
     override fun initComponents() {
-        val label: SpannedString = buildSpannedString {
-            append(requireArguments().getString(EXTRA_MUSIC_TITLE))
-            color(ContextCompat.getColor(requireContext(), R.color.lightGray)) {
-                append(" • ${requireArguments().getString(EXTRA_MUSIC_ARTIST)}")
+        if (requireArguments().getBoolean(EXTRA_SHOW_LABEL)) {
+            val label: SpannedString = buildSpannedString {
+                append(requireArguments().getString(EXTRA_MUSIC_TITLE))
+                color(ContextCompat.getColor(requireContext(), R.color.lightGray)) {
+                    append(" • ${requireArguments().getString(EXTRA_MUSIC_ARTIST)}")
+                }
             }
-        }
-        txtMusicLabel.text = label
-        itemFragmentMusic.setOnClickListener(this)
+            txtMusicLabel.text = label
+            itemFragmentMusic.setOnClickListener(this)
+            txtDevicesLabel.visibility = View.GONE
+            itemFragmentMusic.visibility = View.VISIBLE
+        } else itemFragmentMusic.visibility = View.INVISIBLE
     }
 
     companion object {
         private const val EXTRA_MUSIC_TITLE = "EXTRA_MUSIC_TITLE"
         private const val EXTRA_MUSIC_ARTIST = "EXTRA_MUSIC_ARTIST"
+        private const val EXTRA_SHOW_LABEL = "EXTRA_SHOW_LABEL"
 
         fun getInstance(
-            musicTitle: String,
-            musicArtist: String,
+            musicTitle: String?,
+            musicArtist: String?,
+            show: Boolean,
             onclickCallback: () -> Unit
         ): ItemMusicPlayerFragment {
             val fragment = ItemMusicPlayerFragment(onclickCallback)
             val bundle = Bundle()
             bundle.putString(EXTRA_MUSIC_TITLE, musicTitle)
             bundle.putString(EXTRA_MUSIC_ARTIST, musicArtist)
+            bundle.putBoolean(EXTRA_SHOW_LABEL, show)
             fragment.arguments = bundle
             return fragment
         }

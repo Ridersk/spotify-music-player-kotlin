@@ -39,12 +39,14 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
     }
 
     override fun changedMusic(music: Music) {
-        this.reload(
-            music.title,
-            music.artist,
-            music.albumUriId,
-            intent.getStringExtra(EXTRA_PLAYLIST)!!
-        )
+        music.albumUriId?.let {
+            this.reload(
+                music.title,
+                music.artist,
+                it,
+                intent.getStringExtra(EXTRA_PLAYLIST)!!
+            )
+        }
     }
 
     override fun initComponents() {
@@ -120,7 +122,10 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
 
     private fun startMusic() {
-        changedMusic(playlistMusicPlayer.getCurrentMusic())
+        val currentMusic = playlistMusicPlayer.getCurrentMusic()
+        currentMusic?.let {
+            changedMusic(currentMusic)
+        }
     }
 
     private fun reload(

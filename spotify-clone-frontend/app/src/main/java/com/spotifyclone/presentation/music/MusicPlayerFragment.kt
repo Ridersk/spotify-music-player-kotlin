@@ -21,16 +21,19 @@ class MusicPlayerFragment private constructor(
     MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(parentContext)
-    private var musicList = mutableListOf<Music>()
-    private lateinit var itemsMusicLabelAdapter: ItemsMusicPlayerFragmentAdapter
-    private var currentPosition = 0
+    private var musicPlaying: Music =  Music()
+    private lateinit var itemMusicLabelAdapter: ItemMusicPlayerFragmentAdapter
+    private val currentPosition = ItemMusicPlayerFragmentAdapter.VIEW_VISIBLE
     private val callbackViewPager = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-            if (position > currentPosition) {
-                playlistMusicPlayer.nextMusic()
-            } else playlistMusicPlayer.previousMusic()
-            currentPosition = position
-            super.onPageSelected(position)
+            if (position != currentPosition) {
+                if (position > currentPosition) {
+                    playlistMusicPlayer.nextMusic()
+                } else playlistMusicPlayer.previousMusic()
+                containerMusicPlayerViewPager.currentItem = currentPosition
+                updateLabelCurrentMusic(playlistMusicPlayer.getCurrentMusic())
+                super.onPageSelected(position)
+            }
         }
     }
 
@@ -77,38 +80,32 @@ class MusicPlayerFragment private constructor(
         reload(music)
     }
 
-    override fun updatedList(newMusicList: List<Music>) {
-        updateMusicSliderViewPager(newMusicList)
-    }
-
     private fun reload(music: Music) {
         arguments?.apply {
-            putLong(EXTRA_ALBUM_URI_ID, music.albumUriId)
+            putLong(EXTRA_ALBUM_URI_ID, music.albumUriId?:-1L)
         }
         initComponents()
-        updateMusicSliderViewPager(playlistMusicPlayer.getCompleteListInContext().toMutableList())
-    }
-
-    private fun updateMusicSliderViewPager(newMusicList: List<Music>) {
-        if (this.musicList != newMusicList) {
-            this.musicList.clear()
-            this.musicList.addAll(newMusicList)
-        }
-
-//        containerMusicPlayerViewPager.post {
-            itemsMusicLabelAdapter.notifyDataSetChanged()
-//        }
+        updateLabelCurrentMusic(music)
     }
 
     private fun createMusicSliderViewPager() {
-        musicList = playlistMusicPlayer.getCompleteListInContext().toMutableList()
-        itemsMusicLabelAdapter = ItemsMusicPlayerFragmentAdapter(
+        updateLabelCurrentMusic(playlistMusicPlayer.getCurrentMusic())
+        itemMusicLabelAdapter = ItemMusicPlayerFragmentAdapter(
             requireActivity(),
-            this.musicList,
+            this.musicPlaying,
             this::callOnClick
         )
-        containerMusicPlayerViewPager.adapter = itemsMusicLabelAdapter
+        containerMusicPlayerViewPager.adapter = itemMusicLabelAdapter
         containerMusicPlayerViewPager.registerOnPageChangeCallback(callbackViewPager)
+    }
+
+    private fun updateLabelCurrentMusic(music: Music?) {
+        if (music != null) {
+            fragmentMusicPlayer.visibility = View.VISIBLE
+            containerMusicPlayerViewPager.post {
+                itemMusicLabelAdapter.update(music)
+            }
+        } else fragmentMusicPlayer.visibility = View.GONE
     }
 
     private fun callOnClick() {

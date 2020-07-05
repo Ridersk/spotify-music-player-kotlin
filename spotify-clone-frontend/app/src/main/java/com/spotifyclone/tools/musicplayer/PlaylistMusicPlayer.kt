@@ -4,6 +4,8 @@ import android.content.Context
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
 import com.spotifyclone.tools.utils.ListUtils
+import java.io.IOException
+import java.lang.Exception
 import java.util.*
 
 class PlaylistMusicPlayer private constructor(
@@ -20,7 +22,7 @@ class PlaylistMusicPlayer private constructor(
         private set
     var positionPlaying: Int = 0
         private set
-    private lateinit var currentMusicId: UUID
+    private var currentMusicId: UUID? = null
     private var observers: MutableList<MusicObserver> = mutableListOf()
     private val modeCycleList: List<String> = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ALL, CYCLE_MODE_ONE)
     private var currentModeCycle = 0
@@ -50,15 +52,18 @@ class PlaylistMusicPlayer private constructor(
     }
 
     override fun chooseMusic(id: UUID) {
-        this.currentMusicId = id
-        buildMusicQueue()
-
-        val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
-        if (position != -1) {
-            this.positionPlaying = position
+        try {
+            this.currentMusicId = id
+            buildMusicQueue()
+            val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
+            if (position != -1) {
+                this.positionPlaying = position
+            }
+            val music = getCurrentMusic()
+            initMusic(music, STATE_NEXT_MUSIC_FROM_USER)
+        } catch (ex: NullPointerException) {
+            this.positionPlaying = 0
         }
-        val music = getCurrentMusic()
-        initMusic(music, STATE_NEXT_MUSIC_FROM_USER)
     }
 
     override fun addMusicObserver(observer: MusicObserver) {
@@ -85,9 +90,10 @@ class PlaylistMusicPlayer private constructor(
         }
     }
 
+    @Throws(Exception::class)
     fun getCompleteListInContext(): List<Music> {
         val completeList: MutableList<Music> = mutableListOf()
-        if (::currentMusicId.isInitialized) {
+        if (currentMusicId != null) {
             val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
             completeList.addAll(
                 ListUtils.cut(
@@ -101,9 +107,14 @@ class PlaylistMusicPlayer private constructor(
         return completeList
     }
 
-    private fun initMusic(music: Music, state: Int) {
-        super.playMusicFromPlaylist(music.contentUriId, state)
-        notifyChangedMusic(music)
+    private fun initMusic(music: Music?, state: Int) {
+        music?.let {
+            val contentUrid = music.contentUriId
+            if (contentUrid != null) {
+                super.playMusicFromPlaylist(contentUrid, state)
+                notifyChangedMusic(music)
+            }
+        }
     }
 
     private fun buildMusicQueue() {
@@ -203,7 +214,7 @@ class PlaylistMusicPlayer private constructor(
         if (position >= 0 && position < this.normalMusicQueueRunning.size) {
             this.currentMusicId = this.normalMusicQueueRunning[position].id
         } else {
-            this.currentMusicId = this.normalMusicQueueRunning[0].id
+            this.currentMusicId = null
         }
 
         this.positionPlaying = if (position != -1) position else this.positionPlaying
@@ -218,11 +229,11 @@ class PlaylistMusicPlayer private constructor(
         this.priorityMusicQueue.removeAt(0)
     }
 
-    fun getCurrentMusic(): Music {
+    fun getCurrentMusic(): Music? {
         return if (positionPlaying >= 0 && positionPlaying < normalMusicQueueRunning.size) {
             normalMusicQueueRunning[positionPlaying]
         } else {
-            Music()
+            null
         }
     }
 
@@ -233,8 +244,11 @@ class PlaylistMusicPlayer private constructor(
         return result.toMutableList()
     }
 
-    private fun getPositionMusicById(id: UUID, musicList: List<Music>): Int {
-        return musicList.map { music -> music.id }.indexOf(id)
+    private fun getPositionMusicById(id: UUID?, musicList: List<Music>): Int {
+        if (id != null) {
+            return musicList.map { music -> music.id }.indexOf(id)
+        }
+        return 0
     }
 
     fun toogleRandom() {

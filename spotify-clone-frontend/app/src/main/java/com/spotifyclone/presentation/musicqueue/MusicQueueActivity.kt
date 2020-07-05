@@ -45,30 +45,29 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
     }
 
     override fun changedMusic(music: Music) {
-        reloadActivity(
-            music.albumUriId,
-            intent.getStringExtra(EXTRA_PLAYLIST_NAME)
-        )
+        music.albumUriId?.let {
+            reloadActivity(
+                it,
+                intent.getStringExtra(EXTRA_PLAYLIST_NAME)
+            )
+        }
     }
 
     override fun initComponents() {
-        val layout: ViewGroup = activityMusicQueue
-        val currentMusic: Music = playlistMusicPlayer.getCurrentMusic()
-        val musicTitle = layout.textMusicTitle
-        val musicLabel = layout.textMusicLabel
-        val imageAlbum = layout.imageAlbum
-
-        musicTitle.text = currentMusic.title
-        musicLabel.text = TextUtils.getMusicLabel(currentMusic.artist, currentMusic.album)
-        ImageUtils.insertBitmapInView(
-            applicationContext,
-            imageAlbum,
-            intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
-        )
+        val currentMusic: Music? = playlistMusicPlayer.getCurrentMusic()
+        currentMusic?.let {
+            textMusicTitle.text = currentMusic.title
+            textMusicLabel.text = TextUtils.getMusicLabel(currentMusic.artist, currentMusic.album)
+            ImageUtils.insertBitmapInView(
+                applicationContext,
+                imageAlbum,
+                intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
+            )
+        }
         createDialog({ musicQueueView.addMusics() }, { musicQueueView.removeMusics() })
     }
 
-    private fun updateMusicQueue () {
+    private fun updateMusicQueue() {
         musicQueueView.update()
     }
 

@@ -40,13 +40,15 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     }
 
     protected fun playMusicFromPlaylist(contentUriId: Long, state: Int) {
-        super.reset()
-        setMusicAttrs(contentUriId)
-        super.setDataSource(currentMusic)
-        super.prepare()
+        if (contentUriId != -1L) {
+            super.reset()
+            setMusicAttrs(contentUriId)
+            super.setDataSource(currentMusic)
+            super.prepare()
 
-        if (state != STATE_RESTART_PLAYLIST) {
-            this.startMusic()
+            if (state != STATE_RESTART_PLAYLIST) {
+                this.startMusic()
+            }
         }
     }
 

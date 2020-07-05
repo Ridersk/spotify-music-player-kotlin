@@ -14,7 +14,6 @@ import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.presentation.music.MusicPlayerFragment
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.session.UserSession
-import kotlinx.android.synthetic.main.fragment_music_player.*
 import kotlinx.android.synthetic.main.include_bottom_navigation_menu.*
 
 class MainActivity : BaseActivity() {
@@ -73,14 +72,16 @@ class MainActivity : BaseActivity() {
     fun onclickFragmentMusicPlayer(view: View) {
         if (view.id == R.id.fragmentMusicPlayer) {
             val music = playlistMusicPlayer.getCurrentMusic()
-            val intent = MusicPlayerActivity.getIntent(
-                context,
-                music.title,
-                music.artist,
-                music.albumUriId,
-                getString(R.string.fragment_local_songs_title)
-            )
-            this@MainActivity.startActivity(intent)
+            music?.albumUriId?.let {
+                val intent = MusicPlayerActivity.getIntent(
+                    context,
+                    music.title,
+                    music.artist,
+                    music.albumUriId,
+                    getString(R.string.fragment_local_songs_title)
+                )
+                this@MainActivity.startActivity(intent)
+            }
         }
     }
 }

@@ -76,7 +76,7 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
                             context,
                             music.title,
                             music.artist,
-                            music.albumUriId,
+                            music.albumUriId?:-1,
                             getString(EXTRA_PLAYLIST_NAME)
                         )
 
