@@ -61,11 +61,11 @@ class MainActivity : BaseActivity() {
 
     private fun createMusicPlayerFragment() {
         val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
         val musicPlayerFragment =
             MusicPlayerFragment.getInstanceFragment(this)
-        fragmentTransaction.add(R.id.containerMusicPlayer, musicPlayerFragment)
-        fragmentTransaction.commit()
+        fragmentManager.beginTransaction()
+            .add(R.id.containerMusicPlayer, musicPlayerFragment)
+            .commit()
 
     }
 

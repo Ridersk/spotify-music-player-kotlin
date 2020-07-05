@@ -51,7 +51,7 @@
             android:contentDescription="@string/img_description_favorite_music"
             android:scaleX="1.2"
             android:scaleY="1.2"
-            android:src="@drawable/ic_heart"
+            android:src="@drawable/ic_heart_empty"
             android:tint="@color/selector_button_color" />
 
         <ImageButton

@@ -18,7 +18,7 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     private var observersProgress: MutableList<Pair<Context, ((Int) -> Unit)>> = mutableListOf()
     private var observerNextMusic: (state: Int) -> Unit = {}
     private var progress: Int = 0
-    private val observersStatusPlaying: MutableList<Pair<Context, () -> Unit>> =
+    private val observersMusicState: MutableList<Pair<UUID, () -> Unit>> =
         mutableListOf()
 
     init {
@@ -80,7 +80,7 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     private fun notifyObserversWhenStateChange(state: Int) {
         if (state == STATE_CHANGED_FROM_USER_INPUT || (state == STATE_RESTART_PLAYLIST)) {
             synchronized(this) {
-                this.observersStatusPlaying.forEach { observer ->
+                this.observersMusicState.forEach { observer ->
                     observer.second.invoke()
                 }
             }
@@ -89,15 +89,19 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         }
     }
 
-    open fun setObserverOnMusicState(context: Context, callback: () -> Unit) {
-        val observer = Pair(context, callback)
+    open fun setObserverOnMusicState(callback: () -> Unit): UUID {
+        val id = UUID.randomUUID()
+        val observer = Pair(id, callback)
 
-        this.observersStatusPlaying.add(observer)
+        this.observersMusicState.add(observer)
+        return id
     }
 
-    fun removeObserverOnMusicState(context: Context) {
-        this.observersStatusPlaying.map { observer -> observer.first }.toMutableList()
-            .remove(context)
+    fun removeObserverOnMusicState(id: UUID) {
+        val position = this.observersMusicState.indexOfFirst { observer -> observer.first == id }
+        if (position >= 0 && position < this.observersMusicState.size) {
+            this.observersMusicState.removeAt(position)
+        }
     }
 
     fun setObserverMusicTime(callback: (time: String) -> Unit) {
@@ -114,7 +118,10 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     }
 
     fun removeObserverProgressBar(context: Context) {
-        this.observersProgress.map { observer -> observer.first }.toMutableList().remove(context)
+        val position = this.observersProgress.indexOfFirst { observer -> observer.first == context }
+        if (position >= 0 && position < this.observersProgress.size) {
+            this.observersProgress.removeAt(position)
+        }
     }
 
     private fun setMusicAttrs(contentUriId: Long) {

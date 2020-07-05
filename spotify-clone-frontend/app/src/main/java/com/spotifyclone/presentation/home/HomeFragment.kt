@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.fragment_home_page.*
 import kotlinx.android.synthetic.main.fragment_home_page.view.*
 
 class HomeFragment private constructor(private val parentActivity: BaseActivity) : BaseScreenFragment(parentActivity) {
-
     private lateinit var mListener: IWrapperFragment
 
     override fun onCreateView(

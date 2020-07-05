@@ -8,7 +8,13 @@
     tools:context=".presentation.musicqueue.MusicQueueActivity">
 
     <include layout="@layout/include_toolbar" />
-    <include layout="@layout/fragment_two_options" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/containerOptionsQueue"
+        android:layout_width="match_parent"
+        android:elevation="10dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
     <ScrollView
         android:layout_width="match_parent"

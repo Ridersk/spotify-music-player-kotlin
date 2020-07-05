@@ -12,11 +12,13 @@ import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
 import com.spotifyclone.tools.utils.ImageUtils
 import kotlinx.android.synthetic.main.activity_music_player.*
+import java.util.*
 
 
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicPlayerActivity)
+    private lateinit var idCallbackStateMusic: UUID
 
     init {
         playlistMusicPlayer.addMusicObserver(this)
@@ -24,7 +26,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.activity_music_player)
-        super.onCreate(savedInstanceState)
 
         setupToolbar(
             ToolbarParameters(
@@ -35,6 +36,8 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             )
         )
 
+        super.onCreate(savedInstanceState)
+        createCallbacks()
         startMusic()
     }
 
@@ -79,10 +82,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             playlistMusicPlayer.tooglePlayMusic()
         }
 
-        playlistMusicPlayer.setObserverOnMusicState(this) {
-            buttonPlayMusic.isActivated = playlistMusicPlayer.isPlaying
-        }
-
         buttonPreviousMusic.setOnClickListener {
             playlistMusicPlayer.previousMusic()
         }
@@ -113,11 +112,17 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
     }
 
+    private fun createCallbacks() {
+        idCallbackStateMusic = playlistMusicPlayer.setObserverOnMusicState {
+            buttonPlayMusic.isActivated = playlistMusicPlayer.isPlaying
+        }
+    }
+
     override fun removeComponents() {
         playlistMusicPlayer.removeMusicObserver(this)
         playlistMusicPlayer.removeObserverMusicTime()
         playlistMusicPlayer.removeObserverProgressBar(this)
-        playlistMusicPlayer.removeObserverOnMusicState(this)
+        playlistMusicPlayer.removeObserverOnMusicState(idCallbackStateMusic)
     }
 
 

@@ -11,5 +11,11 @@ abstract class BaseFragment: Fragment() {
         initComponents()
     }
 
+    override fun onDestroy() {
+        removeComponents()
+        super.onDestroy()
+    }
+
     protected abstract fun initComponents()
+    protected open fun removeComponents() {}
 }
