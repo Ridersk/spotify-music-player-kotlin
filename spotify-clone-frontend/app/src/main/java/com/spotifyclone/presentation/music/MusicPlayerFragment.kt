@@ -64,6 +64,10 @@ class MusicPlayerFragment private constructor(
             requireArguments().getLong(EXTRA_ALBUM_URI_ID, -1)
         )
 
+        btnLike.setOnClickListener {
+            btnLike.isActivated = !btnLike.isActivated
+        }
+
         btnPlay.isActivated = playlistMusicPlayer.isPlaying
         btnPlay.setOnClickListener {
             playlistMusicPlayer.tooglePlayMusic()
