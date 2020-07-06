@@ -9,13 +9,14 @@
 
     <TextView
         android:id="@+id/textMusicTitle"
-        style="@style/MusicItemTitleText"
+        style="@style/musicItemTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@id/buttonOptions"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textColor="@color/selector_state_white_pressed"
         android:paddingEnd="10dp"
         android:paddingBottom="2dp"
         tools:ignore="RtlSymmetry"
@@ -50,7 +51,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingEnd="10dp"
-            android:textColor="@color/lightGray"
+            android:textColor="@color/selector_state_lightgray_pressed"
             tools:ignore="RtlSymmetry"
             tools:text="Artist • Album Name" />
     </LinearLayout>

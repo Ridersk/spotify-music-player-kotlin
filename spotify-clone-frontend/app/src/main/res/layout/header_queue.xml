@@ -8,12 +8,14 @@
     android:orientation="horizontal">
 
     <TextView
+        style="@style/smallMediumText"
         android:id="@+id/txtHeaderQueueTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/music_queue_next_from" />
 
     <TextView
+        style="@style/smallMediumText"
         android:id="@+id/txtHeaderQueuePlaylist"
         android:layout_marginStart="10dp"
         android:layout_width="wrap_content"

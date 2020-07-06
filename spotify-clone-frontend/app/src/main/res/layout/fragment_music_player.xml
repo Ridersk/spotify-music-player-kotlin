@@ -61,9 +61,10 @@
             android:layout_gravity="center"
             android:layout_marginEnd="16dp"
             android:background="@null"
-            android:contentDescription="@string/img_description_play_button"
+            android:contentDescription="@string/img_description_play_music"
             android:padding="0dp"
             android:scaleX="1.2"
+            android:tint="@color/selector_state_white_pressed"
             android:scaleY="1.2"
             android:src="@drawable/selector_fragment_button_play" />
     </LinearLayout>

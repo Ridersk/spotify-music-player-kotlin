@@ -39,7 +39,6 @@ class MusicPlayerQueueFragment(parentContext: Context) : BaseFragment() {
         idCallbackStateMusic = playlistMusicPlayer.setObserverOnMusicState {
             btnPlayPause.isActivated = playlistMusicPlayer.isPlaying
         }
-        layoutDevices.visibility = View.GONE
     }
 
     override fun removeComponents() {

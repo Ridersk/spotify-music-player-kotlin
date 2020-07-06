@@ -40,6 +40,9 @@
     <string name="music_queue_fragment_add_music">ADD TO QUEUE</string>
     <string name="music_queue_fragment_remove_music">REMOVE</string>
 
+    <!-- Queue Music Player -->
+    <string name="music_queue_player_devices_available">Devices Available</string>
+
     <!-- Include Toolbar -->
     <string name="toolbar_subTitle_library">PLAYING FROM YOUR LIBRARY</string>
     <string name="toolbar_subTitle_playlist">PLAYING FROM YOUR PLAYLIST</string>
@@ -65,9 +68,11 @@
     <string name="img_description_download">Download Button</string>
     <string name="img_description_playlist_button">Playlist Button</string>
     <string name="img_description_favorite_music">Favorite Music</string>
-    <string name="img_description_play_button">Play Button</string>
+    <string name="img_description_play_music">Play Button</string>
     <string name="img_description_devices">Devices</string>
     <string name="img_description_next_music">Next Music</string>
     <string name="img_description_previous_music">Previous Music</string>
+    <string name="img_description_music_queue">Music Queue</string>
+    <string name="img_description_like_music">Like Music</string>
 
 </resources>

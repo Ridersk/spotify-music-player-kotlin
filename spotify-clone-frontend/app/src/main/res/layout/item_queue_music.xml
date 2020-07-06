@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/textMusicTitle"
-        style="@style/mediumText"
+        style="@style/musicItemTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -25,6 +25,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingEnd="10dp"
+        android:textColor="@color/selector_state_white_pressed"
         tools:ignore="RtlSymmetry"
         tools:text="Music Name" />
 
@@ -40,21 +41,16 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingEnd="10dp"
-        android:textColor="@color/lightGray"
+        android:textColor="@color/selector_state_white_pressed"
         tools:ignore="RtlSymmetry"
         tools:text="Artist • Album Name" />
 
     <ImageButton
         android:id="@+id/buttonPlaylist"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:backgroundTint="@color/transparent"
         android:contentDescription="@string/img_description_playlist_button"
-        android:paddingStart="0dp"
-        android:paddingTop="0dp"
-        android:paddingEnd="0dp"
-        android:paddingBottom="0dp"
-        android:src="@drawable/ic_playlist" />
+        android:background="@drawable/ic_playlist" />
 </RelativeLayout>

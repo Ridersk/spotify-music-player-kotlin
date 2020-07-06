@@ -12,14 +12,14 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/containerOptionsQueue"
         android:layout_width="match_parent"
-        android:elevation="10dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:elevation="10dp" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_below="@id/toolbarMain"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarMain"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin">
 
@@ -36,6 +36,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/smallMediumText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/music_queue_now_playing" />
@@ -48,34 +49,39 @@
 
                     <ImageView
                         android:id="@+id/imageAlbum"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:contentDescription="@string/img_description_music_playing"
+                        android:scaleType="centerCrop"
                         tools:src="@drawable/img_album_art_test" />
 
-                    <TextView
-                        android:id="@+id/textMusicTitle"
-                        style="@style/mediumText"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_toEndOf="@id/imageAlbum"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        tools:text="Music Name" />
+                        android:layout_centerVertical="true"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:layout_toEndOf="@id/imageAlbum">
+                        <TextView
+                            android:id="@+id/textMusicTitle"
+                            style="@style/smallText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            tools:text="Music Name" />
 
-                    <TextView
-                        android:id="@+id/textMusicLabel"
-                        style="@style/smallText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textMusicTitle"
-                        android:layout_marginStart="20dp"
-                        android:layout_toEndOf="@id/imageAlbum"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textColor="@color/lightGray"
-                        tools:text="Artist • Album Name" />
+                        <TextView
+                            android:id="@+id/textMusicLabel"
+                            style="@style/smallText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/textMusicTitle"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="@color/lightGray"
+                            tools:text="Artist • Album Name" />
+                    </RelativeLayout>
                 </RelativeLayout>
             </LinearLayout>
 

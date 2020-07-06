@@ -4,6 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.children
+import androidx.core.view.forEach
+import androidx.core.view.get
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import kotlinx.android.synthetic.main.activity_main.*
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
@@ -52,6 +56,11 @@ class MainActivity : BaseActivity() {
         containerViewPager.adapter = tabAdapter
         containerViewPager.isUserInputEnabled = false
         getString(R.string.dialog_alert_btn_permissions_cancel)
+
+        bottomNavMenu.menu.forEach {
+            val view = bottomNavMenu.findViewById<View>(it.itemId)
+            view.setOnLongClickListener { true }
+        }
         bottomNavMenu.setOnNavigationItemSelectedListener { item: MenuItem ->
             tabAdapter.selectTab(
                 item
