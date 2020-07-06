@@ -1,4 +1,4 @@
-package com.spotifyclone.presentation.maintab
+package com.spotifyclone.presentation.main
 
 import android.view.MenuItem
 import androidx.fragment.app.Fragment

@@ -4,6 +4,8 @@ import android.content.Context
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
 import com.spotifyclone.tools.utils.ListUtils
+import java.io.IOException
+import java.lang.Exception
 import java.util.*
 
 class PlaylistMusicPlayer private constructor(
@@ -20,49 +22,99 @@ class PlaylistMusicPlayer private constructor(
         private set
     var positionPlaying: Int = 0
         private set
-    private lateinit var currentMusicId: UUID
+    private var currentMusicId: UUID? = null
     private var observers: MutableList<MusicObserver> = mutableListOf()
     private val modeCycleList: List<String> = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ALL, CYCLE_MODE_ONE)
     private var currentModeCycle = 0
     private var random = false
 
     val isCycle: () -> Boolean = { currentModeCycle != 0 }
-    val isMusicFirst: () -> Boolean =
-        { this.positionPlaying == 0 }
     val getCycleType: () -> Int = { currentModeCycle }
     val isRandom: () -> Boolean = { random }
     val getRandomType: () -> Int = { if (random) 1 else 0 }
 
+    init {
+        super.setObserverOnNextMusic(this::handleCallbackNextMusic)
+    }
+
+    private fun handleCallbackNextMusic(state: Int) {
+        if (state == STATE_MUSIC_END_FROM_PLAYER &&
+            modeCycleList[currentModeCycle] == CYCLE_MODE_ONE
+        ) {
+            super.restartMusic()
+        } else if (state == STATE_MUSIC_END_FROM_PLAYER) {
+            this.nextMusic(STATE_MUSIC_END_FROM_PLAYER)
+        }
+    }
 
     override fun receiverList(list: List<Music>) {
         this.originalMusicList = list.toMutableList()
     }
 
     override fun chooseMusic(id: UUID) {
-        this.currentMusicId = id
-        buildMusicQueue()
-
-        val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
-        if (position != -1) {
-            this.positionPlaying = position
+        try {
+            this.currentMusicId = id
+            buildMusicQueue()
+            val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
+            if (position != -1) {
+                this.positionPlaying = position
+            }
+            val music = getCurrentMusic()
+            initMusic(music, STATE_NEXT_MUSIC_FROM_USER)
+        } catch (ex: NullPointerException) {
+            this.positionPlaying = 0
         }
-        val music = getCurrentMusic()
-        initMusic(music)
     }
 
     override fun addMusicObserver(observer: MusicObserver) {
         this.observers.add(observer)
     }
 
-    override fun alertChangedMusic(music: Music) {
-        for (observer in this.observers) {
-            observer.changedMusic(music)
+    override fun removeMusicObserver(observer: MusicObserver) {
+        this.observers.remove(observer)
+    }
+
+    override fun notifyChangedMusic(music: Music) {
+        synchronized(this) {
+            this.observers.forEach { observer ->
+                observer.changedMusic(music)
+            }
         }
     }
 
-    private fun initMusic(music: Music, initPlaying: Boolean = true) {
-        super.playMusic(music.contentUriId, initPlaying)
-        alertChangedMusic(music)
+    override fun notifyUpdateList(musicList: List<Music>) {
+        synchronized(this) {
+            this.observers.forEach { observer ->
+                observer.updatedList(musicList)
+            }
+        }
+    }
+
+    @Throws(Exception::class)
+    fun getCompleteListInContext(): List<Music> {
+        val completeList: MutableList<Music> = mutableListOf()
+        if (currentMusicId != null) {
+            val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
+            completeList.addAll(
+                ListUtils.cut(
+                    normalMusicQueueRunning,
+                    position + 1
+                ).toMutableList()
+            )
+            completeList.addAll(priorityMusicQueue)
+            completeList.addAll(ListUtils.sublist(normalMusicQueueRunning, position + 1))
+        }
+        return completeList
+    }
+
+    private fun initMusic(music: Music?, state: Int) {
+        music?.let {
+            val contentUrid = music.contentUriId
+            if (contentUrid != null) {
+                super.playMusicFromPlaylist(contentUrid, state)
+                notifyChangedMusic(music)
+            }
+        }
     }
 
     private fun buildMusicQueue() {
@@ -111,10 +163,10 @@ class PlaylistMusicPlayer private constructor(
         return newList
     }
 
-    fun nextMusic() {
+    fun nextMusic(state: Int = STATE_NEXT_MUSIC_FROM_USER) {
+        var nState = state
         if (priorityMusicQueue.isEmpty()) {
             var position: Int = positionPlaying + 1
-            var initPlaying = true
 
             if (this.normalMusicQueueRunning.size - position <= this.normalMusicQueueBase.size && isCycle()) {
                 this.normalMusicQueueRunning =
@@ -125,10 +177,10 @@ class PlaylistMusicPlayer private constructor(
             } else if (position >= this.normalMusicQueueRunning.size && !isCycle()) {
                 this.normalMusicQueueRunning = this.normalMusicQueueBase
                 position = 0
-                initPlaying = false
+                nState = STATE_RESTART_PLAYLIST
             }
 
-            nextMusicQueue(position, initPlaying)
+            nextMusicQueue(position, nState)
         } else {
             nextMusicFromPriorityQueue()
         }
@@ -155,29 +207,33 @@ class PlaylistMusicPlayer private constructor(
             position = positionPlaying
         }
 
-        nextMusicQueue(position)
+        nextMusicQueue(position, STATE_NEXT_MUSIC_FROM_USER)
     }
 
-    private fun nextMusicQueue(position: Int, initPlaying: Boolean = true) {
-        this.currentMusicId = this.normalMusicQueueRunning[position].id
+    private fun nextMusicQueue(position: Int, state: Int) {
+        if (position >= 0 && position < this.normalMusicQueueRunning.size) {
+            this.currentMusicId = this.normalMusicQueueRunning[position].id
+        } else {
+            this.currentMusicId = null
+        }
 
         this.positionPlaying = if (position != -1) position else this.positionPlaying
         val music = getCurrentMusic()
-        initMusic(music, initPlaying)
+        initMusic(music, state)
     }
 
     private fun nextMusicFromPriorityQueue() {
         this.currentMusicId = this.priorityMusicQueue[0].id
         val music = this.priorityMusicQueue[0]
-        initMusic(music, true)
+        initMusic(music, STATE_NEXT_MUSIC_FROM_USER)
         this.priorityMusicQueue.removeAt(0)
     }
 
-    fun getCurrentMusic(): Music {
+    fun getCurrentMusic(): Music? {
         return if (positionPlaying >= 0 && positionPlaying < normalMusicQueueRunning.size) {
             normalMusicQueueRunning[positionPlaying]
         } else {
-            Music()
+            null
         }
     }
 
@@ -188,27 +244,15 @@ class PlaylistMusicPlayer private constructor(
         return result.toMutableList()
     }
 
-    override fun setObserverOnCompletionListener(callbackObserver: () -> Unit) {
-        val conditionalCallback = {
-            if (isMusicFirst() && super.isInit() && !isCycle()) {
-                callbackObserver.invoke()
-            } else if (modeCycleList[currentModeCycle] == CYCLE_MODE_ONE) {
-                super.restartMusic()
-            } else {
-                this.nextMusic()
-            }
+    private fun getPositionMusicById(id: UUID?, musicList: List<Music>): Int {
+        if (id != null) {
+            return musicList.map { music -> music.id }.indexOf(id)
         }
-
-        super.setObserverOnCompletionListener(conditionalCallback)
-    }
-
-    private fun getPositionMusicById(id: UUID, musicList: List<Music>): Int {
-        return musicList.map { music -> music.id }.indexOf(id)
+        return 0
     }
 
     fun toogleRandom() {
         this.random = !this.random
-
         buildMusicQueue()
     }
 
@@ -228,11 +272,13 @@ class PlaylistMusicPlayer private constructor(
 
     fun recreatePriorityMusicQueue(musics: List<Music>) {
         this.priorityMusicQueue = copyList(musics)
+        this.notifyUpdateList(getCompleteListInContext())
     }
 
     fun updateMusicsFromNormalList(musics: List<Music>, start: Int) {
         this.normalMusicQueueRunning =
             ListUtils.swapAllAt(this.normalMusicQueueRunning, musics, start) as MutableList<Music>
+        this.notifyUpdateList(getCompleteListInContext())
     }
 
     fun firstNotPlayedFromNormalQueue(): Int {

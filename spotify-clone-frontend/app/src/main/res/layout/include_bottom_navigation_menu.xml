@@ -3,6 +3,7 @@
     android:id="@+id/bottomNavMenu"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/darkGray"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     app:itemIconTint="@color/selector_bottom_nav_item_color"

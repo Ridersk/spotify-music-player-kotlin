@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/ic_playlist_picture_small"
-        android:contentDescription="@string/item_recommended_playlist_img_description_playlist_card_background" />
+        android:contentDescription="@string/img_description_download" />
 
     <TextView
         android:id="@+id/textToolbarTitle"

@@ -11,10 +11,10 @@
     <include layout="@layout/include_toolbar" />
 
     <ViewFlipper
-        android:layout_below="@id/toolbarMain"
         android:id="@+id/viewFlipperPlaylist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarMain">
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -22,9 +22,12 @@
             android:layout_gravity="center"
             android:indeterminateTint="@color/green" />
 
+        <!--        <ScrollView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent">-->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="15dp"
             android:paddingTop="22dp"
@@ -32,7 +35,7 @@
 
             <TextView
                 android:id="@+id/textTitle"
-                style="@style/smallSubtitleTextView"
+                style="@style/smallSubtitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -47,10 +50,11 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:layout_marginTop="22dp"
+                android:focusable="true"
                 tools:text="SHUFFLE PLAY" />
 
             <RelativeLayout
-                android:id="@+id/MusicControl"
+                android:id="@+id/layoutMusicControl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/buttonRandomPlay"
@@ -64,7 +68,6 @@
                     android:gravity="center"
                     tools:text="Downloaded Songs" />
 
-
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/swicthDownloadedSongs"
                     style="@style/switchButton"
@@ -77,14 +80,20 @@
                     app:trackTint="@color/selector_switch_button_track" />
             </RelativeLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerMusics"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/MusicControl"
-                android:layout_marginTop="22dp"
-                tools:listitem="@layout/item_music" />
+                android:layout_below="@id/layoutMusicControl">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerMusics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    tools:listitem="@layout/item_music" />
+            </FrameLayout>
         </RelativeLayout>
+        <!--        </ScrollView>-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -92,7 +101,7 @@
 
             <TextView
                 android:id="@+id/txtEmptySongList"
-                style="@style/subTitleTextView"
+                style="@style/subTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -105,7 +114,7 @@
 
             <TextView
                 android:id="@+id/txtDescriptionEmptySongList"
-                style="@style/mediumTextView"
+                style="@style/mediumText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtEmptySongList"

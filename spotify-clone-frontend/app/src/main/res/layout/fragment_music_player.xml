@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragmentMusicPlayer"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_above="@id/bottomNavMenu"
+    android:elevation="10dp"
+    android:onClick="onclickFragmentMusicPlayer"
+    android:background="@color/darkGray"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_alignParentTop="true"
+        android:elevation="2dp"
+        android:progress="0"
+        android:progressBackgroundTint="@color/gray"
+        android:progressTint="@color/white" />
+
+    <ImageView
+        android:id="@+id/imgAlbum"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:contentDescription="@string/img_description_album_image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_album_art_test" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/containerMusicPlayerViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toStartOf="@id/layoutActions"
+        android:layout_toEndOf="@id/imgAlbum"/>
+
+    <LinearLayout
+        android:id="@+id/layoutActions"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true">
+
+        <ImageButton
+            android:id="@+id/btnLike"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:contentDescription="@string/img_description_favorite_music"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:src="@drawable/ic_heart_empty"
+            android:tint="@color/selector_button_color" />
+
+        <ImageButton
+            android:id="@+id/btnPlay"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:contentDescription="@string/img_description_play_button"
+            android:padding="0dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:src="@drawable/selector_fragment_button_play" />
+    </LinearLayout>
+</RelativeLayout>

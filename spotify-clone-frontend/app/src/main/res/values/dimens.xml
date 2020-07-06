@@ -4,6 +4,6 @@
     <dimen name="activity_vertical_margin">8dp</dimen>
     <dimen name="image_album_width">320dp</dimen>
     <dimen name="image_album_height">320dp</dimen>
-    <dimen name="icon_toolbar_size">16dp</dimen>
+    <dimen name="icon_size">16dp</dimen>
     <dimen name="icon_music_player_size">22dp</dimen>
 </resources>

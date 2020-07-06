@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/dialogTxtTitle"
-        style="@style/subTitleTextView"
+        style="@style/subTitleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -25,7 +25,7 @@
 
     <TextView
         android:id="@+id/dialogTxtDescription"
-        style="@style/smallTextView"
+        style="@style/smallText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/dialogTxtTitle"

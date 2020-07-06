@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_playlist.*
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import java.util.*
 
-class LocalSongsFragment(private val parentActivity: BaseActivity) :
+class LocalSongsFragment private constructor(private val parentActivity: BaseActivity) :
     BaseScreenFragment(parentActivity), PlaylistInterface,
     PlaylistObserver<Music> {
 
@@ -32,6 +32,8 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
     private lateinit var layout: ViewGroup
     private lateinit var viewModel: PlaylistMusicsViewModel
     private lateinit var requiredPermissionDialog: CustomDialog
+    private val musicList: MutableList<Music> = mutableListOf()
+    private lateinit var playlistAdapter: PlaylistMusicsAdapter
     private val requiredPermissions = listOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -49,19 +51,37 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
     override fun initComponents() {
         playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context!!)
         layout = fragmentPlaylist
-        with(layout) {
-            textTitle.text = requireArguments().getString(EXTRA_TITLE)
-            buttonRandomPlay.text = getString(R.string.local_songs_button_random_play)
-            textDownloadedSongs.visibility = View.INVISIBLE
-            swicthDownloadedSongs.visibility = View.INVISIBLE
-        }
-
+        textTitle.text = requireArguments().getString(EXTRA_TITLE)
+        buttonRandomPlay.text = getString(R.string.fragment_local_songs_button_random_play)
+        layoutMusicControl.visibility = View.GONE
         setMusicList()
+    }
+
+    override fun onResume() {
+        val selected =  this.musicList.indexOfFirst { music ->  music.id == playlistMusicPlayer.getCurrentMusic()?.id }
+        this.playlistAdapter.select(selected)
+        this.playlistAdapter.notifyDataSetChanged()
+        super.onResume()
     }
 
     override fun getPlaylistName() {}
 
     override fun receiverList(list: List<Music>) {
+        this.musicList.addAll(list)
+        this.playlistAdapter = PlaylistMusicsAdapter(parentActivity, this.musicList) { music ->
+            val intent =
+                MusicPlayerActivity.getIntent(
+                    parentActivity,
+                    music.title,
+                    music.artist,
+                    music.albumUriId?:-1,
+                    getString(EXTRA_PLAYLIST_NAME)
+                )
+
+            chooseMusic(music.id)
+            parentActivity.startActivity(intent)
+        }
+
         with(layout.recyclerMusics) {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
                 context,
@@ -69,20 +89,7 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
                 false
             )
             setHasFixedSize(true)
-            adapter =
-                PlaylistMusicsAdapter(list) { music ->
-                    val intent =
-                        MusicPlayerActivity.getStartIntent(
-                            context,
-                            music.title,
-                            music.artist,
-                            music.albumUriId,
-                            getString(EXTRA_PLAYLIST_NAME)
-                        )
-
-                    chooseMusic(music.id)
-                    context.startActivity(intent)
-                }
+            adapter = playlistAdapter
         }
     }
 
@@ -119,8 +126,8 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
             })
 
         this.addDialog(
-            getString(R.string.dialog_alert_txt_permissions_title),
-            getString(R.string.dialog_alert_txt_permissions_description)
+            getString(R.string.dialog_alert_permissions_title),
+            getString(R.string.dialog_alert_permissions_description)
         )
 
         this.requestPermissions(this.requiredPermissions) { viewModel.getMusics() }
@@ -154,13 +161,12 @@ class LocalSongsFragment(private val parentActivity: BaseActivity) :
         )
 
     companion object {
-        private const val EXTRA_PLAYLIST_NAME: Int = R.string.local_songs_title
+        private const val EXTRA_PLAYLIST_NAME: Int = R.string.fragment_local_songs_title
         private const val EXTRA_TITLE = "EXTRA_TITLE"
 
         fun getInstance(parent: BaseActivity, title: String): Fragment {
             val bundle = Bundle()
             bundle.putString(EXTRA_TITLE, title)
-
             return LocalSongsFragment(parent)
         }
 

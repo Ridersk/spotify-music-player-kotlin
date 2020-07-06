@@ -3,23 +3,22 @@ package com.spotifyclone.presentation.music
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
-import kotlinx.android.synthetic.main.activity_music_player.*
-import kotlinx.android.synthetic.main.activity_music_player.view.*
-import com.spotifyclone.components.buttons.ButtonStage
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
 import com.spotifyclone.tools.utils.ImageUtils
+import kotlinx.android.synthetic.main.activity_music_player.*
+import java.util.*
 
 
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicPlayerActivity)
+    private lateinit var idCallbackStateMusic: UUID
 
     init {
         playlistMusicPlayer.addMusicObserver(this)
@@ -27,48 +26,35 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.activity_music_player)
-        super.onCreate(savedInstanceState)
 
         setupToolbar(
             ToolbarParameters(
                 title = intent.getStringExtra(EXTRA_PLAYLIST),
                 subTitle = getString(R.string.toolbar_subTitle_library),
-                option1 = Pair(R.drawable.ic_close, { super.onBackPressed() }),
+                option1 = Pair(R.drawable.ic_arrow_down, { super.onBackPressed() }),
                 option3 = Pair(R.drawable.ic_options, {})
             )
         )
 
+        super.onCreate(savedInstanceState)
+        createCallbacks()
         startMusic()
     }
 
     override fun changedMusic(music: Music) {
-        reloadActivity(
-            music.title,
-            music.artist,
-            music.albumUriId,
-            intent.getStringExtra(EXTRA_PLAYLIST)
-        )
+        music.albumUriId?.let {
+            this.reload(
+                music.title,
+                music.artist,
+                it,
+                intent.getStringExtra(EXTRA_PLAYLIST)!!
+            )
+        }
     }
 
     override fun initComponents() {
-
-        val layout: ViewGroup = activityMusicPlayer
-        val musicTitle = layout.textMusicTitle
-        val musicArtist = layout.textMusicArtist
-        val imageAlbum = layout.imageAlbum
-        val buttonFavorite = layout.buttonFavoriteMusic
-        val buttonPlay = layout.buttonPlayMusic
-        val buttonPrevious = layout.buttonPreviousMusic
-        val buttonNext = layout.buttonNextMusic
-        val buttonRandom = layout.buttonRandomMusic
-        val buttonRepeat: ButtonStage = layout.buttonRepeat
-        val buttonQueue = layout.buttonMusicQueue
-        val progressBar = layout.progressBarMusic
-        val totalTime = layout.textMusicTotalTime
-        val timer = layout.textMusicCurrentTime
-
-        musicTitle.text = intent.getStringExtra(EXTRA_TITLE)
-        musicArtist.text = intent.getStringExtra(EXTRA_ARTIST)
+        textMusicTitle.text = intent.getStringExtra(EXTRA_TITLE)
+        textMusicArtist.text = intent.getStringExtra(EXTRA_ARTIST)
 
         ImageUtils.insertBitmapInView(
             applicationContext,
@@ -76,42 +62,37 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
         )
 
-        totalTime.text = playlistMusicPlayer.getTotalTime()
+        textMusicTotalTime.text = playlistMusicPlayer.getTotalTime()
 
         playlistMusicPlayer.setObserverMusicTime { time: String ->
-            runOnUiThread { timer.text = time }
+            runOnUiThread { textMusicCurrentTime.text = time }
         }
 
-        progressBar.setOnSeekBarChangeListener(playlistMusicPlayer.progressControl)
-        playlistMusicPlayer.setObserverProgressBar { progress: Int ->
-            progressBar.progress = progress
+        progressBarMusic.setOnSeekBarChangeListener(playlistMusicPlayer.progressControl)
+        playlistMusicPlayer.setObserverProgressBar(this) { progress: Int ->
+            progressBarMusic.progress = progress
         }
 
-        buttonFavorite.setOnClickListener {
-            buttonFavorite.isActivated = !buttonFavorite.isActivated
+        buttonFavoriteMusic.setOnClickListener {
+            buttonFavoriteMusic.isActivated = !buttonFavoriteMusic.isActivated
         }
 
-        buttonPlay.isActivated = true
-        buttonPlay.setOnClickListener {
+        buttonPlayMusic.isActivated = playlistMusicPlayer.isPlaying
+        buttonPlayMusic.setOnClickListener {
             playlistMusicPlayer.tooglePlayMusic()
-            buttonPlay.isActivated = playlistMusicPlayer.isPlaying
         }
 
-        playlistMusicPlayer.setObserverOnCompletionListener {
-            buttonPlay.isActivated = false
-        }
-
-        buttonPrevious.setOnClickListener {
+        buttonPreviousMusic.setOnClickListener {
             playlistMusicPlayer.previousMusic()
         }
 
-        buttonNext.setOnClickListener {
+        buttonNextMusic.setOnClickListener {
             playlistMusicPlayer.nextMusic()
         }
 
-        buttonRandom.setStatusProvider { playlistMusicPlayer.isRandom() }
-        buttonRandom.setMainButtonStatesProvider { playlistMusicPlayer.getRandomType() }
-        buttonRandom.setOnClickListener {
+        buttonRandomMusic.setStatusProvider { playlistMusicPlayer.isRandom() }
+        buttonRandomMusic.setMainButtonStatesProvider { playlistMusicPlayer.getRandomType() }
+        buttonRandomMusic.setOnClickListener {
             playlistMusicPlayer.toogleRandom()
         }
 
@@ -121,7 +102,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             playlistMusicPlayer.toogleModeCycle()
         }
 
-        buttonQueue.setOnClickListener {
+        buttonMusicQueue.setOnClickListener {
             val intent = MusicQueueActivity.getStartIntent(
                 this@MusicPlayerActivity,
                 intent.getStringExtra(EXTRA_PLAYLIST),
@@ -131,14 +112,32 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
     }
 
-
-    private fun startMusic() {
-        changedMusic(playlistMusicPlayer.getCurrentMusic())
+    private fun createCallbacks() {
+        idCallbackStateMusic = playlistMusicPlayer.setObserverOnMusicState {
+            buttonPlayMusic.isActivated = playlistMusicPlayer.isPlaying
+        }
     }
 
-    private fun reloadActivity(
-        title: String, artist: String,
-        albumUriId: Long, playlist: String? = ""
+    override fun removeComponents() {
+        playlistMusicPlayer.removeMusicObserver(this)
+        playlistMusicPlayer.removeObserverMusicTime()
+        playlistMusicPlayer.removeObserverProgressBar(this)
+        playlistMusicPlayer.removeObserverOnMusicState(idCallbackStateMusic)
+    }
+
+
+    private fun startMusic() {
+        val currentMusic = playlistMusicPlayer.getCurrentMusic()
+        currentMusic?.let {
+            changedMusic(currentMusic)
+        }
+    }
+
+    private fun reload(
+        title: String,
+        artist: String,
+        albumUriId: Long,
+        playlist: String? = ""
     ) {
         intent?.apply {
             putExtra(EXTRA_TITLE, title)
@@ -146,7 +145,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             putExtra(EXTRA_ALBUM_URI_ID, albumUriId)
             putExtra(EXTRA_PLAYLIST, playlist)
         }
-
         initComponents()
     }
 
@@ -156,7 +154,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         private const val EXTRA_PLAYLIST = "EXTRA_PLAYLIST"
         private const val EXTRA_ALBUM_URI_ID = "EXTRA_ALBUM_URI_ID"
 
-        fun getStartIntent(
+        fun getIntent(
             context: Context,
             title: String,
             artist: String,

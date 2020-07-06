@@ -16,8 +16,8 @@ class PlaylistMusicsDataSourceLocal(private val context: Context) : PlaylistMusi
             resultCallback.invoke(
                 MusicsResult.ApiError(
                     ERROR_NOT_FOUND,
-                    R.string.local_songs_text_empty_list,
-                    R.string.local_songs_text_empty_list_description
+                    R.string.fragment_local_songs_text_empty_list,
+                    R.string.fragment_local_songs_text_empty_list_description
                 )
             )
         }
@@ -28,7 +28,6 @@ class PlaylistMusicsDataSourceLocal(private val context: Context) : PlaylistMusi
     }
 
     companion object {
-        private const val ERROR_UNAUTHORIZED_ACCESS = 401
         private const val ERROR_NOT_FOUND = 404
     }
 }

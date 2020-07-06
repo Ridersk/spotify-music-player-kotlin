@@ -1,38 +1,22 @@
 package com.spotifyclone.data.model
 
+import com.google.gson.Gson
 import java.util.*
 
 class Music(
     title: String? = "",
     artist: String? = "",
     album: String? = "",
-    contentUriId: Long? = -1L,
-    albumUriId: Long? = -1L
+    val contentUriId: Long? = null,
+    val albumUriId: Long? = null
 ) {
-    val id: UUID
-    var title: String = "Unknown Title"
-    var artist: String = "Unknown Artist"
-    var album: String = "Unknown Album"
-    var contentUriId: Long = -1L
-    var albumUriId: Long = -1L
+    val id: UUID = UUID.randomUUID()
+    val title: String = if (title != null && title.isNotEmpty()) title else "Unknown Title"
+    val artist: String = if (artist != null && artist.isNotEmpty()) artist else "Unknown Artist"
+    val album: String = if (album != null && album.isNotEmpty()) album else "Unknown Album"
 
-    init {
-        if (title != null && title.isNotEmpty()) {
-            this.title = title
-        }
-        if (artist != null && artist.isNotEmpty()) {
-            this.artist = artist
-        }
-        if (album != null && album.isNotEmpty()) {
-            this.album = album
-        }
-        if (contentUriId != null && contentUriId != -1L) {
-            this.contentUriId = contentUriId
-        }
-        if (albumUriId != null && albumUriId != -1L) {
-            this.albumUriId = albumUriId
-        }
-
-        this.id = UUID.randomUUID()
+    fun deepCopy(): Music {
+        val json = Gson().toJson(this)
+        return Gson().fromJson(json, Music::class.java)
     }
 }

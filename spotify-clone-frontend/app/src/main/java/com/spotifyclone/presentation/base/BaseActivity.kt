@@ -13,7 +13,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initComponents()
     }
 
@@ -82,5 +81,12 @@ abstract class BaseActivity : AppCompatActivity() {
         return toolbar
     }
 
+    override fun onBackPressed() {
+        this.removeComponents()
+        super.finish()
+        super.onBackPressed()
+    }
+
     protected open fun initComponents() {}
+    protected open fun removeComponents() {}
 }

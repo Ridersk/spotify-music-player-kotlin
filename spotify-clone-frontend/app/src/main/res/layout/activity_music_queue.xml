@@ -8,7 +8,13 @@
     tools:context=".presentation.musicqueue.MusicQueueActivity">
 
     <include layout="@layout/include_toolbar" />
-    <include layout="@layout/dialog_bottom" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/containerOptionsQueue"
+        android:layout_width="match_parent"
+        android:elevation="10dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -32,7 +38,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/music_queue_txt_now_playing" />
+                    android:text="@string/music_queue_now_playing" />
 
                 <RelativeLayout
                     android:id="@+id/layoutNowMusicPlaying"
@@ -44,12 +50,12 @@
                         android:id="@+id/imageAlbum"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:contentDescription="@string/music_queue_img_description_music_playing"
+                        android:contentDescription="@string/img_description_music_playing"
                         tools:src="@drawable/img_album_art_test" />
 
                     <TextView
                         android:id="@+id/textMusicTitle"
-                        style="@style/mediumTextView"
+                        style="@style/mediumText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -60,7 +66,7 @@
 
                     <TextView
                         android:id="@+id/textMusicLabel"
-                        style="@style/smallTextView"
+                        style="@style/smallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/textMusicTitle"
