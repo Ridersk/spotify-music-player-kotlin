@@ -4,5 +4,7 @@ import com.spotifyclone.data.model.Music
 
 interface MusicProvider {
     fun addMusicObserver(observer: MusicObserver)
-    fun alertChangedMusic(music: Music)
+    fun removeMusicObserver(observer: MusicObserver)
+    fun notifyChangedMusic(music: Music)
+    fun notifyUpdateList(musicList: List<Music>)
 }

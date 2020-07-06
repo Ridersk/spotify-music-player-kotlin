@@ -9,16 +9,16 @@ import com.spotifyclone.tools.filemanager.MusicFileManagerApp
 class ImageUtils {
 
     companion object {
-        fun insertBitmapInView(context: Context, imageAlbum: ImageView, albumUriId: Long) {
-            val musicThumbnail: Bitmap? = MusicFileManagerApp.getAlbumArt(
+        fun insertBitmapInView(context: Context, imageView: ImageView, albumUriId: Long) {
+            val imageBitmap: Bitmap? = MusicFileManagerApp.getAlbumArt(
                 albumUriId,
                 context
             )
 
-            if (musicThumbnail != null) {
-                imageAlbum.setImageBitmap(musicThumbnail)
+            if (imageBitmap != null) {
+                imageView.setImageBitmap(imageBitmap)
             } else {
-                imageAlbum.setImageDrawable(context.getDrawable(R.drawable.img_default_album_art))
+                imageView.setImageDrawable(context.getDrawable(R.drawable.img_default_album_art))
             }
         }
     }

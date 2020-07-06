@@ -2,29 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="54dp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
     <TextView
         android:id="@+id/textMusicTitle"
-        style="@style/mediumTextView"
+        style="@style/MusicItemTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:paddingEnd="10dp"
         android:layout_toStartOf="@id/buttonOptions"
-        tools:text="Music Name Music Name Music Name Music Name "
-        tools:ignore="RtlSymmetry" />
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingEnd="10dp"
+        android:paddingBottom="2dp"
+        tools:ignore="RtlSymmetry"
+        tools:text="Music Name Music Name Music Name Music Name " />
 
     <LinearLayout
         android:id="@+id/layoutMusiclabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/textMusicTitle"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/buttonOptions"
-        android:layout_below="@id/textMusicTitle"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
@@ -34,22 +37,22 @@
             android:layout_gravity="center"
             android:layout_marginEnd="9dp"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/img_description_download"
             android:maxWidth="15dp"
             android:maxHeight="15dp"
-            android:src="@drawable/ic_download"
-            android:contentDescription="@string/item_music_img_description_download" />
+            android:src="@drawable/ic_download" />
 
         <TextView
             android:id="@+id/textMusicLabel"
-            style="@style/smallTextView"
+            style="@style/smallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/lightGray"
             android:ellipsize="end"
-            android:paddingEnd="10dp"
             android:maxLines="1"
-            tools:text="Artist • Album Name"
-            tools:ignore="RtlSymmetry" />
+            android:paddingEnd="10dp"
+            android:textColor="@color/lightGray"
+            tools:ignore="RtlSymmetry"
+            tools:text="Artist • Album Name" />
     </LinearLayout>
 
     <ImageButton
@@ -58,6 +61,6 @@
         android:layout_height="21dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/ic_options"/>
+        android:background="@drawable/ic_options" />
 
 </RelativeLayout>

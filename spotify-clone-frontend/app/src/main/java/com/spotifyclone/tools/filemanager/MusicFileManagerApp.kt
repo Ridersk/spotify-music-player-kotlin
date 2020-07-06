@@ -97,17 +97,27 @@ class MusicFileManagerApp {
         }
 
         fun getMusicDuration(file: FileDescriptor?): Int {
-            val mediaMetada = MediaMetadataRetriever()
-            mediaMetada.setDataSource(file)
-            return mediaMetada.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+            if (file != null) {
+                val mediaMetada = MediaMetadataRetriever()
+                mediaMetada.setDataSource(file)
+                return mediaMetada.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                    .toInt()
+            }
+            return 0
         }
 
         fun getAudioFile(contentUriId: Long, context: Context): FileDescriptor? {
-            return context.contentResolver
-                .openFileDescriptor(getContentUri(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    contentUriId
-                ), "r")?.fileDescriptor
+            return try {
+                context.contentResolver
+                    .openFileDescriptor(
+                        getContentUri(
+                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                            contentUriId
+                        ), "r"
+                    )?.fileDescriptor
+            } catch (exception: UnsupportedOperationException) {
+                null
+            }
         }
 
         fun getAlbumArt(albumUriId: Long, context: Context): Bitmap? {
@@ -146,11 +156,12 @@ class MusicFileManagerApp {
 
             val musics = mutableListOf<Music>()
             if (cursor != null) {
-                val id = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID)
-                val artist = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST)
-                val title = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE)
-                val album = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM)
-                val albumId = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID)
+                val id: Int = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID)
+                val artist: Int = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST)
+                val title: Int = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE)
+                val album: Int = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM)
+                val albumId: Int =
+                    cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID)
 
                 while (cursor.moveToNext()) {
 
@@ -233,7 +244,7 @@ class MusicFileManagerApp {
             return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
         }
 
-        private fun getContentUri (pathUri: Uri, contentUriId: Long): Uri =
+        private fun getContentUri(pathUri: Uri, contentUriId: Long): Uri =
             ContentUris.withAppendedId(pathUri, contentUriId)
     }
 }

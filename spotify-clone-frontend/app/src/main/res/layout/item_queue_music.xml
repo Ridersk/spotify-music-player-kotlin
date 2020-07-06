@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/textMusicTitle"
-        style="@style/mediumTextView"
+        style="@style/mediumText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -30,7 +30,7 @@
 
     <TextView
         android:id="@+id/textMusicLabel"
-        style="@style/smallTextView"
+        style="@style/smallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textMusicTitle"
@@ -51,7 +51,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:backgroundTint="@color/transparent"
-        android:contentDescription="@string/item_queue_music_img_description_playlist_button"
+        android:contentDescription="@string/img_description_playlist_button"
         android:paddingStart="0dp"
         android:paddingTop="0dp"
         android:paddingEnd="0dp"

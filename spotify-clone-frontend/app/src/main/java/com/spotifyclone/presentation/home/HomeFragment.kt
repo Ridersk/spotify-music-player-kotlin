@@ -10,13 +10,12 @@ import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.BaseScreenFragment
 import com.spotifyclone.presentation.base.ToolbarParameters
-import com.spotifyclone.presentation.maintab.IWrapperFragment
+import com.spotifyclone.presentation.main.IWrapperFragment
 import com.spotifyclone.presentation.playlist.LocalSongsFragment
 import kotlinx.android.synthetic.main.fragment_home_page.*
 import kotlinx.android.synthetic.main.fragment_home_page.view.*
 
-class HomeFragment(private val parentActivity: BaseActivity) : BaseScreenFragment(parentActivity) {
-
+class HomeFragment private constructor(private val parentActivity: BaseActivity) : BaseScreenFragment(parentActivity) {
     private lateinit var mListener: IWrapperFragment
 
     override fun onCreateView(
@@ -34,7 +33,7 @@ class HomeFragment(private val parentActivity: BaseActivity) : BaseScreenFragmen
             .ViewModelFactory().create(RecommendedPlaylistsViewModel::class.java)
         val parentActivity = this.parentActivity
 
-        layout.labelRecommendedPlaylists.text = getString(R.string.home_label_recommendedPlaylists)
+        layout.labelRecommendedPlaylists.text = getString(R.string.fragment_home_label_recommendedPlaylists)
         viewModel.recommendedPlaylistsLiveData.observe(this, Observer {
             it?.let { playlists ->
                 with(recommendedPlaylistGrid) {
@@ -52,7 +51,6 @@ class HomeFragment(private val parentActivity: BaseActivity) : BaseScreenFragmen
 
     override fun getToolbar(): ToolbarParameters =
         ToolbarParameters(
-            subTitle = getString(R.string.toolbar_subTitle_library),
             option3 = Pair(R.drawable.ic_settings, {})
         )
 
