@@ -3,9 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_weight="1.9"
+    android:adjustViewBounds="true"
     android:orientation="vertical"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="8dp"
+    android:scaleX="1"
+    android:scaleY="1">
 
     <TextView
         android:id="@+id/textMusicTitle"
@@ -16,9 +20,9 @@
         android:layout_toStartOf="@id/buttonOptions"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/selector_state_white_pressed"
         android:paddingEnd="10dp"
         android:paddingBottom="2dp"
+        android:textColor="@color/selector_state_white_pressed"
         tools:ignore="RtlSymmetry"
         tools:text="Music Name Music Name Music Name Music Name " />
 

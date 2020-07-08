@@ -37,6 +37,7 @@ class MusicQueueView(
         )
 
         musicQueueAdapter = MusicQueueAdapter(
+            context,
             items = itemQueue,
             onItemClickListener = { musicItem ->
                 if (musicItem is QueueMusic) chooseMusic(musicItem.music.id)

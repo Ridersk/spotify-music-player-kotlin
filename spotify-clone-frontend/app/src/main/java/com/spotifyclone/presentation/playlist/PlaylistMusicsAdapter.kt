@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
+import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.utils.TextUtils
 import kotlinx.android.synthetic.main.item_music.view.*
-import kotlin.coroutines.coroutineContext
 
 open class PlaylistMusicsAdapter(
     private val context: Context,
@@ -30,7 +30,7 @@ open class PlaylistMusicsAdapter(
     override fun getItemCount(): Int = musics.count()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position ==  selected) {
+        if (position == selected) {
             holder.bindView(musics[position], true)
         } else {
             holder.bindView(musics[position])
@@ -49,7 +49,7 @@ open class PlaylistMusicsAdapter(
         private val title = itemView.textMusicTitle
         private val musiclabel = itemView.textMusicLabel
 
-        fun bindView(music: Music, selected:Boolean = false) {
+        fun bindView(music: Music, selected: Boolean = false) {
             title.text = music.title
             if (selected) {
                 title.setTextColor(ContextCompat.getColor(context, R.color.green))
@@ -58,6 +58,13 @@ open class PlaylistMusicsAdapter(
 
             itemView.setOnClickListener {
                 onItemClickListener.invoke(music)
+            }
+
+            itemView.setOnTouchListener { view, event ->
+                ReducerAndRegain(context).onTouch(
+                    view,
+                    event
+                )
             }
         }
     }

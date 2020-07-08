@@ -37,9 +37,9 @@ class HomeFragment private constructor(private val parentActivity: BaseActivity)
         viewModel.recommendedPlaylistsLiveData.observe(this, Observer {
             it?.let { playlists ->
                 with(recommendedPlaylistGrid) {
-                    adapter = RecommendedPlaylistsAdapter(playlists) { playlist ->
+                    adapter = RecommendedPlaylistsAdapter(context, playlists) { playlist ->
                         val playlistFragment =
-                            LocalSongsFragment.getInstance(parentActivity, "Test")
+                            LocalSongsFragment.getInstance(parentActivity, "Local Songs")
                         val args = Bundle()
                         mListener.onReplace(playlistFragment, args)
                     }

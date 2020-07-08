@@ -16,6 +16,7 @@ import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.BaseScreenFragment
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.music.MusicPlayerActivity
+import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
 import com.spotifyclone.tools.musicplayer.PlaylistObserver
@@ -51,9 +52,12 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
     override fun initComponents() {
         playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context!!)
         layout = fragmentPlaylist
-        textTitle.text = requireArguments().getString(EXTRA_TITLE)
+        textTitle.text = getString(EXTRA_PLAYLIST_NAME)
         buttonRandomPlay.text = getString(R.string.fragment_local_songs_button_random_play)
         layoutMusicControl.visibility = View.GONE
+        buttonRandomPlay.setOnTouchListener{ view, event ->
+            ReducerAndRegain(parentActivity).onTouch(view, event)
+        }
         setMusicList()
     }
 
@@ -162,11 +166,9 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     companion object {
         private const val EXTRA_PLAYLIST_NAME: Int = R.string.fragment_local_songs_title
-        private const val EXTRA_TITLE = "EXTRA_TITLE"
 
         fun getInstance(parent: BaseActivity, title: String): Fragment {
             val bundle = Bundle()
-            bundle.putString(EXTRA_TITLE, title)
             return LocalSongsFragment(parent)
         }
 
