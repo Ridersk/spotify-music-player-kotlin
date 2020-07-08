@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="54dp"
-    android:layout_marginBottom="14dp"
+    android:layout_height="64dp"
+    android:background="@color/selector_state_queue_item_pressed"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
 
     <CheckBox
@@ -14,36 +16,39 @@
         android:background="@drawable/selector_checkbox"
         android:buttonTint="@color/transparent" />
 
-    <TextView
-        android:id="@+id/textMusicTitle"
-        style="@style/musicItemTitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_toStartOf="@id/buttonPlaylist"
         android:layout_toEndOf="@id/checkboxMusic"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingEnd="10dp"
-        android:textColor="@color/selector_state_white_pressed"
-        tools:ignore="RtlSymmetry"
-        tools:text="Music Name" />
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textMusicTitle"
+            style="@style/smallMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingEnd="10dp"
+            android:textColor="@color/selector_state_white_pressed"
+            tools:ignore="RtlSymmetry"
+            tools:text="Music Name" />
 
-    <TextView
-        android:id="@+id/textMusicLabel"
-        style="@style/smallText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textMusicTitle"
-        android:layout_marginStart="20dp"
-        android:layout_toStartOf="@id/buttonPlaylist"
-        android:layout_toEndOf="@id/checkboxMusic"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingEnd="10dp"
-        android:textColor="@color/selector_state_white_pressed"
-        tools:ignore="RtlSymmetry"
-        tools:text="Artist • Album Name" />
+        <TextView
+            android:id="@+id/textMusicLabel"
+            style="@style/smallText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textMusicTitle"
+            android:layout_marginStart="20dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingEnd="10dp"
+            android:textColor="@color/selector_state_white_pressed"
+            tools:ignore="RtlSymmetry"
+            tools:text="Artist • Album Name" />
+    </RelativeLayout>
 
     <ImageButton
         android:id="@+id/buttonPlaylist"

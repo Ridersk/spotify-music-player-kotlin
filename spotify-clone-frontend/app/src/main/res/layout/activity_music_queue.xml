@@ -19,9 +19,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbarMain"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin">
+        android:layout_below="@id/toolbarMain">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,12 +29,14 @@
             <LinearLayout
                 android:id="@+id/layoutNowPlaying"
                 android:layout_width="match_parent"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/smallMediumText"
+                    style="@style/smallLargeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/music_queue_now_playing" />
@@ -84,12 +84,11 @@
                     </RelativeLayout>
                 </RelativeLayout>
             </LinearLayout>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerNextFromQueue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="24dp"
                 tools:listitem="@layout/item_queue_music" />
         </LinearLayout>
     </ScrollView>
