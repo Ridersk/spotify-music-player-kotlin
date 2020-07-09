@@ -15,7 +15,8 @@ import com.spotifyclone.presentation.playlist.LocalSongsFragment
 import kotlinx.android.synthetic.main.fragment_home_page.*
 import kotlinx.android.synthetic.main.fragment_home_page.view.*
 
-class HomeFragment private constructor(private val parentActivity: BaseActivity) : BaseScreenFragment(parentActivity) {
+class HomeFragment private constructor(private val parentActivity: BaseActivity) :
+    BaseScreenFragment(parentActivity) {
     private lateinit var mListener: IWrapperFragment
 
     override fun onCreateView(
@@ -33,15 +34,18 @@ class HomeFragment private constructor(private val parentActivity: BaseActivity)
             .ViewModelFactory().create(RecommendedPlaylistsViewModel::class.java)
         val parentActivity = this.parentActivity
 
-        layout.labelRecommendedPlaylists.text = getString(R.string.fragment_home_label_recommendedPlaylists)
+        layout.labelRecommendedPlaylists.text =
+            getString(R.string.fragment_home_label_recommendedPlaylists)
         viewModel.recommendedPlaylistsLiveData.observe(this, Observer {
             it?.let { playlists ->
                 with(recommendedPlaylistGrid) {
                     adapter = RecommendedPlaylistsAdapter(context, playlists) { playlist ->
                         val playlistFragment =
-                            LocalSongsFragment.getInstance(parentActivity, "Local Songs")
-                        val args = Bundle()
-                        mListener.onReplace(playlistFragment, args)
+                            LocalSongsFragment.getInstance(
+                                parentActivity,
+                                getString(R.string.fragment_local_songs_title)
+                            )
+                        mListener.onReplace(playlistFragment)
                     }
                 }
             }

@@ -35,9 +35,7 @@ class TabWrapperFragment(private val fragment: Fragment) : Fragment(), IWrapperF
         return frameLayout
     }
 
-    override fun onReplace(fragment: Fragment, args: Bundle) {
-        fragment.arguments = args
-
+    override fun onReplace(fragment: Fragment) {
         childFragmentManager
             .beginTransaction()
             .replace(ID, fragment)

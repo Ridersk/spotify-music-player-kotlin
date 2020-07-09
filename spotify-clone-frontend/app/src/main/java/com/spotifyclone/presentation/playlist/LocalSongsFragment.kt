@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
@@ -52,7 +51,7 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
     override fun initComponents() {
         playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context!!)
         layout = fragmentPlaylist
-        textTitle.text = getString(EXTRA_PLAYLIST_NAME)
+        textTitle.text = requireArguments().getString(EXTRA_PLAYLIST_NAME)
         buttonRandomPlay.text = getString(R.string.fragment_local_songs_button_random_play)
         layoutMusicControl.visibility = View.GONE
         buttonRandomPlay.setOnTouchListener{ view, event ->
@@ -79,7 +78,7 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
                     music.title,
                     music.artist,
                     music.albumUriId?:-1,
-                    getString(EXTRA_PLAYLIST_NAME)
+                    requireArguments().getString(EXTRA_PLAYLIST_NAME, "")
                 )
 
             chooseMusic(music.id)
@@ -165,11 +164,14 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
         )
 
     companion object {
-        private const val EXTRA_PLAYLIST_NAME: Int = R.string.fragment_local_songs_title
+        private const val EXTRA_PLAYLIST_NAME = "EXTRA_PLAYLIST_NAME"
 
-        fun getInstance(parent: BaseActivity, title: String): Fragment {
+        fun getInstance(parent: BaseActivity, playlist: String): LocalSongsFragment {
+            val fragment = LocalSongsFragment(parent)
             val bundle = Bundle()
-            return LocalSongsFragment(parent)
+            bundle.putString(EXTRA_PLAYLIST_NAME, playlist)
+            fragment.arguments = bundle
+            return fragment
         }
 
     }

@@ -18,7 +18,14 @@ class PageTabAdapter(activity: BaseActivity, private val containerViewPager: Vie
     init {
         tabs.add(TabWrapperFragment.getInstance(HomeFragment.getInstance(activity)))
         tabs.add(TabWrapperFragment.getInstance(HomeFragment.getInstance(activity)))
-        tabs.add(TabWrapperFragment.getInstance(LocalSongsFragment.getInstance(activity, "Teste")))
+        tabs.add(
+            TabWrapperFragment.getInstance(
+                LocalSongsFragment.getInstance(
+                    activity,
+                    activity.getString(R.string.fragment_local_songs_title)
+                )
+            )
+        )
     }
 
     override fun getItemCount(): Int {
@@ -29,7 +36,7 @@ class PageTabAdapter(activity: BaseActivity, private val containerViewPager: Vie
         return tabs[position]
     }
 
-    fun selectTab (item: MenuItem): Boolean {
+    fun selectTab(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.page1 -> {
                 this.currentTab = 0
@@ -54,7 +61,7 @@ class PageTabAdapter(activity: BaseActivity, private val containerViewPager: Vie
         return tabs[currentTab].onBackPressed()
     }
 
-    companion object{
+    companion object {
         private const val NUMBER_OF_PAGES = 3
     }
 }
