@@ -11,7 +11,7 @@ import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import kotlinx.android.synthetic.main.fragment_music_player_queue.*
 import java.util.*
 
-class MusicPlayerQueueFragment(parentContext: Context) : BaseFragment() {
+class MusicPlayerQueueFragment(private val parentContext: Context) : BaseFragment() {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(parentContext)
     private lateinit var idCallbackStateMusic: UUID
@@ -39,10 +39,15 @@ class MusicPlayerQueueFragment(parentContext: Context) : BaseFragment() {
         idCallbackStateMusic = playlistMusicPlayer.setObserverOnMusicState {
             btnPlayPause.isActivated = playlistMusicPlayer.isPlaying
         }
+
+        playlistMusicPlayer.setObserverProgressBar(parentContext) { progress: Int ->
+            progressBar?.progress = progress
+        }
     }
 
     override fun removeComponents() {
         playlistMusicPlayer.removeObserverOnMusicState(idCallbackStateMusic)
+        playlistMusicPlayer.removeObserverProgressBar(parentContext)
     }
 
     companion object {

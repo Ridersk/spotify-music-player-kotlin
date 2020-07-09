@@ -81,6 +81,7 @@ class MusicPlayerFragment private constructor(
 
     override fun removeComponents() {
         playlistMusicPlayer.removeObserverOnMusicState(idCallbackStateMusic)
+        playlistMusicPlayer.removeObserverProgressBar(parentContext)
     }
 
     private fun createCallbacks() {
