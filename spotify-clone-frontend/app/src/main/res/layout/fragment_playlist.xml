@@ -22,78 +22,79 @@
             android:layout_gravity="center"
             android:indeterminateTint="@color/green" />
 
-        <!--        <ScrollView-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent">-->
-        <RelativeLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="15dp"
-            android:paddingTop="22dp"
-            android:paddingEnd="15dp">
-
-            <TextView
-                android:id="@+id/textTitle"
-                style="@style/smallSubtitleText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                tools:text="Local Songs" />
-
-            <Button
-                android:id="@+id/buttonRandomPlay"
-                style="@style/secondaryButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textTitle"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_marginTop="22dp"
-                android:focusable="true"
-                tools:text="SHUFFLE PLAY" />
+            android:layout_height="match_parent">
 
             <RelativeLayout
-                android:id="@+id/layoutMusicControl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/buttonRandomPlay"
-                android:layout_marginTop="22dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingStart="15dp"
+                android:paddingTop="22dp"
+                android:paddingEnd="15dp">
 
                 <TextView
-                    android:id="@+id/textDownloadedSongs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    tools:text="Downloaded Songs" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/swicthDownloadedSongs"
-                    style="@style/switchButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_toEndOf="@+id/textDownloadedSongs"
-                    android:checked="true"
-                    app:thumbTint="@color/selector_switch_button_thumb"
-                    app:trackTint="@color/selector_switch_button_track" />
-            </RelativeLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/layoutMusicControl">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerMusics"
+                    android:id="@+id/textTitle"
+                    style="@style/smallSubtitleText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    tools:text="Local Songs" />
+
+                <Button
+                    android:id="@+id/buttonRandomPlay"
+                    style="@style/secondaryButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textTitle"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
                     android:layout_marginTop="22dp"
-                    tools:listitem="@layout/item_music" />
-            </FrameLayout>
-        </RelativeLayout>
-        <!--        </ScrollView>-->
+                    android:focusable="true"
+                    tools:text="SHUFFLE PLAY" />
+
+                <RelativeLayout
+                    android:id="@+id/layoutMusicControl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/buttonRandomPlay"
+                    android:layout_marginTop="22dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textDownloadedSongs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        tools:text="Downloaded Songs" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/swicthDownloadedSongs"
+                        style="@style/switchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toEndOf="@+id/textDownloadedSongs"
+                        android:checked="true"
+                        app:thumbTint="@color/selector_switch_button_thumb"
+                        app:trackTint="@color/selector_switch_button_track" />
+                </RelativeLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="700dp"
+                    android:layout_below="@id/layoutMusicControl">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerMusics"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
+                        tools:listitem="@layout/item_music" />
+                </FrameLayout>
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <RelativeLayout
             android:layout_width="match_parent"

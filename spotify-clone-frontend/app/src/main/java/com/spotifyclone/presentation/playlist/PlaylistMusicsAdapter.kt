@@ -11,13 +11,14 @@ import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.utils.TextUtils
 import kotlinx.android.synthetic.main.item_music.view.*
+import java.util.*
 
 open class PlaylistMusicsAdapter(
     private val context: Context,
     private val musics: List<Music>,
     private val onItemClickListener: ((music: Music) -> Unit) = {}
 ) : RecyclerView.Adapter<PlaylistMusicsAdapter.ViewHolder>() {
-    private var selected = -1
+    private lateinit var selectedUUID: UUID
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
@@ -30,15 +31,15 @@ open class PlaylistMusicsAdapter(
     override fun getItemCount(): Int = musics.count()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position == selected) {
+        if (this::selectedUUID.isInitialized && musics[position].id == selectedUUID) {
             holder.bindView(musics[position], true)
         } else {
             holder.bindView(musics[position])
         }
     }
 
-    fun select(position: Int) {
-        this.selected = position
+    fun select(id: UUID) {
+        this.selectedUUID = id
     }
 
     class ViewHolder(

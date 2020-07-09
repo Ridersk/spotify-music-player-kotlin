@@ -61,8 +61,8 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
     }
 
     override fun onResume() {
-        val selected =  this.musicList.indexOfFirst { music ->  music.id == playlistMusicPlayer.getCurrentMusic()?.id }
-        this.playlistAdapter.select(selected)
+        val selectedMusic =  playlistMusicPlayer.getCurrentMusic()?.id
+        selectedMusic?.let { this.playlistAdapter.select(selectedMusic) }
         this.playlistAdapter.notifyDataSetChanged()
         super.onResume()
     }
