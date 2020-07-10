@@ -5,10 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
-import com.spotifyclone.components.dialogs.CustomDialog
+import com.spotifyclone.presentation.dialogs.CustomDialog
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
 import com.spotifyclone.presentation.base.BaseActivity
@@ -21,15 +22,14 @@ import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
 import com.spotifyclone.tools.musicplayer.PlaylistObserver
 import com.spotifyclone.tools.permissions.AppPermissions
 import kotlinx.android.synthetic.main.fragment_playlist.*
-import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import java.util.*
+
 
 class LocalSongsFragment private constructor(private val parentActivity: BaseActivity) :
     BaseScreenFragment(parentActivity), PlaylistInterface,
     PlaylistObserver<Music> {
 
     private lateinit var playlistMusicPlayer: PlaylistMusicPlayer
-    private lateinit var layout: ViewGroup
     private lateinit var viewModel: PlaylistMusicsViewModel
     private lateinit var requiredPermissionDialog: CustomDialog
     private val musicList: MutableList<Music> = mutableListOf()
@@ -38,7 +38,6 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,20 +49,20 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun initComponents() {
         playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context!!)
-        layout = fragmentPlaylist
-        textTitle.text = requireArguments().getString(EXTRA_PLAYLIST_NAME)
-        buttonRandomPlay.text = getString(R.string.fragment_local_songs_button_random_play)
-        layoutMusicControl.visibility = View.GONE
-        buttonRandomPlay.setOnTouchListener{ view, event ->
+        txtTitle.text = requireArguments().getString(EXTRA_PLAYLIST_NAME)
+        btnFloat.text = getString(R.string.fragment_local_songs_button_random_play)
+        btnFloat.setOnTouchListener { view, event ->
             ReducerAndRegain(parentActivity).onTouch(view, event)
         }
         setMusicList()
     }
 
     override fun onResume() {
-        val selectedMusic =  playlistMusicPlayer.getCurrentMusic()?.id
+        val selectedMusic = playlistMusicPlayer.getCurrentMusic()?.id
         selectedMusic?.let { this.playlistAdapter.select(selectedMusic) }
-        this.playlistAdapter.notifyDataSetChanged()
+        if (this::playlistAdapter.isInitialized) {
+            this.playlistAdapter.notifyDataSetChanged()
+        }
         super.onResume()
     }
 
@@ -77,7 +76,7 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
                     parentActivity,
                     music.title,
                     music.artist,
-                    music.albumUriId?:-1,
+                    music.albumUriId ?: -1,
                     requireArguments().getString(EXTRA_PLAYLIST_NAME, "")
                 )
 
@@ -85,15 +84,21 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
             parentActivity.startActivity(intent)
         }
 
-        with(layout.recyclerMusics) {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+        with(recyclerList) {
+            val lm = androidx.recyclerview.widget.LinearLayoutManager(
                 context,
                 RecyclerView.VERTICAL,
                 false
             )
+            layoutManager = lm
             setHasFixedSize(true)
             adapter = playlistAdapter
         }
+    }
+
+    private fun showOrHideView(view: View, shouldShow: Boolean) {
+        view.animate().alpha(if (shouldShow) 1F else 0F)
+            .setDuration(100).interpolator = DecelerateInterpolator()
     }
 
     override fun chooseMusic(id: UUID) {

@@ -6,14 +6,17 @@
     android:viewportWidth="100"
     android:viewportHeight="100">
     <group>
+        <path
+            android:fillColor="#E6FFFFFF"
+            android:pathData="M0 0V100H100V0" />
         <group
             android:pivotX="50"
             android:pivotY="50"
-            android:rotation="90"
-            android:scaleX="2"
-            android:scaleY="2"
-            android:translateX="1"
-            android:translateY="0">
+            android:rotation="53.389"
+            android:scaleX="2.613"
+            android:scaleY="2.598"
+            android:translateX="0.745"
+            android:translateY="-0.309">
             <path android:pathData="M0 0V100H100V0">
                 <aapt:attr name="android:fillColor">
                     <gradient
@@ -23,11 +26,11 @@
                         android:startY="50"
                         android:type="linear">
                         <item
-                            android:color="#00121212"
+                            android:color="#1C0FB9"
                             android:offset="0" />
                         <item
-                            android:color="#121212"
-                            android:offset="0.271" />
+                            android:color="#D6A8A1F9"
+                            android:offset="0.917" />
                     </gradient>
                 </aapt:attr>
             </path>

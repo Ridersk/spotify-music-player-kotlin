@@ -1,130 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragmentPlaylist"
+    android:id="@+id/viewFlipperPlaylist"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/include_toolbar" />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/green" />
 
-    <ViewFlipper
-        android:id="@+id/viewFlipperPlaylist"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbarMain">
+        android:background="@drawable/background_gradient_purple_to_white">
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminateTint="@color/green" />
-
-        <androidx.core.widget.NestedScrollView
+        <View
+            android:id="@+id/limitToolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp" />
 
-            <RelativeLayout
+        <LinearLayout
+            android:id="@+id/covertPanel"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp"
+            android:layout_marginTop="55dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/txtTitle"
+                style="@style/smallSubtitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="15dp"
-                android:paddingTop="22dp"
-                android:paddingEnd="15dp">
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAlignment="center"
+                tools:text="Local Songs" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textTitle"
-                    style="@style/smallSubtitleText"
+        <com.spotifyclone.components.scroll.CustomNestedScrollView2
+            android:id="@+id/nestedscrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.spotifyclone.components.scroll.CustomBehaviorNestedScroll">
+
+            <FrameLayout
+                android:id="@+id/cardContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+
+                <LinearLayout
+                    android:id="@+id/cardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    tools:text="Local Songs" />
+                    android:orientation="vertical">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:background="@drawable/background_gradient_black"
+                        android:alpha="0.5"/>
+                    <com.spotifyclone.components.scroll.MaxHeightRecyclerView
+                        android:id="@+id/recyclerList"
+                        android:layout_width="match_parent"
+                        android:background="@color/black"
+                        android:layout_height="wrap_content"
+                        tools:listitem="@layout/item_music" />
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/buttonRandomPlay"
+                    android:id="@+id/btnFloat"
                     style="@style/secondaryButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textTitle"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="22dp"
+                    android:layout_width="216dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="top|center"
+                    android:clickable="true"
                     android:focusable="true"
                     tools:text="SHUFFLE PLAY" />
+            </FrameLayout>
 
-                <RelativeLayout
-                    android:id="@+id/layoutMusicControl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/buttonRandomPlay"
-                    android:layout_marginTop="22dp"
-                    android:orientation="horizontal">
+        </com.spotifyclone.components.scroll.CustomNestedScrollView2>
 
-                    <TextView
-                        android:id="@+id/textDownloadedSongs"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        tools:text="Downloaded Songs" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/swicthDownloadedSongs"
-                        style="@style/switchButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_toEndOf="@+id/textDownloadedSongs"
-                        android:checked="true"
-                        app:thumbTint="@color/selector_switch_button_thumb"
-                        app:trackTint="@color/selector_switch_button_track" />
-                </RelativeLayout>
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="700dp"
-                    android:layout_below="@id/layoutMusicControl">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerMusics"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="22dp"
-                        tools:listitem="@layout/item_music" />
-                </FrameLayout>
-            </RelativeLayout>
-        </androidx.core.widget.NestedScrollView>
+        <TextView
+            android:id="@+id/txtEmptySongList"
+            style="@style/subTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="40dp"
+            android:textColor="@color/green"
+            tools:text="There Is Nothing Here" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/txtEmptySongList"
-                style="@style/subTitleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="40dp"
-                android:textColor="@color/green"
-                tools:text="There Is Nothing Here" />
-
-            <TextView
-                android:id="@+id/txtDescriptionEmptySongList"
-                style="@style/mediumText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtEmptySongList"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center"
-                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean tincidunt fringilla augue, eu lobortis dui malesuada at. Vivamus in porttitor dui. Vivamus dignissim nec enim id porta" />
-        </RelativeLayout>
-    </ViewFlipper>
-</RelativeLayout>
+        <TextView
+            android:id="@+id/txtDescriptionEmptySongList"
+            style="@style/mediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtEmptySongList"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean tincidunt fringilla augue, eu lobortis dui malesuada at. Vivamus in porttitor dui. Vivamus dignissim nec enim id porta" />
+    </RelativeLayout>
+</ViewFlipper>
