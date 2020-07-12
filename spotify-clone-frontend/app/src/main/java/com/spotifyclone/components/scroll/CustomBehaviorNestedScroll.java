@@ -32,9 +32,10 @@ class CustomBehaviorNestedScroll extends CoordinatorLayout.Behavior<NestedScroll
         final View titlePanel = parent.findViewById(R.id.titlePanel);
         final View cardContainer = child.findViewById(R.id.cardContainer);
         final View cardView = child.findViewById(R.id.cardView);
+        final View btnFloat = child.findViewById(R.id.btnFloat);
         final MaxHeightRecyclerView rv = child.findViewById(R.id.recyclerList);
         final int toolbarContainerHeight = parent.getDependencies(child).get(0).getHeight();
-        final int fabHalfHeight = child.findViewById(R.id.btnFloat).getHeight() / 2;
+        final int fabHalfHeight = btnFloat.getHeight() / 2;
         final int rvMaxHeight = child.getHeight() - fabHalfHeight;
         final int titlePanelBottomPos = titlePanel.getBottom();
 
@@ -43,7 +44,9 @@ class CustomBehaviorNestedScroll extends CoordinatorLayout.Behavior<NestedScroll
         setTopMargin(titlePanel, toolbarContainerHeight);
         setPaddingTop(cardContainer,  titlePanelBottomPos - toolbarContainerHeight);
         setTopMargin(cardView, fabHalfHeight);
-        ViewCompat.offsetTopAndBottom(child, toolbarContainerHeight);
+
+        ViewCompat.offsetTopAndBottom(child.findViewById(R.id.btnFloat), toolbarContainerHeight);
+        ViewCompat.offsetTopAndBottom(cardView, toolbarContainerHeight);
         setPaddingBottom(rv, toolbarContainerHeight);
         return true;
     }
