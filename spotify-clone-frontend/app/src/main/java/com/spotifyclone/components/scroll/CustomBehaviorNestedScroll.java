@@ -19,7 +19,7 @@ class CustomBehaviorNestedScroll extends CoordinatorLayout.Behavior<NestedScroll
     @Override
     public boolean layoutDependsOn(
             @NotNull CoordinatorLayout parent, @NotNull NestedScrollView child, View dependency) {
-        return dependency.getId() == R.id.limitToolbar;
+        return dependency.getId() == R.id.toolbarContainer;
     }
 
     public CustomBehaviorNestedScroll(Context context, AttributeSet attrs) {
@@ -29,19 +29,31 @@ class CustomBehaviorNestedScroll extends CoordinatorLayout.Behavior<NestedScroll
     @Override
     public boolean onLayoutChild(
             CoordinatorLayout parent, @NotNull NestedScrollView child, int layoutDirection) {
+        final View titlePanel = parent.findViewById(R.id.titlePanel);
+        final View cardContainer = child.findViewById(R.id.cardContainer);
+        final View cardView = child.findViewById(R.id.cardView);
+        final MaxHeightRecyclerView rv = child.findViewById(R.id.recyclerList);
+        final int toolbarContainerHeight = parent.getDependencies(child).get(0).getHeight();
         final int fabHalfHeight = child.findViewById(R.id.btnFloat).getHeight() / 2;
         final int rvMaxHeight = child.getHeight() - fabHalfHeight;
-        final MaxHeightRecyclerView rv = child.findViewById(R.id.recyclerList);
-        final int panelBottomPos = parent.findViewById(R.id.covertPanel).getBottom();
-        final View cardContainer = child.findViewById(R.id.cardContainer);
-        final int toolbarContainerHeight = parent.getDependencies(child).get(0).getHeight();
+        final int titlePanelBottomPos = titlePanel.getBottom();
 
         parent.onLayoutChild(child, layoutDirection);
         rv.setMaxHeight(rvMaxHeight);
-        setPaddingTop(cardContainer,  panelBottomPos - toolbarContainerHeight);
+        setTopMargin(titlePanel, toolbarContainerHeight);
+        setPaddingTop(cardContainer,  titlePanelBottomPos - toolbarContainerHeight);
+        setTopMargin(cardView, fabHalfHeight);
         ViewCompat.offsetTopAndBottom(child, toolbarContainerHeight);
         setPaddingBottom(rv, toolbarContainerHeight);
         return true;
+    }
+
+    private static void setTopMargin(View v, int topMargin) {
+        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+        if (lp.topMargin != topMargin) {
+            lp.topMargin = topMargin;
+            v.setLayoutParams(lp);
+        }
     }
 
     private static void setPaddingTop(View v, int top) {

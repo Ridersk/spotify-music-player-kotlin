@@ -18,18 +18,19 @@
         android:layout_height="match_parent"
         android:background="@drawable/background_gradient_purple_to_white">
 
-        <View
-            android:id="@+id/limitToolbar"
+        <FrameLayout
+            android:id="@+id/toolbarContainer"
             android:layout_width="match_parent"
-            android:layout_height="55dp" />
+            android:layout_height="wrap_content">
+            <include layout="@layout/include_toolbar" />
+        </FrameLayout>
 
         <LinearLayout
-            android:id="@+id/covertPanel"
+            android:id="@+id/titlePanel"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:paddingStart="64dp"
             android:paddingEnd="64dp"
-            android:layout_marginTop="55dp"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/txtTitle"
@@ -53,6 +54,7 @@
                 android:id="@+id/cardContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_gradient_black"
                 android:descendantFocusability="blocksDescendants">
 
                 <LinearLayout
@@ -60,11 +62,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:background="@drawable/background_gradient_black"
-                        android:alpha="0.5"/>
                     <com.spotifyclone.components.scroll.MaxHeightRecyclerView
                         android:id="@+id/recyclerList"
                         android:layout_width="match_parent"
