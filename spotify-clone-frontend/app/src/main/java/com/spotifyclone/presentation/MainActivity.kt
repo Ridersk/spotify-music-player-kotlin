@@ -1,9 +1,14 @@
 package com.spotifyclone.presentation
 
+import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
+import android.transition.Fade
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
 import androidx.core.view.forEach
 import kotlinx.android.synthetic.main.activity_main.*
 import com.spotifyclone.R
@@ -25,7 +30,8 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
-        setContentView(R.layout.activity_main)
+//        setAnimationTransitions()
+        super.setContentView(R.layout.activity_main)
 
         super.setupToolbar(ToolbarParameters())
 
@@ -86,7 +92,10 @@ class MainActivity : BaseActivity() {
                     music.albumUriId,
                     getString(R.string.fragment_local_songs_title)
                 )
-                this@MainActivity.startActivity(intent)
+                this@MainActivity.startActivity(
+                    intent,
+                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+                )
             }
         }
     }

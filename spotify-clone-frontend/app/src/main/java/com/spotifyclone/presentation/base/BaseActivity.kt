@@ -1,19 +1,39 @@
 package com.spotifyclone.presentation.base
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
+import android.transition.Transition
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.spotifyclone.tools.permissions.AppPermissions
+import com.spotifyclone.R
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.android.synthetic.main.include_toolbar.view.*
 
 
 abstract class BaseActivity : AppCompatActivity() {
 
+    private lateinit var enterTransition: Transition
+    private lateinit var exitTransition: Transition
+
+    override fun createConfigurationContext(overrideConfiguration: Configuration): Context {
+        window.requestFeature(android.view.Window.FEATURE_ACTIVITY_TRANSITIONS)
+        return super.createConfigurationContext(overrideConfiguration)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        if (this::enterTransition.isInitialized) {
+            window.enterTransition = enterTransition
+        }
         initComponents()
+    }
+
+    override fun onPause() {
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        super.onPause()
     }
 
     protected fun setupToolbar(toolbarArgs: ToolbarParameters) {
@@ -83,10 +103,18 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         this.removeComponents()
-        super.finish()
+        if (this::exitTransition.isInitialized) {
+            window.exitTransition = exitTransition
+        }
+        finishAfterTransition()
         super.onBackPressed()
     }
 
+    protected fun setTransitions(enter: Transition, exit: Transition) {
+        this.enterTransition = enter
+        this.exitTransition =  exit
+
+    }
     protected open fun initComponents() {}
     protected open fun removeComponents() {}
 }

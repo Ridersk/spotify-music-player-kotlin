@@ -1,8 +1,11 @@
 package com.spotifyclone.presentation.music
 
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.transition.Slide
+import android.view.Gravity
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
@@ -25,7 +28,9 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        createCallbacks()
         super.setContentView(R.layout.activity_music_player)
+        super.setTransitions(Slide(Gravity.BOTTOM), Slide(Gravity.BOTTOM))
 
         setupToolbar(
             ToolbarParameters(
@@ -37,7 +42,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         )
 
         super.onCreate(savedInstanceState)
-        createCallbacks()
         startMusic()
     }
 
@@ -108,7 +112,11 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
                 intent.getStringExtra(EXTRA_PLAYLIST),
                 intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
             )
-            this@MusicPlayerActivity.startActivity(intent)
+            this.intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+            this@MusicPlayerActivity.startActivity(
+                intent,
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+            )
         }
     }
 
