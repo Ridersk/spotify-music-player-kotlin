@@ -34,7 +34,6 @@ class MusicPlayerFragment private constructor(
                     playlistMusicPlayer.nextMusic()
                 } else playlistMusicPlayer.previousMusic()
                 containerMusicPlayerViewPager.currentItem = currentPosition
-                updateLabelCurrentMusic(playlistMusicPlayer.getCurrentMusic())
                 super.onPageSelected(position)
             }
         }
@@ -42,10 +41,6 @@ class MusicPlayerFragment private constructor(
 
     init {
         playlistMusicPlayer.addMusicObserver(this)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -104,11 +99,11 @@ class MusicPlayerFragment private constructor(
             putLong(EXTRA_ALBUM_URI_ID, music.albumUriId?:-1L)
         }
         initComponents()
-        updateLabelCurrentMusic(music)
+        updateViewLabelMusic(music)
     }
 
     private fun createMusicSliderViewPager() {
-        updateLabelCurrentMusic(playlistMusicPlayer.getCurrentMusic())
+        updateViewLabelMusic(playlistMusicPlayer.getCurrentMusic())
         itemMusicLabelAdapter = ItemMusicPlayerFragmentAdapter(
             requireActivity(),
             this.musicPlaying,
@@ -118,7 +113,7 @@ class MusicPlayerFragment private constructor(
         containerMusicPlayerViewPager.registerOnPageChangeCallback(callbackViewPager)
     }
 
-    private fun updateLabelCurrentMusic(music: Music?) {
+    private fun updateViewLabelMusic(music: Music?) {
         if (music != null) {
             if (fragmentMusicPlayer.visibility != View.VISIBLE) {
                 fragmentMusicPlayer.visibility = View.VISIBLE

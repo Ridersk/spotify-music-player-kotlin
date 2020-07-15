@@ -5,6 +5,8 @@ import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
@@ -34,6 +36,8 @@ class ItemMusicPlayerFragment(private val onclickCallback: () -> Unit): BaseFrag
                 }
             }
             txtMusicLabel.text = label
+            txtMusicLabel.isSelected = true
+
             itemFragmentMusic.setOnClickListener(this)
             txtDevicesLabel.visibility = View.GONE
             itemFragmentMusic.visibility = View.VISIBLE

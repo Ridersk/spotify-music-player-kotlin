@@ -36,6 +36,7 @@ class PageTabAdapter(activity: BaseActivity, private val containerViewPager: Vie
         return when (item.itemId) {
             R.id.page1 -> {
                 this.currentTab = 0
+                this.tabs[this.currentTab].reset()
                 containerViewPager.currentItem = this.currentTab
                 true
             }
