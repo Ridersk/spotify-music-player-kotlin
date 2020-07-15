@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.viewpager2.widget.ViewPager2
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
@@ -119,7 +120,10 @@ class MusicPlayerFragment private constructor(
 
     private fun updateLabelCurrentMusic(music: Music?) {
         if (music != null) {
-            fragmentMusicPlayer.visibility = View.VISIBLE
+            if (fragmentMusicPlayer.visibility != View.VISIBLE) {
+                fragmentMusicPlayer.visibility = View.VISIBLE
+            }
+            fragmentMusicPlayer.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.bottom_to_top))
             containerMusicPlayerViewPager.post {
                 itemMusicLabelAdapter.update(music)
             }

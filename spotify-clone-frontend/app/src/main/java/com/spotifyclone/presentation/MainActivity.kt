@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.transition.Fade
 import android.view.MenuItem
 import android.view.View
-import android.view.Window
 import androidx.core.view.forEach
 import kotlinx.android.synthetic.main.activity_main.*
 import com.spotifyclone.R
@@ -30,7 +29,6 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
-//        setAnimationTransitions()
         super.setContentView(R.layout.activity_main)
 
         super.setupToolbar(ToolbarParameters())

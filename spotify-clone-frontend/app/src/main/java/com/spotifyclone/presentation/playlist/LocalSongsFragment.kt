@@ -71,17 +71,7 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
     override fun receiverList(list: List<Music>) {
         this.musicList.addAll(list)
         this.playlistAdapter = PlaylistMusicsAdapter(parentActivity, this.musicList) { music ->
-            val intent =
-                MusicPlayerActivity.getIntent(
-                    parentActivity,
-                    music.title,
-                    music.artist,
-                    music.albumUriId ?: -1,
-                    requireArguments().getString(EXTRA_PLAYLIST_NAME, "")
-                )
-
             chooseMusic(music.id)
-            parentActivity.startActivity(intent)
         }
 
         with(recyclerList) {
@@ -94,11 +84,6 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
             setHasFixedSize(true)
             adapter = playlistAdapter
         }
-    }
-
-    private fun showOrHideView(view: View, shouldShow: Boolean) {
-        view.animate().alpha(if (shouldShow) 1F else 0F)
-            .setDuration(100).interpolator = DecelerateInterpolator()
     }
 
     override fun chooseMusic(id: UUID) {
