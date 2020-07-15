@@ -19,9 +19,16 @@
     <string name="credentials_input_hint_email">Your E-mail</string>
     <string name="credentials_input_hint_password">Your Password</string>
 
-    <!-- Home Activity -->
+    <!-- Home Fragment -->
     <string name="fragment_home_toolbar_title" />
     <string name="fragment_home_label_recommendedPlaylists">Good Morning</string>
+
+    <!-- Search Fragment -->
+    <string name="fragment_search_title">Search</string>
+
+    <!-- Library Fragment -->
+    <string name="fragment_library_musics_guide">Musics</string>
+    <string name="fragment_library_podcasts_guide">Podcasts</string>
 
     <!-- Local Songs Fragment -->
     <string name="fragment_local_songs_title">Local Songs</string>

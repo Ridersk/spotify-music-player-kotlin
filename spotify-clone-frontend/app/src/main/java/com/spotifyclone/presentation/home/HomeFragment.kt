@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
@@ -12,8 +11,8 @@ import com.spotifyclone.presentation.base.BaseScreenFragment
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.main.IWrapperFragment
 import com.spotifyclone.presentation.playlist.LocalSongsFragment
-import kotlinx.android.synthetic.main.fragment_home_page.*
-import kotlinx.android.synthetic.main.fragment_home_page.view.*
+import kotlinx.android.synthetic.main.fragment_page_home.*
+import kotlinx.android.synthetic.main.fragment_page_home.view.*
 
 class HomeFragment private constructor(private val parentActivity: BaseActivity) :
     BaseScreenFragment(parentActivity) {
@@ -25,11 +24,16 @@ class HomeFragment private constructor(private val parentActivity: BaseActivity)
         savedInstanceState: Bundle?
     ): View? {
         mListener = this.parentFragment as IWrapperFragment
-        return inflater.inflate(R.layout.fragment_home_page, container, false)
+        return inflater.inflate(R.layout.fragment_page_home, container, false)
     }
 
+    override fun getToolbar(): ToolbarParameters =
+        ToolbarParameters(
+            option3 = Pair(R.drawable.ic_settings, {})
+        )
+
     override fun initComponents() {
-        val layout: ViewGroup = activityHome
+        val layout: ViewGroup = fragmentHome
         val viewModel: RecommendedPlaylistsViewModel = RecommendedPlaylistsViewModel
             .ViewModelFactory().create(RecommendedPlaylistsViewModel::class.java)
         val parentActivity = this.parentActivity
@@ -53,13 +57,8 @@ class HomeFragment private constructor(private val parentActivity: BaseActivity)
         viewModel.getRecommendedPlaylists()
     }
 
-    override fun getToolbar(): ToolbarParameters =
-        ToolbarParameters(
-            option3 = Pair(R.drawable.ic_settings, {})
-        )
-
     companion object {
-        fun getInstance(parent: BaseActivity): Fragment {
+        fun getInstance(parent: BaseActivity): HomeFragment {
             val homeFragment = HomeFragment(parent)
             val bundle = Bundle()
             homeFragment.arguments = bundle

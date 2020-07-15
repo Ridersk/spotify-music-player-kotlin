@@ -1,13 +1,16 @@
 package com.spotifyclone.presentation.main
 
 import android.view.MenuItem
+import android.view.SearchEvent
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.home.HomeFragment
+import com.spotifyclone.presentation.library.LibraryFragment
 import com.spotifyclone.presentation.playlist.LocalSongsFragment
+import com.spotifyclone.presentation.search.SearchFragment
 
 class PageTabAdapter(activity: BaseActivity, private val containerViewPager: ViewPager2) :
     FragmentStateAdapter(activity) {
@@ -17,15 +20,8 @@ class PageTabAdapter(activity: BaseActivity, private val containerViewPager: Vie
 
     init {
         tabs.add(TabWrapperFragment.getInstance(HomeFragment.getInstance(activity)))
-        tabs.add(TabWrapperFragment.getInstance(HomeFragment.getInstance(activity)))
-        tabs.add(
-            TabWrapperFragment.getInstance(
-                LocalSongsFragment.getInstance(
-                    activity,
-                    activity.getString(R.string.fragment_local_songs_title)
-                )
-            )
-        )
+        tabs.add(TabWrapperFragment.getInstance(SearchFragment.getInstance(activity)))
+        tabs.add(TabWrapperFragment.getInstance(LibraryFragment.getInstance(activity)))
     }
 
     override fun getItemCount(): Int {
