@@ -60,7 +60,7 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
             textMusicLabel.text = TextUtils.getMusicLabel(currentMusic.artist, currentMusic.album)
             ImageUtils.insertBitmapInView(
                 applicationContext,
-                imageAlbum,
+                albumArt,
                 intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
             )
         }

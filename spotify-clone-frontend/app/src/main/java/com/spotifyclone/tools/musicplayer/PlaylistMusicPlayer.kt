@@ -4,7 +4,6 @@ import android.content.Context
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.basepatterns.SingletonHolder
 import com.spotifyclone.tools.utils.ListUtils
-import java.io.IOException
 import java.lang.Exception
 import java.util.*
 
@@ -55,10 +54,6 @@ class PlaylistMusicPlayer private constructor(
         try {
             this.currentMusicId = id
             buildMusicQueue()
-            val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
-            if (position != -1) {
-                this.positionPlaying = position
-            }
             val music = getCurrentMusic()
             initMusic(music, STATE_NEXT_MUSIC_FROM_USER)
         } catch (ex: NullPointerException) {
@@ -124,13 +119,13 @@ class PlaylistMusicPlayer private constructor(
             Collections.swap(shuffledList, 0, position)
             this.positionPlaying = 0
             this.normalMusicQueueBase = shuffledList
+            this.normalMusicQueueRunning = initQueue(this.normalMusicQueueBase)
         } else {
             this.normalMusicQueueBase = this.originalMusicList.toMutableList()
+            this.normalMusicQueueRunning = initQueue(this.normalMusicQueueBase)
             this.positionPlaying =
                 getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
         }
-
-        this.normalMusicQueueRunning = initQueue(this.normalMusicQueueBase)
 
         if (isCycle()) {
             this.normalMusicQueueRunning.addAll(copyList(this.normalMusicQueueBase))
@@ -260,10 +255,6 @@ class PlaylistMusicPlayer private constructor(
         this.currentModeCycle = (this.currentModeCycle + 1) % modeCycleList.size
 
         buildMusicQueue()
-        val position = getPositionMusicById(currentMusicId, this.normalMusicQueueRunning)
-        if (position != -1) {
-            this.positionPlaying = position
-        }
     }
 
     private fun shuffleQueue(list: List<Music>): MutableList<Music> {

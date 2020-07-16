@@ -1,7 +1,6 @@
 package com.spotifyclone.presentation.main
 
 import android.view.MenuItem
-import android.view.SearchEvent
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -9,7 +8,6 @@ import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.home.HomeFragment
 import com.spotifyclone.presentation.library.LibraryFragment
-import com.spotifyclone.presentation.playlist.LocalSongsFragment
 import com.spotifyclone.presentation.search.SearchFragment
 
 class PageTabAdapter(activity: BaseActivity, private val containerViewPager: ViewPager2) :

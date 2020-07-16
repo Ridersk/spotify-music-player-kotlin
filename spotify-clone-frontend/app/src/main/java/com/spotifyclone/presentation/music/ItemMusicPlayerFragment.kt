@@ -5,8 +5,6 @@ import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
@@ -14,10 +12,9 @@ import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseFragment
 import kotlinx.android.synthetic.main.item_fragment_music_player.*
 
-class ItemMusicPlayerFragment(private val onclickCallback: () -> Unit): BaseFragment(), View.OnClickListener {
-    override fun onClick(v: View?) {
-        onclickCallback.invoke()
-    }
+class ItemMusicPlayerFragment private constructor(
+    private val onclickCallback: () -> Unit
+) : BaseFragment(), View.OnClickListener {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,10 +35,14 @@ class ItemMusicPlayerFragment(private val onclickCallback: () -> Unit): BaseFrag
             txtMusicLabel.text = label
             txtMusicLabel.isSelected = true
 
-            itemFragmentMusic.setOnClickListener(this)
+            itemFragmentMusicLabel.setOnClickListener(this)
             txtDevicesLabel.visibility = View.GONE
-            itemFragmentMusic.visibility = View.VISIBLE
-        } else itemFragmentMusic.visibility = View.INVISIBLE
+            itemFragmentMusicLabel.visibility = View.VISIBLE
+        } else itemFragmentMusicLabel.visibility = View.INVISIBLE
+    }
+
+    override fun onClick(v: View?) {
+        onclickCallback.invoke()
     }
 
     companion object {

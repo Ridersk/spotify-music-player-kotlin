@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
@@ -15,7 +14,6 @@ import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.BaseScreenFragment
 import com.spotifyclone.presentation.base.ToolbarParameters
-import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider

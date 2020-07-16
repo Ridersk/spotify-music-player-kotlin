@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemFragmentAlbumArt"
+    android:orientation="vertical"
+    android:background="@color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/albumArt"
+        android:layout_width="@dimen/image_album_width"
+        android:layout_height="@dimen/image_album_height"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="152dp"
+        android:layout_marginBottom="80dp"
+        android:contentDescription="@string/img_description_album_image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_album_art_test" />
+
+</RelativeLayout>

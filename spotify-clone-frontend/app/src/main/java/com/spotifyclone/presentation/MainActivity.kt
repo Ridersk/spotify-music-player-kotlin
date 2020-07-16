@@ -1,11 +1,8 @@
 package com.spotifyclone.presentation
 
 import android.app.ActivityOptions
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
-import android.transition.Fade
 import android.view.MenuItem
 import android.view.View
 import androidx.core.view.forEach
@@ -63,9 +60,7 @@ class MainActivity : BaseActivity() {
             view.setOnLongClickListener { true }
         }
         bottomNavMenu.setOnNavigationItemSelectedListener { item: MenuItem ->
-            tabAdapter.selectTab(
-                item
-            )
+            tabAdapter.selectTab(item)
         }
     }
 

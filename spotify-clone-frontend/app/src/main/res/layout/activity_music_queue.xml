@@ -43,7 +43,7 @@
                     android:layout_marginTop="20dp">
 
                     <ImageView
-                        android:id="@+id/imageAlbum"
+                        android:id="@+id/albumArt"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:contentDescription="@string/img_description_music_playing"
@@ -56,7 +56,7 @@
                         android:layout_centerVertical="true"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:layout_toEndOf="@id/imageAlbum">
+                        android:layout_toEndOf="@id/albumArt">
                         <TextView
                             android:id="@+id/textMusicTitle"
                             style="@style/smallText"

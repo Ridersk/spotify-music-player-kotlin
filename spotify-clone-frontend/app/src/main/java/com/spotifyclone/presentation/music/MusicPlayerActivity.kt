@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
+import androidx.viewpager2.widget.ViewPager2
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
@@ -13,7 +14,6 @@ import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
-import com.spotifyclone.tools.utils.ImageUtils
 import kotlinx.android.synthetic.main.activity_music_player.*
 import java.util.*
 
@@ -21,7 +21,19 @@ import java.util.*
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicPlayerActivity)
+    private lateinit var itemAlbumArtAdapter: ItemAlbumArtAdapter
     private lateinit var idCallbackStateMusic: UUID
+    private val callbackViewPagerAlbumArt = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            val currentPosition = itemAlbumArtAdapter.currentPosition
+            if (position != currentPosition) {
+                if (position > currentPosition) {
+                    playlistMusicPlayer.nextMusic()
+                } else playlistMusicPlayer.previousMusic()
+                super.onPageSelected(position)
+            }
+        }
+    }
 
     init {
         playlistMusicPlayer.addMusicObserver(this)
@@ -43,6 +55,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
         super.onCreate(savedInstanceState)
         startMusic()
+        createViewPagerAlbumArt()
     }
 
     override fun changedMusic(music: Music) {
@@ -59,12 +72,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
     override fun initComponents() {
         textMusicTitle.text = intent.getStringExtra(EXTRA_TITLE)
         textMusicArtist.text = intent.getStringExtra(EXTRA_ARTIST)
-
-        ImageUtils.insertBitmapInView(
-            applicationContext,
-            imageAlbum,
-            intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
-        )
 
         textMusicTotalTime.text = playlistMusicPlayer.getTotalTime()
 
@@ -120,6 +127,21 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
     }
 
+    private fun createViewPagerAlbumArt() {
+        val imageList: List<Long?> =
+            playlistMusicPlayer.normalMusicQueueRunning.map { music -> music.albumUriId }
+
+        itemAlbumArtAdapter = ItemAlbumArtAdapter(this, imageList, containerAlbumArt)
+
+        containerAlbumArt.adapter = itemAlbumArtAdapter
+        containerAlbumArt.registerOnPageChangeCallback(callbackViewPagerAlbumArt)
+
+        val currentMusic = playlistMusicPlayer.positionPlaying
+        containerAlbumArt.post {
+            itemAlbumArtAdapter.update(currentMusic)
+        }
+    }
+
     private fun createCallbacks() {
         idCallbackStateMusic = playlistMusicPlayer.setObserverOnMusicState {
             buttonPlayMusic.isActivated = playlistMusicPlayer.isPlaying
@@ -154,6 +176,15 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             putExtra(EXTRA_PLAYLIST, playlist)
         }
         initComponents()
+        updateAlbumArt()
+    }
+
+    private fun updateAlbumArt() {
+        val currentMusic = playlistMusicPlayer.positionPlaying
+
+        containerAlbumArt.post {
+            itemAlbumArtAdapter.update(currentMusic)
+        }
     }
 
     companion object {

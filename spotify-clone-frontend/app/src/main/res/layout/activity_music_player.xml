@@ -10,6 +10,11 @@
 
     <include layout="@layout/include_toolbar" />
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/containerAlbumArt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,17 +22,6 @@
         android:layout_below="@+id/toolbarMain"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin">
-
-        <ImageView
-            android:id="@+id/imageAlbum"
-            android:layout_width="@dimen/image_album_width"
-            android:layout_height="@dimen/image_album_height"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="80dp"
-            android:layout_marginBottom="80dp"
-            android:contentDescription="@string/img_description_album_image"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/img_album_art_test" />
 
         <RelativeLayout
             android:id="@+id/layoutMusicControl"

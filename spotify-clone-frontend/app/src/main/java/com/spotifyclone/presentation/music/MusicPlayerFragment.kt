@@ -33,7 +33,6 @@ class MusicPlayerFragment private constructor(
                 if (position > currentPosition) {
                     playlistMusicPlayer.nextMusic()
                 } else playlistMusicPlayer.previousMusic()
-                containerMusicPlayerViewPager.currentItem = currentPosition
                 super.onPageSelected(position)
             }
         }
@@ -103,14 +102,15 @@ class MusicPlayerFragment private constructor(
     }
 
     private fun createMusicSliderViewPager() {
-        updateViewLabelMusic(playlistMusicPlayer.getCurrentMusic())
         itemMusicLabelAdapter = ItemMusicPlayerFragmentAdapter(
             requireActivity(),
+            containerMusicPlayerViewPager,
             this.musicPlaying,
             this::callOnClick
         )
         containerMusicPlayerViewPager.adapter = itemMusicLabelAdapter
         containerMusicPlayerViewPager.registerOnPageChangeCallback(callbackViewPager)
+        updateViewLabelMusic(playlistMusicPlayer.getCurrentMusic())
     }
 
     private fun updateViewLabelMusic(music: Music?) {
@@ -119,10 +119,10 @@ class MusicPlayerFragment private constructor(
                 fragmentMusicPlayer.visibility = View.VISIBLE
             }
             fragmentMusicPlayer.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.bottom_to_top))
-            containerMusicPlayerViewPager.post {
-                itemMusicLabelAdapter.update(music)
-            }
         } else fragmentMusicPlayer.visibility = View.GONE
+        containerMusicPlayerViewPager.post {
+            itemMusicLabelAdapter.update(music)
+        }
     }
 
     private fun callOnClick() {
