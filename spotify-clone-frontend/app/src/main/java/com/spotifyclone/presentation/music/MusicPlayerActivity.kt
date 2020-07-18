@@ -16,6 +16,14 @@ import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
 import kotlinx.android.synthetic.main.activity_music_player.*
 import java.util.*
+import androidx.palette.graphics.Palette
+import android.graphics.Bitmap
+import android.graphics.drawable.GradientDrawable
+import android.os.Build
+import android.view.animation.AnimationUtils
+import androidx.core.content.ContextCompat
+import com.spotifyclone.tools.filemanager.MusicFileManagerApp
+import com.spotifyclone.tools.utils.ColorUtils
 
 
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
@@ -71,6 +79,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     override fun initComponents() {
         textMusicTitle.text = intent.getStringExtra(EXTRA_TITLE)
+        textMusicTitle.isSelected = true
         textMusicArtist.text = intent.getStringExtra(EXTRA_ARTIST)
 
         textMusicTotalTime.text = playlistMusicPlayer.getTotalTime()
@@ -138,7 +147,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
         val currentMusic = playlistMusicPlayer.positionPlaying
         containerAlbumArt.post {
-            itemAlbumArtAdapter.update(currentMusic)
+            itemAlbumArtAdapter.update(currentMusic, false)
         }
     }
 
@@ -177,6 +186,38 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
         initComponents()
         updateAlbumArt()
+        generateGradientBackground(albumUriId)
+    }
+
+    private fun generateGradientBackground(albumUriId: Long) {
+        val imageBitmap: Bitmap? = MusicFileManagerApp.getAlbumArt(
+            albumUriId,
+            applicationContext
+        )
+
+        imageBitmap?.let {
+            Palette.from(imageBitmap).generate {
+                it?.let { palette ->
+
+                    backgroundPanel.background = ColorUtils.getGradient(
+                        palette.getDominantColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.lightGray
+                            )
+                        ),
+                        ContextCompat.getColor(applicationContext, R.color.black)
+                    )
+
+                    val animation = AnimationUtils.loadAnimation(
+                        this,
+                        R.anim.fade_in
+                    )
+                    animation.duration = 1000
+                    backgroundPanel.startAnimation(animation)
+                }
+            }
+        }
     }
 
     private fun updateAlbumArt() {

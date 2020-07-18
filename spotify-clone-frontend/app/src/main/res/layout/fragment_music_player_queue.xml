@@ -28,10 +28,11 @@
 
         <ImageButton
             android:id="@+id/btncPrevious"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_previous_music"
+            android:background="@null"
+            android:src="@drawable/ic_previous_music"
             android:backgroundTint="@color/selector_state_white_pressed"
             android:contentDescription="@string/img_description_previous_music" />
 
@@ -48,11 +49,12 @@
 
         <ImageButton
             android:id="@+id/btnNext"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/btnPlayPause"
-            android:background="@drawable/ic_next_music"
+            android:background="@null"
+            android:src="@drawable/ic_next_music"
             android:backgroundTint="@color/selector_state_white_pressed"
             android:contentDescription="@string/img_description_next_music" />
     </RelativeLayout>
@@ -61,8 +63,8 @@
         android:id="@+id/layoutDevices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layoutMusicControl"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
         android:layout_centerHorizontal="true">
 
         <ImageView

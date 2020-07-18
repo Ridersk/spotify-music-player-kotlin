@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.QueueHeader
-import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.model.QueueItem
 import com.spotifyclone.data.model.QueueMusic
 import com.spotifyclone.tools.animations.ReducerAndRegain
@@ -21,6 +20,7 @@ class MusicQueueAdapter(
     private val onItemClickListener: ((music: QueueItem) -> Unit) = {},
     private val onCheckboxClickListener: ((music: QueueMusic) -> Unit)
 ) : RecyclerView.Adapter<MusicQueueAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         if (viewType == TYPE_HEADER) {
             val itemView = LayoutInflater.from(parent.context).inflate(
@@ -37,7 +37,7 @@ class MusicQueueAdapter(
         return ViewHolderItem(context, itemView, onItemClickListener, onCheckboxClickListener)
     }
 
-    override fun getItemCount(): Int = items.count()
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val itemBind = items[position]
@@ -46,6 +46,10 @@ class MusicQueueAdapter(
         } else if (holder is ViewHolderHeader && itemBind is QueueHeader) {
             holder.bindView(itemBind)
         }
+    }
+
+    override fun getItemId(position: Int): Long {
+        return super.getItemId(position).hashCode().toLong()
     }
 
     override fun getItemViewType(position: Int): Int {

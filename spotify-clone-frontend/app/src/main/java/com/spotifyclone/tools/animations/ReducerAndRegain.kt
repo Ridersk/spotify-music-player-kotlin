@@ -14,7 +14,7 @@ class ReducerAndRegain(private val context: Context): View.OnTouchListener {
                 reducer.setTarget(view)
                 reducer.start()
             }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_MOVE -> {
+            else -> {
                 val regainer = AnimatorInflater.loadAnimator(context, R.animator.regain_size)
                 regainer.setTarget(view)
                 regainer.start()

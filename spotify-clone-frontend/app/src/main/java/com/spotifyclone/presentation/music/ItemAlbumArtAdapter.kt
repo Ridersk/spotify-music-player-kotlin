@@ -25,9 +25,10 @@ class ItemAlbumArtAdapter(
         return ItemAlbumArtFragment.getInstance(albumArtList[position])
     }
 
-    fun update(position: Int) {
+    fun update(position: Int, showAnimation: Boolean = true) {
         currentPosition = position
-        containerViewPager.currentItem = currentPosition
+        containerViewPager.setCurrentItem(position, showAnimation)
+
         super.notifyDataSetChanged()
     }
 }

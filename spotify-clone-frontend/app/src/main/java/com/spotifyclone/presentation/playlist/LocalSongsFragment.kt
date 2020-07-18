@@ -80,12 +80,14 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
             )
             layoutManager = lm
             setHasFixedSize(true)
+            setHasTransientState(true)
             adapter = playlistAdapter
         }
     }
 
     override fun chooseMusic(id: UUID) {
         playlistMusicPlayer.chooseMusic(id)
+        onResume()
     }
 
     private fun setMusicList() {

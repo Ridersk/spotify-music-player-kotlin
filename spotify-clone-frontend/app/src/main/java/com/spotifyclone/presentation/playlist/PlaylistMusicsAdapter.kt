@@ -10,6 +10,7 @@ import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.utils.TextUtils
+import com.spotifyclone.tools.utils.ViewUtils
 import kotlinx.android.synthetic.main.item_music.view.*
 import java.util.*
 
@@ -19,6 +20,10 @@ open class PlaylistMusicsAdapter(
     private val onItemClickListener: ((music: Music) -> Unit) = {}
 ) : RecyclerView.Adapter<PlaylistMusicsAdapter.ViewHolder>() {
     private lateinit var selectedUUID: UUID
+
+    init {
+        super.setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
@@ -30,11 +35,19 @@ open class PlaylistMusicsAdapter(
 
     override fun getItemCount(): Int = musics.count()
 
+    override fun getItemId(position: Int): Long {
+        return super.getItemId(position).hashCode().toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (this::selectedUUID.isInitialized && musics[position].id == selectedUUID) {
-            holder.bindView(musics[position], true)
+            holder.bindView(position, musics[position], true)
         } else {
-            holder.bindView(musics[position])
+            holder.bindView(position, musics[position])
         }
     }
 
@@ -42,7 +55,7 @@ open class PlaylistMusicsAdapter(
         this.selectedUUID = id
     }
 
-    class ViewHolder(
+    inner class ViewHolder(
         private val context: Context,
         itemView: View,
         private val onItemClickListener: (music: Music) -> Unit
@@ -50,11 +63,8 @@ open class PlaylistMusicsAdapter(
         private val title = itemView.textMusicTitle
         private val musiclabel = itemView.textMusicLabel
 
-        fun bindView(music: Music, selected: Boolean = false) {
+        fun bindView(position: Int, music: Music, selected: Boolean = false) {
             title.text = music.title
-            if (selected) {
-                title.setTextColor(ContextCompat.getColor(context, R.color.green))
-            }
             musiclabel.text = TextUtils.getMusicLabel(music.artist, music.album)
 
             itemView.setOnClickListener {
@@ -67,7 +77,15 @@ open class PlaylistMusicsAdapter(
                     event
                 )
             }
+
+            if (position == 0) {
+                ViewUtils.setTopMargin(itemView, 100)
+            }
+
+            if (selected) title.setTextColor(ContextCompat.getColor(context, R.color.green))
+            else title.setTextColor(ContextCompat.getColor(context, R.color.white))
         }
+
     }
 
 }

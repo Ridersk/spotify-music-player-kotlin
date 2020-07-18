@@ -185,8 +185,10 @@ class MusicQueueView(
         val wasEmpty = selectedMusics.isEmpty()
 
         if (!selectedMusics.contains(music)) {
+            music.checked = true
             selectedMusics.add(music)
         } else {
+            music.checked = false
             selectedMusics.remove(music)
         }
 
