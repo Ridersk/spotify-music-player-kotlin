@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
+import com.spotifyclone.components.scroll.CustomBehaviorNestedScroll
+import com.spotifyclone.components.scroll.NestedScrollView2
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.utils.TextUtils
@@ -17,6 +19,7 @@ import java.util.*
 open class PlaylistMusicsAdapter(
     private val context: Context,
     private val musics: List<Music>,
+    private val scrollView: NestedScrollView2,
     private val onItemClickListener: ((music: Music) -> Unit) = {}
 ) : RecyclerView.Adapter<PlaylistMusicsAdapter.ViewHolder>() {
     private lateinit var selectedUUID: UUID
@@ -53,6 +56,12 @@ open class PlaylistMusicsAdapter(
 
     fun select(id: UUID) {
         this.selectedUUID = id
+        this.notifyDataSetChanged()
+        updateScroolView()
+    }
+
+    private fun updateScroolView () {
+        CustomBehaviorNestedScroll.getBehavior(scrollView).refresh(scrollView)
     }
 
     inner class ViewHolder(

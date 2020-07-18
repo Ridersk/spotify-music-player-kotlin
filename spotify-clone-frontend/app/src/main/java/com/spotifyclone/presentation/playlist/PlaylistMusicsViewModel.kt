@@ -49,7 +49,7 @@ open class PlaylistMusicsViewModel(
     }
 
     companion object {
-        private const val VIEW_FLIPPER_MUSICS = 1
-        private const val VIEW_FLIPPER_ERROR = 2
+        const val VIEW_FLIPPER_MUSICS = 1
+        const val VIEW_FLIPPER_ERROR = 2
     }
 }

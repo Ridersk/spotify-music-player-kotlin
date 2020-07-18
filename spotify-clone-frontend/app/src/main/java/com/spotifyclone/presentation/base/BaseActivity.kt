@@ -46,17 +46,20 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun buildToolbar(toolbarArgs: ToolbarParameters): Toolbar {
         val toolbar: Toolbar = toolbarMain
+
         with(toolbar) {
+
             if (toolbarArgs.title != null && toolbarArgs.title.isNotEmpty()) {
-                textToolbarTitle.visibility = View.VISIBLE
                 textToolbarTitle.text = toolbarArgs.title
+                textToolbarTitle.visibility = View.VISIBLE
+
             } else {
                 textToolbarTitle.visibility = View.GONE
             }
 
             if (toolbarArgs.subTitle != null && toolbarArgs.subTitle.isNotEmpty()) {
-                textToolbarSubtitle.visibility = View.VISIBLE
                 textToolbarSubtitle.text = toolbarArgs.subTitle
+                textToolbarSubtitle.visibility = View.VISIBLE
             } else {
                 textToolbarSubtitle.visibility = View.GONE
             }
@@ -117,4 +120,9 @@ abstract class BaseActivity : AppCompatActivity() {
     }
     protected open fun initComponents() {}
     protected open fun removeComponents() {}
+
+    fun updateTitleAlpha (alpha: Float) {
+        textToolbarTitle.alpha = alpha
+        textToolbarSubtitle.alpha = alpha
+    }
 }

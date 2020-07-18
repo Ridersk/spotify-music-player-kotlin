@@ -14,6 +14,7 @@
         android:indeterminateTint="@color/green" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/layoutPlaylist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_gradient_purple_to_white">
@@ -22,27 +23,30 @@
             android:id="@+id/toolbarContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <include layout="@layout/include_toolbar" />
         </FrameLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/titlePanel"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_marginTop="72dp"
+            android:orientation="vertical"
             android:paddingStart="64dp"
-            android:paddingEnd="64dp"
-            android:orientation="vertical">
+            android:paddingEnd="64dp">
+
             <TextView
                 android:id="@+id/txtTitle"
                 style="@style/smallSubtitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_centerVertical="true"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textAlignment="center"
                 tools:text="Local Songs" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <com.spotifyclone.components.scroll.CustomNestedScrollView2
             android:id="@+id/nestedscrollview"
@@ -62,11 +66,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <com.spotifyclone.components.scroll.MaxHeightRecyclerView
                         android:id="@+id/recyclerList"
                         android:layout_width="match_parent"
-                        android:background="@color/black"
                         android:layout_height="wrap_content"
+                        android:background="@color/black"
                         tools:listitem="@layout/item_music" />
                 </LinearLayout>
 
