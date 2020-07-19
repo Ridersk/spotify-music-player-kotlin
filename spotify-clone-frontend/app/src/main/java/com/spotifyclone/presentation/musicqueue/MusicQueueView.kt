@@ -37,6 +37,7 @@ class MusicQueueView(
         )
 
         musicQueueAdapter = MusicQueueAdapter(
+            context,
             items = itemQueue,
             onItemClickListener = { musicItem ->
                 if (musicItem is QueueMusic) chooseMusic(musicItem.music.id)
@@ -184,8 +185,10 @@ class MusicQueueView(
         val wasEmpty = selectedMusics.isEmpty()
 
         if (!selectedMusics.contains(music)) {
+            music.checked = true
             selectedMusics.add(music)
         } else {
+            music.checked = false
             selectedMusics.remove(music)
         }
 

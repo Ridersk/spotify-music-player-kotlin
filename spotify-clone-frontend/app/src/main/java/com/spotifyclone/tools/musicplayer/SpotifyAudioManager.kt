@@ -28,7 +28,8 @@ class SpotifyAudioManager private constructor(var context: Context) {
         }
 
         val audioManager: AudioManager = getAudioService()
-        val afChangeListener: AudioManager.OnAudioFocusChangeListener = getAfterChangeListener(callPlayback, callPauseback)
+        val afChangeListener: AudioManager.OnAudioFocusChangeListener =
+            getAfterChangeListener(callPlayback, callPauseback)
         val focusRequest: AudioFocusRequestCompat = buildFocusRequest(afChangeListener)
 
         playbackNowAuthorized = requestFocus(audioManager, focusRequest, callPlayback)
@@ -37,7 +38,8 @@ class SpotifyAudioManager private constructor(var context: Context) {
     private fun requestFocus(
         audioManager: AudioManager,
         focusRequest: AudioFocusRequestCompat,
-        callPlayback: () -> Unit = {}):Boolean {
+        callPlayback: () -> Unit = {}
+    ): Boolean {
         val res = AudioManagerCompat.requestAudioFocus(audioManager, focusRequest)
         val authorization: Boolean
 

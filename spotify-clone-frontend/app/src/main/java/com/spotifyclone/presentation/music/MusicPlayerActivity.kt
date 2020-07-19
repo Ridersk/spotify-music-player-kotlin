@@ -1,8 +1,12 @@
 package com.spotifyclone.presentation.music
 
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.transition.Slide
+import android.view.Gravity
+import androidx.viewpager2.widget.ViewPager2
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.presentation.base.BaseActivity
@@ -10,22 +14,41 @@ import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
-import com.spotifyclone.tools.utils.ImageUtils
 import kotlinx.android.synthetic.main.activity_music_player.*
 import java.util.*
+import androidx.palette.graphics.Palette
+import android.graphics.Bitmap
+import android.view.animation.AnimationUtils
+import androidx.core.content.ContextCompat
+import com.spotifyclone.tools.filemanager.MusicFileManagerApp
+import com.spotifyclone.tools.utils.ColorUtils
 
 
 class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicPlayerActivity)
+    private lateinit var itemAlbumArtAdapter: ItemAlbumArtAdapter
     private lateinit var idCallbackStateMusic: UUID
+    private val callbackViewPagerAlbumArt = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            val currentPosition = itemAlbumArtAdapter.currentPosition
+            if (position != currentPosition) {
+                if (position > currentPosition) {
+                    playlistMusicPlayer.nextMusic()
+                } else playlistMusicPlayer.previousMusic()
+                super.onPageSelected(position)
+            }
+        }
+    }
 
     init {
         playlistMusicPlayer.addMusicObserver(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        createCallbacks()
         super.setContentView(R.layout.activity_music_player)
+        super.setTransitions(Slide(Gravity.BOTTOM), Slide(Gravity.BOTTOM))
 
         setupToolbar(
             ToolbarParameters(
@@ -37,8 +60,8 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         )
 
         super.onCreate(savedInstanceState)
-        createCallbacks()
         startMusic()
+        createViewPagerAlbumArt()
     }
 
     override fun changedMusic(music: Music) {
@@ -54,13 +77,8 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     override fun initComponents() {
         textMusicTitle.text = intent.getStringExtra(EXTRA_TITLE)
+        textMusicTitle.isSelected = true
         textMusicArtist.text = intent.getStringExtra(EXTRA_ARTIST)
-
-        ImageUtils.insertBitmapInView(
-            applicationContext,
-            imageAlbum,
-            intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
-        )
 
         textMusicTotalTime.text = playlistMusicPlayer.getTotalTime()
 
@@ -108,7 +126,26 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
                 intent.getStringExtra(EXTRA_PLAYLIST),
                 intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
             )
-            this@MusicPlayerActivity.startActivity(intent)
+            this.intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+            this@MusicPlayerActivity.startActivity(
+                intent,
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+            )
+        }
+    }
+
+    private fun createViewPagerAlbumArt() {
+        val imageList: List<Long?> =
+            playlistMusicPlayer.normalMusicQueueRunning.map { music -> music.albumUriId }
+
+        itemAlbumArtAdapter = ItemAlbumArtAdapter(this, imageList, containerAlbumArt)
+
+        containerAlbumArt.adapter = itemAlbumArtAdapter
+        containerAlbumArt.registerOnPageChangeCallback(callbackViewPagerAlbumArt)
+
+        val currentMusic = playlistMusicPlayer.positionPlaying
+        containerAlbumArt.post {
+            itemAlbumArtAdapter.update(currentMusic, false)
         }
     }
 
@@ -146,6 +183,47 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             putExtra(EXTRA_PLAYLIST, playlist)
         }
         initComponents()
+        updateAlbumArt()
+        generateGradientBackground(albumUriId)
+    }
+
+    private fun generateGradientBackground(albumUriId: Long) {
+        val imageBitmap: Bitmap? = MusicFileManagerApp.getAlbumArt(
+            albumUriId,
+            applicationContext
+        )
+
+        imageBitmap?.let {
+            Palette.from(imageBitmap).generate {
+                it?.let { palette ->
+
+                    backgroundPanel.background = ColorUtils.getGradient(
+                        palette.getDominantColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.lightGray
+                            )
+                        ),
+                        ContextCompat.getColor(applicationContext, R.color.black)
+                    )
+
+                    val animation = AnimationUtils.loadAnimation(
+                        this,
+                        R.anim.fade_in
+                    )
+                    animation.duration = 1000
+                    backgroundPanel.startAnimation(animation)
+                }
+            }
+        }
+    }
+
+    private fun updateAlbumArt() {
+        val currentMusic = playlistMusicPlayer.positionPlaying
+
+        containerAlbumArt.post {
+            itemAlbumArtAdapter.update(currentMusic)
+        }
     }
 
     companion object {

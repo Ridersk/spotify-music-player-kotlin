@@ -1,4 +1,4 @@
-package com.spotifyclone.components.dialogs
+package com.spotifyclone.presentation.dialogs
 
 import android.app.Activity
 import android.app.Dialog

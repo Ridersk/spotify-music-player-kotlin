@@ -5,7 +5,7 @@ import androidx.core.app.ActivityCompat
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.spotifyclone.components.dialogs.CustomDialog
+import com.spotifyclone.presentation.dialogs.CustomDialog
 
 class AppPermissions {
     companion object {

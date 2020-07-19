@@ -6,6 +6,7 @@
     android:background="@color/darkGray"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
+    app:itemIconSize="16dp"
     app:itemIconTint="@color/selector_bottom_nav_item_color"
     app:itemTextColor="@color/selector_bottom_nav_item_color"
     app:menu="@menu/bottom_navigation" />

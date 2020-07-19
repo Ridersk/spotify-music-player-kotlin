@@ -3,10 +3,12 @@ package com.spotifyclone.presentation.music
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.spotifyclone.data.model.Music
 
 class ItemMusicPlayerFragmentAdapter(
     activity: FragmentActivity,
+    private val containerViewPager: ViewPager2,
     private var showMusic: Music,
     private val onClickCallback: () -> Unit
 ) : FragmentStateAdapter(activity) {
@@ -18,6 +20,7 @@ class ItemMusicPlayerFragmentAdapter(
             this.showMusic = music
             this.musicList[VIEW_VISIBLE] = this.showMusic
         }
+        containerViewPager.setCurrentItem(VIEW_VISIBLE, false)
         super.notifyDataSetChanged()
     }
 

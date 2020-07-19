@@ -3,6 +3,8 @@ package com.spotifyclone.presentation.musicqueue
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.transition.Slide
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
@@ -26,7 +28,8 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_music_queue)
+        super.setContentView(R.layout.activity_music_queue)
+        super.setTransitions(Slide(Gravity.BOTTOM), Slide(Gravity.BOTTOM))
 
         setupToolbar(
             ToolbarParameters(
@@ -57,7 +60,7 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
             textMusicLabel.text = TextUtils.getMusicLabel(currentMusic.artist, currentMusic.album)
             ImageUtils.insertBitmapInView(
                 applicationContext,
-                imageAlbum,
+                albumArt,
                 intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
             )
         }

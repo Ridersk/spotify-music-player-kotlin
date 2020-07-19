@@ -2,14 +2,14 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">@color/green</color>
     <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="Lightblack">#1B1B1B</color>
+    <color name="darkBlack">#000000</color>
+    <color name="black">#101010</color>
     <color name="green">#1DB954</color>
     <color name="darkGreen">#284F36</color>
     <color name="gray">#535353</color>
     <color name="lightGray">#B3B3B3</color>
-    <color name="darkGray">#383838</color>
+    <color name="darkGray">#292929</color>
     <color name="transparent">@android:color/transparent</color>
 </resources>

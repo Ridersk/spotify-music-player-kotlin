@@ -1,9 +1,11 @@
 package com.spotifyclone.presentation
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.forEach
 import kotlinx.android.synthetic.main.activity_main.*
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseActivity
@@ -24,7 +26,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
-        setContentView(R.layout.activity_main)
+        super.setContentView(R.layout.activity_main)
 
         super.setupToolbar(ToolbarParameters())
 
@@ -52,10 +54,13 @@ class MainActivity : BaseActivity() {
         containerViewPager.adapter = tabAdapter
         containerViewPager.isUserInputEnabled = false
         getString(R.string.dialog_alert_btn_permissions_cancel)
+
+        bottomNavMenu.menu.forEach {
+            val view = bottomNavMenu.findViewById<View>(it.itemId)
+            view.setOnLongClickListener { true }
+        }
         bottomNavMenu.setOnNavigationItemSelectedListener { item: MenuItem ->
-            tabAdapter.selectTab(
-                item
-            )
+            tabAdapter.selectTab(item)
         }
     }
 
@@ -80,7 +85,10 @@ class MainActivity : BaseActivity() {
                     music.albumUriId,
                     getString(R.string.fragment_local_songs_title)
                 )
-                this@MainActivity.startActivity(intent)
+                this@MainActivity.startActivity(
+                    intent,
+                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+                )
             }
         }
     }

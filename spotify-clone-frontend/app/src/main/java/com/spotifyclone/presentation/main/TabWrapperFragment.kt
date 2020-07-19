@@ -8,8 +8,9 @@ import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.spotifyclone.R
 
-class TabWrapperFragment(private val fragment: Fragment) : Fragment(), IWrapperFragment {
+class TabWrapperFragment(private val initialFragment: Fragment) : Fragment(), IWrapperFragment {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -18,32 +19,39 @@ class TabWrapperFragment(private val fragment: Fragment) : Fragment(), IWrapperF
     ): View? {
         val frameLayout = FrameLayout(activity!!.applicationContext)
         frameLayout.id = ID
-        val initialFragment = fragment
         val args = Bundle()
         initialFragment.arguments = args
-
-        val fragmentManager = childFragmentManager
-        fragmentManager.popBackStack(
-            BACK_STACK_ROOT_TAG,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
-
-        fragmentManager.beginTransaction()
-            .replace(ID, initialFragment)
-            .addToBackStack(BACK_STACK_ROOT_TAG)
-            .commit()
+        reset()
         return frameLayout
     }
 
-    override fun onReplace(fragment: Fragment, args: Bundle) {
-        fragment.arguments = args
-
+    override fun onReplace(fragment: Fragment) {
         childFragmentManager
             .beginTransaction()
             .replace(ID, fragment)
             .addToBackStack(BACK_STACK_ROOT_TAG)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
+    }
+
+    override fun reset() {
+        removeBackStatck()
+        childFragmentManager
+            .beginTransaction()
+            .replace(ID, initialFragment)
+            .addToBackStack(BACK_STACK_ROOT_TAG)
+            .commit()
+    }
+
+    private fun removeBackStatck() {
+        if (childFragmentManager.fragments.size == 0) {
+            return
+        }
+        childFragmentManager.popBackStack(
+            BACK_STACK_ROOT_TAG,
+            FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+        childFragmentManager.executePendingTransactions()
     }
 
     override fun onBackPressed(): Boolean {
@@ -56,7 +64,7 @@ class TabWrapperFragment(private val fragment: Fragment) : Fragment(), IWrapperF
     }
 
     companion object {
-        private const val ID = 10000
+        private const val ID = R.id.containerViewPager
         private const val BACK_STACK_ROOT_TAG = "ROOT_FRAGMENT"
 
         fun getInstance(fragment: Fragment): TabWrapperFragment {

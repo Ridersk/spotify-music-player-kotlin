@@ -3,15 +3,19 @@ package com.spotifyclone.tools.utils
 class ListUtils {
 
     companion object {
-        inline fun <reified T : Any> sublist(
+        inline fun <reified T : Any?> sublist(
             list: List<T>,
             start: Int,
             end: Int = list.size
         ): List<T> {
-            return list.subList(
-                start,
-                end
-            )
+            if (start > end || start > list.size || end < 0) {
+                return listOf()
+            }
+            if (end > list.size) {
+                return list
+            }
+            val startCut: Int = if (start < 0) 0 else start
+            return list.subList(startCut, end)
         }
 
         inline fun <reified T : Any> swapAllAt(

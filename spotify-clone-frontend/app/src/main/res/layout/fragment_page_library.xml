@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragmentLibrary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_toolbar" />
+
+
+    <LinearLayout
+        android:layout_below="@id/toolbarMain"
+        android:layout_width="match_parent"
+        android:paddingTop="16dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtMusicsGuide"
+            style="@style/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:layout_gravity="start"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/fragment_library_musics_guide" />
+
+        <TextView
+            android:id="@+id/txtPodcastsGuide"
+            style="@style/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/fragment_library_podcasts_guide" />
+    </LinearLayout>
+</RelativeLayout>

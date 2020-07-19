@@ -12,10 +12,9 @@ import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseFragment
 import kotlinx.android.synthetic.main.item_fragment_music_player.*
 
-class ItemMusicPlayerFragment(private val onclickCallback: () -> Unit): BaseFragment(), View.OnClickListener {
-    override fun onClick(v: View?) {
-        onclickCallback.invoke()
-    }
+class ItemMusicPlayerFragment private constructor(
+    private val onclickCallback: () -> Unit
+) : BaseFragment(), View.OnClickListener {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,10 +33,16 @@ class ItemMusicPlayerFragment(private val onclickCallback: () -> Unit): BaseFrag
                 }
             }
             txtMusicLabel.text = label
-            itemFragmentMusic.setOnClickListener(this)
+            txtMusicLabel.isSelected = true
+
+            itemFragmentMusicLabel.setOnClickListener(this)
             txtDevicesLabel.visibility = View.GONE
-            itemFragmentMusic.visibility = View.VISIBLE
-        } else itemFragmentMusic.visibility = View.INVISIBLE
+            itemFragmentMusicLabel.visibility = View.VISIBLE
+        } else itemFragmentMusicLabel.visibility = View.INVISIBLE
+    }
+
+    override fun onClick(v: View?) {
+        onclickCallback.invoke()
     }
 
     companion object {

@@ -1,23 +1,26 @@
 package com.spotifyclone.presentation.musicqueue
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
 import com.spotifyclone.data.model.QueueHeader
-import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.model.QueueItem
 import com.spotifyclone.data.model.QueueMusic
+import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.utils.TextUtils
 import kotlinx.android.synthetic.main.header_queue.view.*
 import kotlinx.android.synthetic.main.item_queue_music.view.*
 
 class MusicQueueAdapter(
+    private val context: Context,
     private val items: List<QueueItem>,
     private val onItemClickListener: ((music: QueueItem) -> Unit) = {},
     private val onCheckboxClickListener: ((music: QueueMusic) -> Unit)
 ) : RecyclerView.Adapter<MusicQueueAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         if (viewType == TYPE_HEADER) {
             val itemView = LayoutInflater.from(parent.context).inflate(
@@ -31,10 +34,10 @@ class MusicQueueAdapter(
             R.layout.item_queue_music, parent, false
         )
 
-        return ViewHolderItem(itemView, onItemClickListener, onCheckboxClickListener)
+        return ViewHolderItem(context, itemView, onItemClickListener, onCheckboxClickListener)
     }
 
-    override fun getItemCount(): Int = items.count()
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val itemBind = items[position]
@@ -43,6 +46,10 @@ class MusicQueueAdapter(
         } else if (holder is ViewHolderHeader && itemBind is QueueHeader) {
             holder.bindView(itemBind)
         }
+    }
+
+    override fun getItemId(position: Int): Long {
+        return super.getItemId(position).hashCode().toLong()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -58,6 +65,7 @@ class MusicQueueAdapter(
     ) : RecyclerView.ViewHolder(itemView)
 
     class ViewHolderItem(
+        private val context: Context,
         itemView: View,
         private val onItemClickListener: ((music: QueueItem) -> Unit) = {},
         private val onCheckboxClickListener: (music: QueueMusic) -> Unit
@@ -77,6 +85,13 @@ class MusicQueueAdapter(
             checkbox.isChecked = music.checked
             checkbox.setOnClickListener {
                 onCheckboxClickListener.invoke(music)
+            }
+
+            itemView.setOnTouchListener { view, event ->
+                ReducerAndRegain(context).onTouch(
+                    view,
+                    event
+                )
             }
         }
     }

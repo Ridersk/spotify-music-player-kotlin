@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="142dp"
+    android:layout_height="106dp"
+    android:clickable="true"
+    android:focusable="true"
     android:background="@color/black"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <ProgressBar
@@ -13,7 +14,7 @@
         android:layout_height="3dp"
         android:layout_alignParentTop="true"
         android:elevation="2dp"
-        android:progress="50"
+        android:progress="0"
         android:progressBackgroundTint="@color/gray"
         android:progressTint="@color/white" />
 
@@ -30,18 +31,21 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_previous_music"
+            android:background="@null"
+            android:src="@drawable/ic_previous_music"
+            android:backgroundTint="@color/selector_state_white_pressed"
             android:contentDescription="@string/img_description_previous_music" />
 
         <ImageButton
             android:id="@+id/btnPlayPause"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="48dp"
             android:layout_marginEnd="48dp"
             android:layout_toEndOf="@id/btncPrevious"
             android:background="@drawable/selector_fragment_queue_button_play"
-            android:contentDescription="@string/img_description_play_button"/>
+            android:backgroundTint="@color/selector_state_white_pressed"
+            android:contentDescription="@string/img_description_play_music" />
 
         <ImageButton
             android:id="@+id/btnNext"
@@ -49,27 +53,36 @@
             android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/btnPlayPause"
-            android:background="@drawable/ic_next_music"
-            android:contentDescription="@string/img_description_next_music"/>
+            android:background="@null"
+            android:src="@drawable/ic_next_music"
+            android:backgroundTint="@color/selector_state_white_pressed"
+            android:contentDescription="@string/img_description_next_music" />
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/layoutDevices"
-        android:layout_below="@id/layoutMusicControl"
         android:layout_width="wrap_content"
-        android:layout_marginTop="36dp"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
+        android:layout_centerHorizontal="true">
+
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/ic_devices"
-            android:contentDescription="@string/img_description_devices" />
-        <TextView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_devices"
+            android:backgroundTint="@color/selector_state_lightgray_pressed"
+            android:contentDescription="@string/img_description_devices" />
+
+        <TextView
+            style="@style/smallText"
             android:layout_width="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_height="wrap_content"
-            tools:text="Devices Available"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/selector_state_lightgray_pressed"
+            android:gravity="center_vertical"
+            android:text="@string/music_queue_player_devices_available" />
     </LinearLayout>
 </RelativeLayout>

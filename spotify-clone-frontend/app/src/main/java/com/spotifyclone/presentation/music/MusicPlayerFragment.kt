@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.viewpager2.widget.ViewPager2
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
@@ -32,8 +33,6 @@ class MusicPlayerFragment private constructor(
                 if (position > currentPosition) {
                     playlistMusicPlayer.nextMusic()
                 } else playlistMusicPlayer.previousMusic()
-                containerMusicPlayerViewPager.currentItem = currentPosition
-                updateLabelCurrentMusic(playlistMusicPlayer.getCurrentMusic())
                 super.onPageSelected(position)
             }
         }
@@ -64,6 +63,10 @@ class MusicPlayerFragment private constructor(
             requireArguments().getLong(EXTRA_ALBUM_URI_ID, -1)
         )
 
+        btnLike.setOnClickListener {
+            btnLike.isActivated = !btnLike.isActivated
+        }
+
         btnPlay.isActivated = playlistMusicPlayer.isPlaying
         btnPlay.setOnClickListener {
             playlistMusicPlayer.tooglePlayMusic()
@@ -77,6 +80,7 @@ class MusicPlayerFragment private constructor(
 
     override fun removeComponents() {
         playlistMusicPlayer.removeObserverOnMusicState(idCallbackStateMusic)
+        playlistMusicPlayer.removeObserverProgressBar(parentContext)
     }
 
     private fun createCallbacks() {
@@ -94,27 +98,31 @@ class MusicPlayerFragment private constructor(
             putLong(EXTRA_ALBUM_URI_ID, music.albumUriId?:-1L)
         }
         initComponents()
-        updateLabelCurrentMusic(music)
+        updateViewLabelMusic(music)
     }
 
     private fun createMusicSliderViewPager() {
-        updateLabelCurrentMusic(playlistMusicPlayer.getCurrentMusic())
         itemMusicLabelAdapter = ItemMusicPlayerFragmentAdapter(
             requireActivity(),
+            containerMusicPlayerViewPager,
             this.musicPlaying,
             this::callOnClick
         )
         containerMusicPlayerViewPager.adapter = itemMusicLabelAdapter
         containerMusicPlayerViewPager.registerOnPageChangeCallback(callbackViewPager)
+        updateViewLabelMusic(playlistMusicPlayer.getCurrentMusic())
     }
 
-    private fun updateLabelCurrentMusic(music: Music?) {
+    private fun updateViewLabelMusic(music: Music?) {
         if (music != null) {
-            fragmentMusicPlayer.visibility = View.VISIBLE
-            containerMusicPlayerViewPager.post {
-                itemMusicLabelAdapter.update(music)
+            if (fragmentMusicPlayer.visibility != View.VISIBLE) {
+                fragmentMusicPlayer.visibility = View.VISIBLE
             }
+            fragmentMusicPlayer.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.bottom_to_top))
         } else fragmentMusicPlayer.visibility = View.GONE
+        containerMusicPlayerViewPager.post {
+            itemMusicLabelAdapter.update(music)
+        }
     }
 
     private fun callOnClick() {

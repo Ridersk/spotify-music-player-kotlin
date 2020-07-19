@@ -5,31 +5,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.view.ViewTreeObserver
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.spotifyclone.R
-import com.spotifyclone.components.dialogs.CustomDialog
+import com.spotifyclone.components.scroll.CustomBehaviorNestedScroll
+import com.spotifyclone.presentation.dialogs.CustomDialog
 import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.BaseScreenFragment
 import com.spotifyclone.presentation.base.ToolbarParameters
-import com.spotifyclone.presentation.music.MusicPlayerActivity
+import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
 import com.spotifyclone.tools.musicplayer.PlaylistObserver
 import com.spotifyclone.tools.permissions.AppPermissions
+import com.spotifyclone.tools.utils.MathUtils
 import kotlinx.android.synthetic.main.fragment_playlist.*
-import kotlinx.android.synthetic.main.fragment_playlist.view.*
+import kotlinx.android.synthetic.main.include_toolbar.*
 import java.util.*
+import kotlin.math.abs
 
 class LocalSongsFragment private constructor(private val parentActivity: BaseActivity) :
     BaseScreenFragment(parentActivity), PlaylistInterface,
-    PlaylistObserver<Music> {
+    PlaylistObserver<Music>, ViewTreeObserver.OnScrollChangedListener {
 
     private lateinit var playlistMusicPlayer: PlaylistMusicPlayer
-    private lateinit var layout: ViewGroup
     private lateinit var viewModel: PlaylistMusicsViewModel
     private lateinit var requiredPermissionDialog: CustomDialog
     private val musicList: MutableList<Music> = mutableListOf()
@@ -38,7 +40,6 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,17 +51,46 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun initComponents() {
         playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context!!)
-        layout = fragmentPlaylist
-        textTitle.text = requireArguments().getString(EXTRA_TITLE)
-        buttonRandomPlay.text = getString(R.string.fragment_local_songs_button_random_play)
-        layoutMusicControl.visibility = View.GONE
+        txtTitle.text = requireArguments().getString(EXTRA_PLAYLIST_NAME)
+        btnFloat.text = getString(R.string.fragment_local_songs_button_random_play)
+        btnFloat.setOnTouchListener { view, event ->
+            ReducerAndRegain(parentActivity).onTouch(view, event)
+        }
+
+        nestedscrollview.viewTreeObserver.addOnScrollChangedListener(this)
         setMusicList()
     }
 
+
+    override fun onScrollChanged() {
+        val coordinatesCardView = intArrayOf(0, 0)
+        btnFloat?.getLocationOnScreen(coordinatesCardView)
+        val btnPositionY = coordinatesCardView[1]
+        val toolbarBottomPos: Int = toolbarMain?.bottom?:0
+        val limitPos = toolbarBottomPos + CustomBehaviorNestedScroll.MARGIN_TO_LIMIT
+        val scaleProportion = MathUtils.calculateProportion(
+            abs(btnPositionY - limitPos),
+            DIST_CARD_VIEW_TOOLBAR,
+            0.2F
+        )
+        val alpha = MathUtils.calculateReverseProportion(
+            abs(btnPositionY - limitPos),
+            DIST_CARD_VIEW_TOOLBAR,
+            1.0F
+        )
+
+        txtTitle?.scaleX = scaleProportion
+        txtTitle?.scaleY = scaleProportion
+        textToolbarTitle?.scaleX = alpha
+        parentActivity.updateTitleAlpha(alpha)
+    }
+
+
     override fun onResume() {
-        val selected =  this.musicList.indexOfFirst { music ->  music.id == playlistMusicPlayer.getCurrentMusic()?.id }
-        this.playlistAdapter.select(selected)
-        this.playlistAdapter.notifyDataSetChanged()
+        val selectedMusic = playlistMusicPlayer.getCurrentMusic()?.id
+        if (this::playlistAdapter.isInitialized) {
+            selectedMusic?.let { this.playlistAdapter.select(selectedMusic) }
+        }
         super.onResume()
     }
 
@@ -68,26 +98,18 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun receiverList(list: List<Music>) {
         this.musicList.addAll(list)
-        this.playlistAdapter = PlaylistMusicsAdapter(parentActivity, this.musicList) { music ->
-            val intent =
-                MusicPlayerActivity.getIntent(
-                    parentActivity,
-                    music.title,
-                    music.artist,
-                    music.albumUriId?:-1,
-                    getString(EXTRA_PLAYLIST_NAME)
-                )
+        this.playlistAdapter =
+            PlaylistMusicsAdapter(parentActivity, this.musicList, nestedscrollview) { music ->
+                chooseMusic(music.id)
+            }
 
-            chooseMusic(music.id)
-            parentActivity.startActivity(intent)
-        }
-
-        with(layout.recyclerMusics) {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+        with(recyclerList) {
+            val lm = androidx.recyclerview.widget.LinearLayoutManager(
                 context,
                 RecyclerView.VERTICAL,
                 false
             )
+            layoutManager = lm
             setHasFixedSize(true)
             adapter = playlistAdapter
         }
@@ -95,6 +117,7 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun chooseMusic(id: UUID) {
         playlistMusicPlayer.chooseMusic(id)
+        onResume()
     }
 
     private fun setMusicList() {
@@ -156,18 +179,21 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun getToolbar(): ToolbarParameters =
         ToolbarParameters(
+            title = requireArguments().getString(EXTRA_PLAYLIST_NAME),
             option1 = Pair(R.drawable.ic_back, { parentActivity.onBackPressed() }),
             option3 = Pair(R.drawable.ic_options, {})
         )
 
     companion object {
-        private const val EXTRA_PLAYLIST_NAME: Int = R.string.fragment_local_songs_title
-        private const val EXTRA_TITLE = "EXTRA_TITLE"
+        private const val EXTRA_PLAYLIST_NAME = "EXTRA_PLAYLIST_NAME"
+        private const val DIST_CARD_VIEW_TOOLBAR = 275F
 
-        fun getInstance(parent: BaseActivity, title: String): Fragment {
+        fun getInstance(parent: BaseActivity, playlist: String): LocalSongsFragment {
+            val fragment = LocalSongsFragment(parent)
             val bundle = Bundle()
-            bundle.putString(EXTRA_TITLE, title)
-            return LocalSongsFragment(parent)
+            bundle.putString(EXTRA_PLAYLIST_NAME, playlist)
+            fragment.arguments = bundle
+            return fragment
         }
 
     }
