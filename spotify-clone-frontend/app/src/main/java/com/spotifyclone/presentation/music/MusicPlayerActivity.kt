@@ -18,8 +18,6 @@ import kotlinx.android.synthetic.main.activity_music_player.*
 import java.util.*
 import androidx.palette.graphics.Palette
 import android.graphics.Bitmap
-import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import com.spotifyclone.tools.filemanager.MusicFileManagerApp

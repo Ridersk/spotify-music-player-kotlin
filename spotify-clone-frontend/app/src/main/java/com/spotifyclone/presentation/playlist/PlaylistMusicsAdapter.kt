@@ -74,6 +74,9 @@ open class PlaylistMusicsAdapter(
 
         fun bindView(position: Int, music: Music, selected: Boolean = false) {
             title.text = music.title
+            if (selected) {
+                title.setTextColor(ContextCompat.getColor(context, R.color.green))
+            }
             musiclabel.text = TextUtils.getMusicLabel(music.artist, music.album)
 
             itemView.setOnClickListener {

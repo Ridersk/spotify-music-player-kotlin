@@ -7,9 +7,9 @@
     android:layout_height="wrap_content"
     android:contentInsetLeft="0dp"
     android:contentInsetRight="0dp"
+    android:elevation="10dp"
     android:fitsSystemWindows="true"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:elevation="10dp"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp">
 

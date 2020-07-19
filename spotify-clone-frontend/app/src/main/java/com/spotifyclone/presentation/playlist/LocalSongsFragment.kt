@@ -27,7 +27,6 @@ import kotlinx.android.synthetic.main.include_toolbar.*
 import java.util.*
 import kotlin.math.abs
 
-
 class LocalSongsFragment private constructor(private val parentActivity: BaseActivity) :
     BaseScreenFragment(parentActivity), PlaylistInterface,
     PlaylistObserver<Music>, ViewTreeObserver.OnScrollChangedListener {
@@ -65,9 +64,10 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun onScrollChanged() {
         val coordinatesCardView = intArrayOf(0, 0)
-        btnFloat.getLocationOnScreen(coordinatesCardView)
+        btnFloat?.getLocationOnScreen(coordinatesCardView)
         val btnPositionY = coordinatesCardView[1]
-        val limitPos = toolbarMain.bottom + CustomBehaviorNestedScroll.MARGIN_TO_LIMIT
+        val toolbarBottomPos: Int = toolbarMain?.bottom?:0
+        val limitPos = toolbarBottomPos + CustomBehaviorNestedScroll.MARGIN_TO_LIMIT
         val scaleProportion = MathUtils.calculateProportion(
             abs(btnPositionY - limitPos),
             DIST_CARD_VIEW_TOOLBAR,
@@ -79,9 +79,9 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
             1.0F
         )
 
-        txtTitle.scaleX = scaleProportion
-        txtTitle.scaleY = scaleProportion
-        textToolbarTitle.scaleX = alpha
+        txtTitle?.scaleX = scaleProportion
+        txtTitle?.scaleY = scaleProportion
+        textToolbarTitle?.scaleX = alpha
         parentActivity.updateTitleAlpha(alpha)
     }
 
