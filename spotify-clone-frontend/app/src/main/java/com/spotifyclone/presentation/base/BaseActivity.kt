@@ -109,7 +109,6 @@ abstract class BaseActivity : AppCompatActivity() {
         if (this::exitTransition.isInitialized) {
             window.exitTransition = exitTransition
         }
-        finishAfterTransition()
         super.onBackPressed()
     }
 

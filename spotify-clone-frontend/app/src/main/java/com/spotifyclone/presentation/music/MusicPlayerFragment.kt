@@ -57,10 +57,11 @@ class MusicPlayerFragment private constructor(
     }
 
     override fun initComponents() {
-        ImageUtils.insertBitmapInView(
-            activity!!.applicationContext,
-            imgAlbum,
-            requireArguments().getLong(EXTRA_ALBUM_URI_ID, -1)
+        imgAlbum.setImageBitmap(
+            ImageUtils.getBitmapAlbumArt(
+                activity!!.applicationContext,
+                requireArguments().getLong(EXTRA_ALBUM_URI_ID, -1)
+            )
         )
 
         btnLike.setOnClickListener {

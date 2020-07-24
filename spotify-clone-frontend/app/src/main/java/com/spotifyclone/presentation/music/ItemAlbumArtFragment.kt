@@ -9,7 +9,7 @@ import com.spotifyclone.presentation.base.BaseFragment
 import com.spotifyclone.tools.utils.ImageUtils
 import kotlinx.android.synthetic.main.item_fragment_album_art.*
 
-class ItemAlbumArtFragment private constructor(): BaseFragment() {
+class ItemAlbumArtFragment private constructor() : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,10 +22,11 @@ class ItemAlbumArtFragment private constructor(): BaseFragment() {
 
     override fun initComponents() {
         activity?.let { activity ->
-            ImageUtils.insertBitmapInView(
-                activity.applicationContext,
-                albumArt,
-                requireArguments().getLong(EXTRA_ALBUM_URI_ID, -1)
+            albumArt.setImageBitmap(
+                ImageUtils.getBitmapAlbumArt(
+                    activity.applicationContext,
+                    requireArguments().getLong(EXTRA_ALBUM_URI_ID, -1)
+                )
             )
         }
     }
@@ -35,7 +36,7 @@ class ItemAlbumArtFragment private constructor(): BaseFragment() {
 
         fun getInstance(
             albumUriId: Long?
-            ) : ItemAlbumArtFragment {
+        ): ItemAlbumArtFragment {
             val fragment = ItemAlbumArtFragment()
             val bundle = Bundle()
             bundle.putLong(EXTRA_ALBUM_URI_ID, albumUriId ?: -1L)

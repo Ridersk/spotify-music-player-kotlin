@@ -16,6 +16,7 @@ import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.BaseScreenFragment
 import com.spotifyclone.presentation.base.ToolbarParameters
+import com.spotifyclone.presentation.notifications.MusicPlayerNotification
 import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
@@ -117,6 +118,8 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun chooseMusic(id: UUID) {
         playlistMusicPlayer.chooseMusic(id)
+        val musicPlayerNotification = MusicPlayerNotification.getInstance(parentActivity)
+        musicPlayerNotification.createNotification()
         onResume()
     }
 

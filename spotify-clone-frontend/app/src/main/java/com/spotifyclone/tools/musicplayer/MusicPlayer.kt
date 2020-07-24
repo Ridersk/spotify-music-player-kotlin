@@ -236,5 +236,4 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         const val STATE_RESTART_PLAYLIST = 2
         const val STATE_NEXT_MUSIC_FROM_USER = 3
     }
-
 }

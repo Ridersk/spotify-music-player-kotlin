@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".presentation.MainActivity">
+        <activity android:name=".presentation.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,6 +27,7 @@
         <activity android:name=".presentation.playlist.LocalSongsFragment" />
         <activity android:name=".presentation.music.MusicPlayerActivity" />
         <activity android:name=".presentation.musicqueue.MusicQueueActivity" />
+        <receiver android:name="com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver" />
     </application>
 
 </manifest>

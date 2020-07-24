@@ -58,10 +58,12 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
         currentMusic?.let {
             textMusicTitle.text = currentMusic.title
             textMusicLabel.text = TextUtils.getMusicLabel(currentMusic.artist, currentMusic.album)
-            ImageUtils.insertBitmapInView(
-                applicationContext,
-                albumArt,
-                intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
+
+            albumArt.setImageBitmap(
+                ImageUtils.getBitmapAlbumArt(
+                    applicationContext,
+                    intent.getLongExtra(EXTRA_ALBUM_URI_ID, -1)
+                )
             )
         }
     }
