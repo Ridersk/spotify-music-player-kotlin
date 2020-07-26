@@ -9,4 +9,7 @@ interface MusicProvider {
     fun notifyChangedMusic(music: Music) {}
     fun notifyUpdateList(musicList: List<Music>) {}
     fun chooseMusic(id: UUID) {}
+    fun changeProgress(progress: Int) {}
+    fun changeMusicState() {}
+    fun changeMusicTimer(time: Pair<Int, Int>) {}
 }

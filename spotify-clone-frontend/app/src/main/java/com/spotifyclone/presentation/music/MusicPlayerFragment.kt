@@ -15,10 +15,9 @@ import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.utils.ImageUtils
 import kotlinx.android.synthetic.main.fragment_music_player.*
-import java.util.*
 
 class MusicPlayerFragment private constructor(
-    private val parentContext: Context
+    parentContext: Context
 ) : BaseFragment(),
     MusicObserver {
 
@@ -26,7 +25,6 @@ class MusicPlayerFragment private constructor(
     private var musicPlaying: Music =  Music()
     private lateinit var itemMusicLabelAdapter: ItemMusicPlayerFragmentAdapter
     private val currentPosition = ItemMusicPlayerFragmentAdapter.VIEW_VISIBLE
-    private lateinit var idCallbackStateMusic: UUID
     private val callbackViewPager = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             if (position != currentPosition) {
@@ -36,10 +34,6 @@ class MusicPlayerFragment private constructor(
                 super.onPageSelected(position)
             }
         }
-    }
-
-    init {
-        playlistMusicPlayer.addMusicObserver(this)
     }
 
     override fun onCreateView(
@@ -52,7 +46,7 @@ class MusicPlayerFragment private constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         createMusicSliderViewPager()
-        createCallbacks()
+        playlistMusicPlayer.addMusicObserver(this)
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -73,21 +67,18 @@ class MusicPlayerFragment private constructor(
             playlistMusicPlayer.tooglePlayMusic()
             btnPlay.isActivated = playlistMusicPlayer.isPlaying
         }
+    }
 
-        playlistMusicPlayer.setObserverProgressBar(parentContext) { progress: Int ->
-            progressBar?.progress = progress
-        }
+    override fun changedProgress(progress: Int) {
+        progressBar?.progress = progress
+    }
+
+    override fun changedMusicState() {
+        btnPlay.isActivated = playlistMusicPlayer.isPlaying
     }
 
     override fun removeComponents() {
-        playlistMusicPlayer.removeObserverOnMusicState(idCallbackStateMusic)
-        playlistMusicPlayer.removeObserverProgressBar(parentContext)
-    }
-
-    private fun createCallbacks() {
-        idCallbackStateMusic = playlistMusicPlayer.setObserverOnMusicState {
-            btnPlay.isActivated = playlistMusicPlayer.isPlaying
-        }
+        playlistMusicPlayer.removeMusicObserver(this)
     }
 
     override fun changedMusic(music: Music) {

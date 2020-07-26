@@ -7,14 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.spotifyclone.R
 import com.spotifyclone.presentation.base.BaseFragment
+import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import kotlinx.android.synthetic.main.fragment_music_player_queue.*
-import java.util.*
 
-class MusicPlayerQueueFragment(private val parentContext: Context) : BaseFragment() {
+class MusicPlayerQueueFragment(parentContext: Context) : BaseFragment(), MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(parentContext)
-    private lateinit var idCallbackStateMusic: UUID
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,6 +21,11 @@ class MusicPlayerQueueFragment(private val parentContext: Context) : BaseFragmen
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_music_player_queue, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        playlistMusicPlayer.addMusicObserver(this)
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun initComponents() {
@@ -36,18 +40,18 @@ class MusicPlayerQueueFragment(private val parentContext: Context) : BaseFragmen
             playlistMusicPlayer.tooglePlayMusic()
             btnPlayPause.isActivated = playlistMusicPlayer.isPlaying
         }
-        idCallbackStateMusic = playlistMusicPlayer.setObserverOnMusicState {
-            btnPlayPause.isActivated = playlistMusicPlayer.isPlaying
-        }
+    }
 
-        playlistMusicPlayer.setObserverProgressBar(parentContext) { progress: Int ->
-            progressBar?.progress = progress
-        }
+    override fun changedProgress(progress: Int) {
+        progressBar?.progress = progress
+    }
+
+    override fun changedMusicState() {
+        btnPlayPause.isActivated = playlistMusicPlayer.isPlaying
     }
 
     override fun removeComponents() {
-        playlistMusicPlayer.removeObserverOnMusicState(idCallbackStateMusic)
-        playlistMusicPlayer.removeObserverProgressBar(parentContext)
+        playlistMusicPlayer.removeMusicObserver(this)
     }
 
     companion object {

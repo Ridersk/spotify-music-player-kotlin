@@ -23,10 +23,6 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
     private var currentPositionFragmentQueueOption = 0
     private lateinit var musicQueueView: MusicQueueView
 
-    init {
-        playlistMusicPlayer.addMusicObserver(this)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.activity_music_queue)
         super.setTransitions(Slide(Gravity.BOTTOM), Slide(Gravity.BOTTOM))
@@ -42,6 +38,7 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
         musicQueueView = createRecyclerViewMusicQueue()
         musicQueueView.create()
         createOptionsBottom()
+        playlistMusicPlayer.addMusicObserver(this)
     }
 
     override fun changedMusic(music: Music) {
@@ -66,6 +63,10 @@ class MusicQueueActivity : BaseActivity(), MusicObserver {
                 )
             )
         }
+    }
+
+    override fun removeComponents() {
+        playlistMusicPlayer.removeMusicObserver(this)
     }
 
     private fun createOptionsBottom() {

@@ -40,10 +40,6 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
-    init {
-        playlistMusicPlayer.addMusicObserver(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,6 +50,7 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         createRecyclerList()
+        playlistMusicPlayer.addMusicObserver(this)
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -66,6 +63,10 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
         nestedscrollview.viewTreeObserver.addOnScrollChangedListener(this)
         setMusicList()
+    }
+
+    override fun removeComponents() {
+        playlistMusicPlayer.removeMusicObserver(this)
     }
 
     private fun createRecyclerList() {

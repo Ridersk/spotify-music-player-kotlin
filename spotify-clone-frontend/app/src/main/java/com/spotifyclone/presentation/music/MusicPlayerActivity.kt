@@ -15,7 +15,6 @@ import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.presentation.musicqueue.MusicQueueActivity
 import kotlinx.android.synthetic.main.activity_music_player.*
-import java.util.*
 import androidx.palette.graphics.Palette
 import android.graphics.Bitmap
 import android.view.animation.AnimationUtils
@@ -28,7 +27,6 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(this@MusicPlayerActivity)
     private lateinit var itemAlbumArtAdapter: ItemAlbumArtAdapter
-    private lateinit var idCallbackStateMusic: UUID
     private val callbackViewPagerAlbumArt = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             val currentPosition = itemAlbumArtAdapter.currentPosition
@@ -41,12 +39,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
     }
 
-    init {
-        playlistMusicPlayer.addMusicObserver(this)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        createCallbacks()
         super.setContentView(R.layout.activity_music_player)
         super.setTransitions(Slide(Gravity.BOTTOM), Slide(Gravity.BOTTOM))
 
@@ -62,6 +55,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         super.onCreate(savedInstanceState)
         startMusic()
         createViewPagerAlbumArt()
+        playlistMusicPlayer.addMusicObserver(this)
     }
 
     override fun changedMusic(music: Music) {
@@ -75,6 +69,10 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
     }
 
+    override fun changedMusicTimer(time: String) {
+        runOnUiThread { textMusicCurrentTime.text = time }
+    }
+
     override fun initComponents() {
         textMusicTitle.text = intent.getStringExtra(EXTRA_TITLE)
         textMusicTitle.isSelected = true
@@ -82,14 +80,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
 
         textMusicTotalTime.text = playlistMusicPlayer.getTotalTime()
 
-        playlistMusicPlayer.setObserverMusicTime { time: String ->
-            runOnUiThread { textMusicCurrentTime.text = time }
-        }
-
         progressBarMusic.setOnSeekBarChangeListener(playlistMusicPlayer.progressControl)
-        playlistMusicPlayer.setObserverProgressBar(this) { progress: Int ->
-            progressBarMusic.progress = progress
-        }
 
         buttonFavoriteMusic.setOnClickListener {
             buttonFavoriteMusic.isActivated = !buttonFavoriteMusic.isActivated
@@ -134,6 +125,14 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
     }
 
+    override fun changedProgress(progress: Int) {
+        progressBarMusic.progress = progress
+    }
+
+    override fun changedMusicState() {
+        buttonPlayMusic.isActivated = playlistMusicPlayer.isPlaying
+    }
+
     private fun createViewPagerAlbumArt() {
         val imageList: List<Long?> =
             playlistMusicPlayer.normalMusicQueueRunning.map { music -> music.albumUriId }
@@ -149,19 +148,9 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
         }
     }
 
-    private fun createCallbacks() {
-        idCallbackStateMusic = playlistMusicPlayer.setObserverOnMusicState {
-            buttonPlayMusic.isActivated = playlistMusicPlayer.isPlaying
-        }
-    }
-
     override fun removeComponents() {
         playlistMusicPlayer.removeMusicObserver(this)
-        playlistMusicPlayer.removeObserverMusicTime()
-        playlistMusicPlayer.removeObserverProgressBar(this)
-        playlistMusicPlayer.removeObserverOnMusicState(idCallbackStateMusic)
     }
-
 
     private fun startMusic() {
         val currentMusic = playlistMusicPlayer.getCurrentMusic()

@@ -20,12 +20,10 @@ import com.spotifyclone.tools.basepatterns.SingletonHolder
 import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.utils.ImageUtils
-import java.util.*
 
 class MusicPlayerNotification private constructor(private val context: Context): MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context)
-    private lateinit var idCallbackStateMusic: UUID
     private val notificationManager = NotificationManagerCompat.from(context.applicationContext)
     private val notificationLayout =
         RemoteViews(context.packageName, R.layout.fragment_music_player_notification)
@@ -35,12 +33,15 @@ class MusicPlayerNotification private constructor(private val context: Context):
         .setCustomBigContentView(notificationLayout)
 
     init {
-        playlistMusicPlayer.addMusicObserver(this)
         createNotificationChannel()
-        createCallbacks()
+        playlistMusicPlayer.addMusicObserver(this)
     }
 
     override fun changedMusic(music: Music) {
+        updateNotification()
+    }
+
+    override fun changedMusicState() {
         updateNotification()
     }
 
@@ -77,7 +78,7 @@ class MusicPlayerNotification private constructor(private val context: Context):
         updateNotification()
     }
 
-    fun updateNotification() {
+    private fun updateNotification() {
         val playMusicDrawable =
             if (playlistMusicPlayer.isPlaying) R.drawable.ic_pause else R.drawable.ic_play
         val music = playlistMusicPlayer.getCurrentMusic() ?: Music()
@@ -97,14 +98,8 @@ class MusicPlayerNotification private constructor(private val context: Context):
         )
     }
 
-    private fun createCallbacks() {
-        idCallbackStateMusic = playlistMusicPlayer.setObserverOnMusicState {
-            updateNotification()
-        }
-    }
-
     private fun destroyNotification() {
-        playlistMusicPlayer.removeObserverOnMusicState(idCallbackStateMusic)
+        playlistMusicPlayer.removeMusicObserver(this)
         notificationManager.cancel(NOTIFICATION_MUSIC_PLAYER_ID)
     }
 
