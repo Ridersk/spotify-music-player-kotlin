@@ -31,7 +31,6 @@ class MusicPlayerNotificationReceiver : BroadcastReceiver() {
                 else -> {
                 }
             }
-            MusicPlayerNotification.getInstance(context!!).updateNotification()
         }
     }
 

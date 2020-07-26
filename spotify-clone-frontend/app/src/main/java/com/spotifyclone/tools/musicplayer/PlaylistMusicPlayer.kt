@@ -10,8 +10,8 @@ import java.util.*
 class PlaylistMusicPlayer private constructor(
     contextActivity: Context
 ) : MusicPlayer(contextActivity),
-    PlaylistObserver<Music>,
-    MusicProvider {
+    MusicProvider,
+    MusicObserver {
 
     private var originalMusicList = listOf<Music>()
     private var normalMusicQueueBase: MutableList<Music> = mutableListOf()
@@ -46,8 +46,8 @@ class PlaylistMusicPlayer private constructor(
         }
     }
 
-    override fun receiverList(list: List<Music>) {
-        this.originalMusicList = list.toMutableList()
+    override fun updatedList(newMusicList: List<Music>) {
+        this.originalMusicList = newMusicList.toMutableList()
     }
 
     override fun chooseMusic(id: UUID) {

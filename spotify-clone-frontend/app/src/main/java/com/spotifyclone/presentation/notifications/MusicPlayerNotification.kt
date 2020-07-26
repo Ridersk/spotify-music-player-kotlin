@@ -17,11 +17,12 @@ import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiv
 import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver.Companion.ACTION_PLAY_MUSIC
 import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver.Companion.ACTION_PREVIOUS_MUSIC
 import com.spotifyclone.tools.basepatterns.SingletonHolder
+import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.utils.ImageUtils
 import java.util.*
 
-class MusicPlayerNotification private constructor(private val context: Context) {
+class MusicPlayerNotification private constructor(private val context: Context): MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context)
     private lateinit var idCallbackStateMusic: UUID
@@ -34,8 +35,13 @@ class MusicPlayerNotification private constructor(private val context: Context) 
         .setCustomBigContentView(notificationLayout)
 
     init {
+        playlistMusicPlayer.addMusicObserver(this)
         createNotificationChannel()
         createCallbacks()
+    }
+
+    override fun changedMusic(music: Music) {
+        updateNotification()
     }
 
     fun createNotification() {

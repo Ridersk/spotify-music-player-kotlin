@@ -9,8 +9,9 @@ import com.spotifyclone.data.model.Music
 import com.spotifyclone.data.model.QueueHeader
 import com.spotifyclone.data.model.QueueItem
 import com.spotifyclone.data.model.QueueMusic
+import com.spotifyclone.tools.musicplayer.MusicObserver
+import com.spotifyclone.tools.musicplayer.MusicProvider
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
-import com.spotifyclone.tools.musicplayer.PlaylistObserver
 import com.spotifyclone.tools.musicqueue.MusicQueueController
 import com.spotifyclone.tools.utils.ListUtils
 import java.util.*
@@ -20,7 +21,7 @@ class MusicQueueView(
     private val recyclerView: RecyclerView,
     private val playlistName: String? = "",
     private val callbackSelectedItems: () -> Unit = {}
-) : PlaylistObserver<Music> {
+) : MusicObserver, MusicProvider {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context)
     private var selectedMusics = mutableListOf<QueueMusic>()
@@ -70,7 +71,7 @@ class MusicQueueView(
         musicQueueAdapter.notifyDataSetChanged()
     }
 
-    override fun receiverList(list: List<Music>) {}
+    override fun updatedList(newMusicList: List<Music>) {}
 
     override fun chooseMusic(id: UUID) {
         playlistMusicPlayer.chooseMusic(id)
