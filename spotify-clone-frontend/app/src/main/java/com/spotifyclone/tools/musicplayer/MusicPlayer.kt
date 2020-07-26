@@ -43,13 +43,9 @@ open class MusicPlayer(var context: Context) : MediaPlayer(), MusicProvider {
     }
 
     override fun changeProgress(progress: Int) {
-        this.progress = progress
-        runBlocking {
-            launch(Dispatchers.Default) {
-                observers.forEach { observer ->
-                    observer.changedProgress(progress)
-                }
-            }
+        this@MusicPlayer.progress = progress
+        observers.forEach { observer ->
+            observer.changedProgress(progress)
         }
     }
 

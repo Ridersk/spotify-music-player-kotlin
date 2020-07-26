@@ -5,13 +5,15 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import com.spotifyclone.R
 import com.spotifyclone.data.model.Music
+import com.spotifyclone.presentation.music.MusicPlayerActivity
 import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver.Companion.ACTION_LIKE_MUSIC
 import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver.Companion.ACTION_NEXT_MUSIC
 import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver.Companion.ACTION_PLAY_MUSIC
@@ -21,7 +23,7 @@ import com.spotifyclone.tools.musicplayer.MusicObserver
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.utils.ImageUtils
 
-class MusicPlayerNotification private constructor(private val context: Context): MusicObserver {
+class MusicPlayerNotification private constructor(private val context: Context) : MusicObserver {
 
     private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context)
     private val notificationManager = NotificationManagerCompat.from(context.applicationContext)
@@ -34,6 +36,7 @@ class MusicPlayerNotification private constructor(private val context: Context):
 
     init {
         createNotificationChannel()
+        createNotification()
         playlistMusicPlayer.addMusicObserver(this)
     }
 
@@ -46,15 +49,25 @@ class MusicPlayerNotification private constructor(private val context: Context):
     }
 
     fun createNotification() {
+        val notificationBuilded = notification.build()
         val playMusicIntent = Intent(context, MusicPlayerNotificationReceiver::class.java)
         val previousMusicIntent = Intent(context, MusicPlayerNotificationReceiver::class.java)
         val nextMusicIntent = Intent(context, MusicPlayerNotificationReceiver::class.java)
         val likeMusicIntent = Intent(context, MusicPlayerNotificationReceiver::class.java)
+        val musicPlayerIntent = Intent(context, MusicPlayerActivity::class.java)
 
         playMusicIntent.action = ACTION_PLAY_MUSIC
         previousMusicIntent.action = ACTION_PREVIOUS_MUSIC
         nextMusicIntent.action = ACTION_NEXT_MUSIC
         likeMusicIntent.action = ACTION_LIKE_MUSIC
+
+        musicPlayerIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        notificationBuilded.flags = NotificationCompat.FLAG_AUTO_CANCEL
+
+        notificationLayout.setOnClickPendingIntent(
+            R.id.fragmentMusicPlayerNotification,
+            PendingIntent.getActivity(context, 0, musicPlayerIntent, 0)
+        )
 
         notificationLayout.setOnClickPendingIntent(
             R.id.btnPlayMusic,
@@ -96,6 +109,20 @@ class MusicPlayerNotification private constructor(private val context: Context):
             NOTIFICATION_MUSIC_PLAYER_ID,
             notification.build()
         )
+
+
+        if(context.isDarkThemeOn()) {
+            notificationLayout.setInt(R.id.btnPlayMusic, "setColorFilter", R.color.white)
+            notificationLayout.setInt(R.id.btnPreviousMusic, "setColorFilter", R.color.white)
+            notificationLayout.setInt(R.id.btnNextMusic, "setColorFilter", R.color.white)
+            notificationLayout.setInt(R.id.btnLike, "setColorFilter", R.color.white)
+        }
+
+    }
+
+    private fun Context.isDarkThemeOn(): Boolean {
+        return resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
     }
 
     private fun destroyNotification() {
@@ -110,18 +137,11 @@ class MusicPlayerNotification private constructor(private val context: Context):
                 "MusicPlayerNotificationChannel",
                 NotificationManager.IMPORTANCE_DEFAULT
             )
-            val manager: NotificationManager? =
-                ContextCompat.getSystemService(
-                    context.applicationContext,
-                    NotificationManager::class.java
-                )
 
             channel1.enableVibration(false)
             channel1.enableLights(false)
             channel1.vibrationPattern = longArrayOf(0L)
-            manager?.let {
-                manager.createNotificationChannel(channel1)
-            }
+            notificationManager.createNotificationChannel(channel1)
         }
     }
 

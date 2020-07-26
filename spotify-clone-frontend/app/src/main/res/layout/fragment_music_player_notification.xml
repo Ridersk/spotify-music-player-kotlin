@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentMusicPlayerNotification"
     android:layout_width="match_parent"
     android:layout_height="128dp"
     android:layout_weight="1"
-    android:background="@color/darkGray"
+    android:background="@color/white"
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingTop="8dp"
     android:paddingEnd="@dimen/activity_horizontal_margin"
@@ -40,18 +41,18 @@
             style="@style/smallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Music"
             android:textAppearance="@style/TextAppearance.Compat.Notification.Info"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Music" />
 
         <TextView
             android:id="@+id/txtMusicArtist"
             style="@style/smallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Artist"
             android:textColor="@color/lightGray"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            tools:text="Artist" />
     </LinearLayout>
 
     <RelativeLayout
@@ -68,7 +69,7 @@
             android:background="@null"
             android:contentDescription="@string/img_description_like_music"
             android:src="@drawable/ic_heart_empty"
-            android:tint="@color/white" />
+            android:tint="@color/darkBlack" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -80,11 +81,11 @@
                 android:id="@+id/btnPreviousMusic"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-
                 android:layout_gravity="center_vertical"
                 android:background="@null"
                 android:contentDescription="@string/img_description_previous_music"
-                android:src="@drawable/ic_previous_music" />
+                android:src="@drawable/ic_previous_music"
+                android:tint="@color/darkBlack" />
 
             <ImageButton
                 android:id="@+id/btnPlayMusic"
@@ -95,7 +96,8 @@
                 android:layout_marginEnd="72dp"
                 android:background="@null"
                 android:contentDescription="@string/img_description_previous_music"
-                android:src="@drawable/ic_pause" />
+                android:src="@drawable/ic_pause"
+                android:tint="@color/darkBlack" />
 
             <ImageButton
                 android:id="@+id/btnNextMusic"
@@ -104,7 +106,8 @@
                 android:layout_gravity="center_vertical"
                 android:background="@null"
                 android:contentDescription="@string/img_description_next_music"
-                android:src="@drawable/ic_next_music" />
+                android:src="@drawable/ic_next_music"
+                android:tint="@color/darkBlack" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

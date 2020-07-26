@@ -64,7 +64,7 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
                 music.title,
                 music.artist,
                 it,
-                intent.getStringExtra(EXTRA_PLAYLIST)!!
+                intent.getStringExtra(EXTRA_PLAYLIST)
             )
         }
     }
@@ -226,13 +226,15 @@ class MusicPlayerActivity : BaseActivity(), MusicObserver {
             title: String,
             artist: String,
             albumUriId: Long,
-            playlist: String
+            playlist: String? = null
         ): Intent {
             return Intent(context, MusicPlayerActivity::class.java).apply {
                 putExtra(EXTRA_TITLE, title)
                 putExtra(EXTRA_ARTIST, artist)
                 putExtra(EXTRA_ALBUM_URI_ID, albumUriId)
-                putExtra(EXTRA_PLAYLIST, playlist)
+                if (playlist != null) {
+                    putExtra(EXTRA_PLAYLIST, playlist)
+                }
             }
         }
 

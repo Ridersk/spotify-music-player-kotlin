@@ -28,8 +28,6 @@ class MusicPlayerNotificationReceiver : BroadcastReceiver() {
                 }
                 ACTION_LIKE_MUSIC -> {
                 }
-                else -> {
-                }
             }
         }
     }
@@ -44,7 +42,6 @@ class MusicPlayerNotificationReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val ACTION_OPEN_MUSIC_PLAYER = "ACTION_OPEN_MUSIC_PLAYER"
         const val ACTION_PLAY_MUSIC = "ACTION_PLAY_MUSIC"
         const val ACTION_PREVIOUS_MUSIC = "ACTION_PREVIOUS_MUSIC"
         const val ACTION_NEXT_MUSIC = "ACTION_NEXT_MUSIC"
