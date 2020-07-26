@@ -16,8 +16,7 @@ class MusicPlayerNotificationReceiver : BroadcastReceiver() {
         }
 
         intent?.let {
-            val action = intent.getIntExtra(EXTRA_ACTION, 0)
-            when (action) {
+            when (intent.action) {
                 ACTION_PLAY_MUSIC -> {
                     playlistMusicPlayer.tooglePlayMusic()
                 }
@@ -46,11 +45,10 @@ class MusicPlayerNotificationReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val ACTION_OPEN_MUSIC_PLAYER = 0
-        const val ACTION_PLAY_MUSIC = 1
-        const val ACTION_PREVIOUS_MUSIC = 2
-        const val ACTION_NEXT_MUSIC = 3
-        const val ACTION_LIKE_MUSIC = 4
-        const val EXTRA_ACTION = "EXTRA_ACTION"
+        const val ACTION_OPEN_MUSIC_PLAYER = "ACTION_OPEN_MUSIC_PLAYER"
+        const val ACTION_PLAY_MUSIC = "ACTION_PLAY_MUSIC"
+        const val ACTION_PREVIOUS_MUSIC = "ACTION_PREVIOUS_MUSIC"
+        const val ACTION_NEXT_MUSIC = "ACTION_NEXT_MUSIC"
+        const val ACTION_LIKE_MUSIC = "ACTION_LIKE_MUSIC"
     }
 }

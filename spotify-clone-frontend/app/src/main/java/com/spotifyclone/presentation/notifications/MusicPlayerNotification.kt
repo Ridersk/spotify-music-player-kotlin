@@ -16,7 +16,6 @@ import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiv
 import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver.Companion.ACTION_NEXT_MUSIC
 import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver.Companion.ACTION_PLAY_MUSIC
 import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver.Companion.ACTION_PREVIOUS_MUSIC
-import com.spotifyclone.presentation.notifications.MusicPlayerNotificationReceiver.Companion.EXTRA_ACTION
 import com.spotifyclone.tools.basepatterns.SingletonHolder
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.utils.ImageUtils
@@ -45,10 +44,10 @@ class MusicPlayerNotification private constructor(private val context: Context) 
         val nextMusicIntent = Intent(context, MusicPlayerNotificationReceiver::class.java)
         val likeMusicIntent = Intent(context, MusicPlayerNotificationReceiver::class.java)
 
-        playMusicIntent.putExtra(EXTRA_ACTION, ACTION_PLAY_MUSIC)
-        previousMusicIntent.putExtra(EXTRA_ACTION, ACTION_PREVIOUS_MUSIC)
-        nextMusicIntent.putExtra(EXTRA_ACTION, ACTION_NEXT_MUSIC)
-        likeMusicIntent.putExtra(EXTRA_ACTION, ACTION_LIKE_MUSIC)
+        playMusicIntent.action = ACTION_PLAY_MUSIC
+        previousMusicIntent.action = ACTION_PREVIOUS_MUSIC
+        nextMusicIntent.action = ACTION_NEXT_MUSIC
+        likeMusicIntent.action = ACTION_LIKE_MUSIC
 
         notificationLayout.setOnClickPendingIntent(
             R.id.btnPlayMusic,
@@ -75,8 +74,8 @@ class MusicPlayerNotification private constructor(private val context: Context) 
     fun updateNotification() {
         val playMusicDrawable =
             if (playlistMusicPlayer.isPlaying) R.drawable.ic_pause else R.drawable.ic_play
-        val music = playlistMusicPlayer.getCurrentMusic()?: Music()
-        val image = ImageUtils.getBitmapAlbumArt(context, music.albumUriId?:-1L)
+        val music = playlistMusicPlayer.getCurrentMusic() ?: Music()
+        val image = ImageUtils.getBitmapAlbumArt(context, music.albumUriId ?: -1L)
 
         notificationLayout.setImageViewResource(
             R.id.btnPlayMusic,
