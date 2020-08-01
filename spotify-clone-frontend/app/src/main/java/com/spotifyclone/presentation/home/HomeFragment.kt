@@ -35,7 +35,7 @@ class HomeFragment private constructor(private val parentActivity: BaseActivity)
     override fun initComponents() {
         val layout: ViewGroup = fragmentHome
         val viewModel: RecommendedPlaylistsViewModel = RecommendedPlaylistsViewModel
-            .ViewModelFactory().create(RecommendedPlaylistsViewModel::class.java)
+            .ViewModelFactory(context!!).create(RecommendedPlaylistsViewModel::class.java)
         val parentActivity = this.parentActivity
 
         layout.labelRecommendedPlaylists.text =
@@ -47,7 +47,7 @@ class HomeFragment private constructor(private val parentActivity: BaseActivity)
                         val playlistFragment =
                             LocalSongsFragment.getInstance(
                                 parentActivity,
-                                getString(R.string.fragment_local_songs_title)
+                                playlist.layoutFragment
                             )
                         mListener.onReplace(playlistFragment)
                     }

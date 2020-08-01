@@ -17,21 +17,21 @@ import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.BaseScreenFragment
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.tools.animations.ReducerAndRegain
-import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
-import com.spotifyclone.tools.musicplayer.PlaylistObserverProvider
-import com.spotifyclone.tools.musicplayer.PlaylistObserver
+import com.spotifyclone.tools.musicplayer.*
 import com.spotifyclone.tools.permissions.AppPermissions
 import com.spotifyclone.tools.utils.MathUtils
 import kotlinx.android.synthetic.main.fragment_playlist.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import java.util.*
 import kotlin.math.abs
+import com.spotifyclone.SpotifyApplication
+
 
 class LocalSongsFragment private constructor(private val parentActivity: BaseActivity) :
     BaseScreenFragment(parentActivity), PlaylistInterface,
-    PlaylistObserver<Music>, ViewTreeObserver.OnScrollChangedListener {
+    MusicProvider, MusicObserver, ViewTreeObserver.OnScrollChangedListener {
 
-    private lateinit var playlistMusicPlayer: PlaylistMusicPlayer
+    private val playlistMusicPlayer = PlaylistMusicPlayer.getInstance(parentActivity)
     private lateinit var viewModel: PlaylistMusicsViewModel
     private lateinit var requiredPermissionDialog: CustomDialog
     private val musicList: MutableList<Music> = mutableListOf()
@@ -49,8 +49,13 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
         return inflater.inflate(R.layout.fragment_playlist, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        createRecyclerList()
+        playlistMusicPlayer.addMusicObserver(this)
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     override fun initComponents() {
-        playlistMusicPlayer = PlaylistMusicPlayer.getInstance(context!!)
         txtTitle.text = requireArguments().getString(EXTRA_PLAYLIST_NAME)
         btnFloat.text = getString(R.string.fragment_local_songs_button_random_play)
         btnFloat.setOnTouchListener { view, event ->
@@ -61,12 +66,34 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
         setMusicList()
     }
 
+    override fun removeComponents() {
+        playlistMusicPlayer.removeMusicObserver(this)
+    }
+
+    private fun createRecyclerList() {
+        this.playlistAdapter =
+            PlaylistMusicsAdapter(parentActivity, this.musicList, nestedscrollview) { music ->
+                chooseMusic(music.id)
+            }
+
+        with(recyclerList) {
+            val lm = androidx.recyclerview.widget.LinearLayoutManager(
+                context,
+                RecyclerView.VERTICAL,
+                false
+            )
+            layoutManager = lm
+            setHasFixedSize(true)
+            adapter = playlistAdapter
+        }
+    }
+
 
     override fun onScrollChanged() {
         val coordinatesCardView = intArrayOf(0, 0)
         btnFloat?.getLocationOnScreen(coordinatesCardView)
         val btnPositionY = coordinatesCardView[1]
-        val toolbarBottomPos: Int = toolbarMain?.bottom?:0
+        val toolbarBottomPos: Int = toolbarMain?.bottom ?: 0
         val limitPos = toolbarBottomPos + CustomBehaviorNestedScroll.MARGIN_TO_LIMIT
         val scaleProportion = MathUtils.calculateProportion(
             abs(btnPositionY - limitPos),
@@ -85,6 +112,9 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
         parentActivity.updateTitleAlpha(alpha)
     }
 
+    override fun changedMusic(music: Music) {
+        onResume()
+    }
 
     override fun onResume() {
         val selectedMusic = playlistMusicPlayer.getCurrentMusic()?.id
@@ -96,28 +126,15 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun getPlaylistName() {}
 
-    override fun receiverList(list: List<Music>) {
-        this.musicList.addAll(list)
-        this.playlistAdapter =
-            PlaylistMusicsAdapter(parentActivity, this.musicList, nestedscrollview) { music ->
-                chooseMusic(music.id)
-            }
-
-        with(recyclerList) {
-            val lm = androidx.recyclerview.widget.LinearLayoutManager(
-                context,
-                RecyclerView.VERTICAL,
-                false
-            )
-            layoutManager = lm
-            setHasFixedSize(true)
-            adapter = playlistAdapter
-        }
+    override fun updatedList(newMusicList: List<Music>) {
+        this.musicList.clear()
+        this.musicList.addAll(newMusicList)
     }
 
     override fun chooseMusic(id: UUID) {
         playlistMusicPlayer.chooseMusic(id)
         onResume()
+        SpotifyApplication.getInstance()?.startMusicPlayerNotification()
     }
 
     private fun setMusicList() {

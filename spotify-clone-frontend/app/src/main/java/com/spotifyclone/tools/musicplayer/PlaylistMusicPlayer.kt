@@ -10,8 +10,8 @@ import java.util.*
 class PlaylistMusicPlayer private constructor(
     contextActivity: Context
 ) : MusicPlayer(contextActivity),
-    PlaylistObserver<Music>,
-    MusicProvider {
+    MusicProvider,
+    MusicObserver {
 
     private var originalMusicList = listOf<Music>()
     private var normalMusicQueueBase: MutableList<Music> = mutableListOf()
@@ -22,7 +22,6 @@ class PlaylistMusicPlayer private constructor(
     var positionPlaying: Int = 0
         private set
     private var currentMusicId: UUID? = null
-    private var observers: MutableList<MusicObserver> = mutableListOf()
     private val modeCycleList: List<String> = listOf(CYCLE_MODE_OFF, CYCLE_MODE_ALL, CYCLE_MODE_ONE)
     private var currentModeCycle = 0
     private var random = false
@@ -46,8 +45,8 @@ class PlaylistMusicPlayer private constructor(
         }
     }
 
-    override fun receiverList(list: List<Music>) {
-        this.originalMusicList = list.toMutableList()
+    override fun updatedList(newMusicList: List<Music>) {
+        this.originalMusicList = newMusicList.toMutableList()
     }
 
     override fun chooseMusic(id: UUID) {
@@ -59,14 +58,6 @@ class PlaylistMusicPlayer private constructor(
         } catch (ex: NullPointerException) {
             this.positionPlaying = 0
         }
-    }
-
-    override fun addMusicObserver(observer: MusicObserver) {
-        this.observers.add(observer)
-    }
-
-    override fun removeMusicObserver(observer: MusicObserver) {
-        this.observers.remove(observer)
     }
 
     override fun notifyChangedMusic(music: Music) {

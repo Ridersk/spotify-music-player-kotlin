@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentMusicPlayerNotification"
+    android:layout_width="match_parent"
+    android:layout_height="128dp"
+    android:layout_weight="1"
+    android:background="@color/white"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingTop="8dp"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingBottom="16dp">
+
+
+    <ImageView
+        android:id="@+id/imgAlbum"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/img_description_album_image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_default_album_art" />
+
+    <LinearLayout
+        android:id="@+id/layoutLabel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layoutControl"
+        android:layout_toEndOf="@id/imgAlbum"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/littleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/spotify"
+            android:textColor="@color/gray" />
+
+        <TextView
+            android:id="@+id/txtMusicTitle"
+            style="@style/smallText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Info"
+            android:textStyle="bold"
+            tools:text="Music" />
+
+        <TextView
+            android:id="@+id/txtMusicArtist"
+            style="@style/smallText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightGray"
+            android:textStyle="normal"
+            tools:text="Artist" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutControl"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:paddingTop="4dp">
+
+        <ImageButton
+            android:id="@+id/btnLike"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@null"
+            android:contentDescription="@string/img_description_like_music"
+            android:src="@drawable/ic_heart_empty"
+            android:tint="@color/darkBlack" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnPreviousMusic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@string/img_description_previous_music"
+                android:src="@drawable/ic_previous_music"
+                android:tint="@color/darkBlack" />
+
+            <ImageButton
+                android:id="@+id/btnPlayMusic"
+                android:layout_width="34dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="72dp"
+                android:layout_marginEnd="72dp"
+                android:background="@null"
+                android:contentDescription="@string/img_description_previous_music"
+                android:src="@drawable/ic_pause"
+                android:tint="@color/darkBlack" />
+
+            <ImageButton
+                android:id="@+id/btnNextMusic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@string/img_description_next_music"
+                android:src="@drawable/ic_next_music"
+                android:tint="@color/darkBlack" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

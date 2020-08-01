@@ -4,28 +4,64 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.widget.SeekBar
 import com.spotifyclone.tools.filemanager.MusicFileManagerApp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.FileDescriptor
 import java.util.*
 
-open class MusicPlayer(var context: Context) : MediaPlayer() {
+open class MusicPlayer(var context: Context) : MediaPlayer(), MusicProvider {
 
     private val spotifyAudioManager: SpotifyAudioManager
     private var stoppedPlayer: Boolean = false
     private var currentMusic: FileDescriptor? = null
     private var musicDurationMilisec: Int = 1
     private var blockUpdateProgress = false
-    private var observerTimer: ((String) -> Unit)? = null
-    private var observersProgress: MutableList<Pair<Context, ((Int) -> Unit)>> = mutableListOf()
-    private var observerNextMusic: (state: Int) -> Unit = {}
+    protected val observers: MutableList<MusicObserver> = mutableListOf()
+    private var callbackHandlerNextMusic: (state: Int) -> Unit = {}
     private var progress: Int = 0
-    private val observersMusicState: MutableList<Pair<UUID, () -> Unit>> =
-        mutableListOf()
 
     init {
         super.reset()
         musicRefresh()
         spotifyAudioManager = SpotifyAudioManager.getInstance(context)
         registerForObserverOnCompletionListener()
+    }
+
+    override fun addMusicObserver(observer: MusicObserver) {
+        this.observers.add(observer)
+    }
+
+    override fun changeMusicState() {
+        runBlocking {
+            launch(Dispatchers.Default) {
+                observers.forEach { observer ->
+                    observer.changedMusicState()
+                }
+            }
+        }
+    }
+
+    override fun changeProgress(progress: Int) {
+        this@MusicPlayer.progress = progress
+        observers.forEach { observer ->
+            observer.changedProgress(progress)
+        }
+    }
+
+    override fun changeMusicTimer(time: Pair<Int, Int>) {
+        runBlocking {
+            launch(Dispatchers.Default) {
+                val timeStr = convertToFormatTimer(time)
+                observers.forEach { observer ->
+                    observer.changedMusicTimer(timeStr)
+                }
+            }
+        }
+    }
+
+    override fun removeMusicObserver(observer: MusicObserver) {
+        this.observers.remove(observer)
     }
 
     fun tooglePlayMusic() {
@@ -79,48 +115,9 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
 
     private fun notifyObserversWhenStateChange(state: Int) {
         if (state == STATE_CHANGED_FROM_USER_INPUT || (state == STATE_RESTART_PLAYLIST)) {
-            synchronized(this) {
-                this.observersMusicState.forEach { observer ->
-                    observer.second.invoke()
-                }
-            }
+            changeMusicState()
         } else {
-            this.observerNextMusic.invoke(state)
-        }
-    }
-
-    open fun setObserverOnMusicState(callback: () -> Unit): UUID {
-        val id = UUID.randomUUID()
-        val observer = Pair(id, callback)
-
-        this.observersMusicState.add(observer)
-        return id
-    }
-
-    fun removeObserverOnMusicState(id: UUID) {
-        val position = this.observersMusicState.indexOfFirst { observer -> observer.first == id }
-        if (position >= 0 && position < this.observersMusicState.size) {
-            this.observersMusicState.removeAt(position)
-        }
-    }
-
-    fun setObserverMusicTime(callback: (time: String) -> Unit) {
-        observerTimer = callback
-    }
-
-    fun removeObserverMusicTime() {
-        observerTimer = null
-    }
-
-    fun setObserverProgressBar(context: Context, callback: (progress: Int) -> Unit) {
-        val observer = Pair(context, callback)
-        this.observersProgress.add(observer)
-    }
-
-    fun removeObserverProgressBar(context: Context) {
-        val position = this.observersProgress.indexOfFirst { observer -> observer.first == context }
-        if (position >= 0 && position < this.observersProgress.size) {
-            this.observersProgress.removeAt(position)
+            this.callbackHandlerNextMusic.invoke(state)
         }
     }
 
@@ -152,15 +149,15 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     }
 
     private fun updateTimerObserver() {
-        if (!blockUpdateProgress && observerTimer != null) {
+        if (!blockUpdateProgress) {
             val time: Pair<Int, Int> = convertToMinutes(currentPosition)
-            setTimeOnObserverTimer(time)
+            changeMusicTimer(time)
         }
     }
 
     private fun updateProgressbarObserver() {
-        if (!blockUpdateProgress && observersProgress.isNotEmpty()) {
-            notifyMusicProgress(calculateProgress(currentPosition))
+        if (!blockUpdateProgress && observers.isNotEmpty()) {
+            changeProgress(calculateProgress(currentPosition))
         }
     }
 
@@ -169,23 +166,8 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         return convertToFormatTimer(time)
     }
 
-    private fun setTimeOnObserverTimer(time: Pair<Int, Int>) {
-        observerTimer!!.invoke(convertToFormatTimer(time))
-    }
-
     private fun convertToFormatTimer(time: Pair<Int, Int>): String =
         "${time.first}:${if (time.second < 10) "0" else ""}${time.second}"
-
-
-    private fun notifyMusicProgress(progress: Int) {
-        this.progress = progress
-
-        synchronized(this) {
-            this.observersProgress.forEach { observer ->
-                observer.second.invoke(progress)
-            }
-        }
-    }
 
     private fun updateProgressOnMusicPlayer() {
         super.seekTo(calculateMiliseconds(progress))
@@ -210,8 +192,8 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     val progressControl = object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             if (fromUser) {
-                notifyMusicProgress(progress)
-                setTimeOnObserverTimer(convertToMinutes(calculateMiliseconds(progress)))
+                changeProgress(progress)
+                changeMusicTimer(convertToMinutes(calculateMiliseconds(progress)))
             }
         }
 
@@ -227,7 +209,7 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
     }
 
     protected fun setObserverOnNextMusic(callback: (state: Int) -> Unit) {
-        this.observerNextMusic = callback
+        this.callbackHandlerNextMusic = callback
     }
 
     companion object {
@@ -236,5 +218,4 @@ open class MusicPlayer(var context: Context) : MediaPlayer() {
         const val STATE_RESTART_PLAYLIST = 2
         const val STATE_NEXT_MUSIC_FROM_USER = 3
     }
-
 }

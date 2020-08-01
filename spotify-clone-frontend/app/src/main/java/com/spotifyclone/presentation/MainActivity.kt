@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.forEach
 import kotlinx.android.synthetic.main.activity_main.*
 import com.spotifyclone.R
+import com.spotifyclone.SpotifyApplication
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.login.LoginActivity
@@ -17,6 +19,7 @@ import com.spotifyclone.presentation.music.MusicPlayerFragment
 import com.spotifyclone.tools.musicplayer.PlaylistMusicPlayer
 import com.spotifyclone.tools.session.UserSession
 import kotlinx.android.synthetic.main.include_bottom_navigation_menu.*
+
 
 class MainActivity : BaseActivity() {
 
@@ -40,6 +43,8 @@ class MainActivity : BaseActivity() {
 
     override fun onBackPressed() {
         if (!tabAdapter.onBackPressed()) {
+            val notificationManager = NotificationManagerCompat.from(this)
+            notificationManager.cancel(1)
             super.onBackPressed()
         }
     }
