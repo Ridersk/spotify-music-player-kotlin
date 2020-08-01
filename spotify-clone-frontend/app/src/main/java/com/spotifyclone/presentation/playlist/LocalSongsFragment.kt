@@ -16,7 +16,6 @@ import com.spotifyclone.data.repository.PlaylistMusicsDataSourceLocal
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.BaseScreenFragment
 import com.spotifyclone.presentation.base.ToolbarParameters
-import com.spotifyclone.presentation.notifications.MusicPlayerNotification
 import com.spotifyclone.tools.animations.ReducerAndRegain
 import com.spotifyclone.tools.musicplayer.*
 import com.spotifyclone.tools.permissions.AppPermissions
@@ -25,6 +24,8 @@ import kotlinx.android.synthetic.main.fragment_playlist.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import java.util.*
 import kotlin.math.abs
+import com.spotifyclone.SpotifyApplication
+
 
 class LocalSongsFragment private constructor(private val parentActivity: BaseActivity) :
     BaseScreenFragment(parentActivity), PlaylistInterface,
@@ -132,9 +133,8 @@ class LocalSongsFragment private constructor(private val parentActivity: BaseAct
 
     override fun chooseMusic(id: UUID) {
         playlistMusicPlayer.chooseMusic(id)
-        val musicPlayerNotification = MusicPlayerNotification.getInstance(parentActivity)
-        musicPlayerNotification.createNotification()
         onResume()
+        SpotifyApplication.getInstance()?.startMusicPlayerNotification()
     }
 
     private fun setMusicList() {

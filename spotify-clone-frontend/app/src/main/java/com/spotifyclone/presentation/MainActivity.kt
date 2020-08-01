@@ -9,6 +9,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.forEach
 import kotlinx.android.synthetic.main.activity_main.*
 import com.spotifyclone.R
+import com.spotifyclone.SpotifyApplication
 import com.spotifyclone.presentation.base.BaseActivity
 import com.spotifyclone.presentation.base.ToolbarParameters
 import com.spotifyclone.presentation.login.LoginActivity

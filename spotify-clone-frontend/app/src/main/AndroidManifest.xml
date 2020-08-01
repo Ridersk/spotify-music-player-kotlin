@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".SpotifyApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher_spotify"
@@ -15,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <service android:name=".presentation.notifications.MusicPlayerNotification"/>
         <activity android:name=".presentation.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
